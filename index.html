@@ -1,0 +1,163 @@
+<!-- create html template -->
+<!DOCTYPE html>
+<html lang="pl">
+    <head>
+        <meta charset="utf-8">
+        <title>Tablice Relacyjne - Demo</title>
+        <link rel="stylesheet" href="assets/styles.css">
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+        <script src="assets/timetables.min.js"></script>
+    </head>
+    <body>
+        <div id="sidebar">
+            <div class="fl" id="menu-holder">
+                <div id="menu">
+                    <div class="menu-header">
+                        <p>USTAWIENIA TABLICY</p>
+                    </div>
+                    <div id="submenu-1">
+                        <label>
+                            Stacja / Przystanek
+                            <select id="sceneries" onchange="changeTimetables(this)">
+                                <optgroup label="**AKTYWNE ROZKŁADY PL**" id="active-timetables"></optgroup>
+                            </select>
+                        </label>
+                        <label>
+                            Wersja tablicy
+                            <select id="tables" onchange="changeTableVersion(this)">
+                                <option>Odjazdy</option>
+                                <option>Przyjazdy</option>
+                            </select>
+                        </label>
+                    </div>
+                    <div class="menu-header">
+                        <p>FILTRY</p>
+                    </div>
+                    <div id="submenu-2">
+                        <label>
+                            <input type="checkbox" name="checkbox" value="checkbox" disabled>
+                            Komunikaty specjalne
+                        </label><br>
+                        <label>
+                            <input type="checkbox" name="checkbox" value="checkbox" disabled>
+                            Pociągi towarowe
+                        </label><br>
+                        <label>
+                            <input type="checkbox" name="checkbox" value="checkbox" disabled>
+                            Pociągi pasażerskie
+                        </label><br>
+                        <label>
+                            <input type="checkbox" name="checkbox" value="checkbox" disabled>
+                            Pociągi bez ph
+                        </label><br>
+                        <label>
+                            <input type="checkbox" name="checkbox" value="checkbox" disabled>
+                            Pociągi offline
+                        </label><br>
+                        <label>
+                            <input type="checkbox" name="checkbox" value="checkbox" disabled>
+                            Pokazuj przewoźnika
+                        </label><br>
+                        <label>
+                            <input type="checkbox" name="checkbox" value="checkbox" disabled>
+                            Pokazuj peron
+                        </label><br>
+                        <label>
+                            <input type="checkbox" name="checkbox" value="checkbox" disabled>
+                            Pokazuj wszystkie punkty pośrednie
+                        </label><br>
+                        <label>
+                            <input type="checkbox" name="checkbox" value="checkbox" disabled>
+                            Pokazuj opóźnienie pociągów kończących bieg
+                        </label><br>
+                        <label>
+                            <input type="checkbox" name="checkbox" value="checkbox" disabled>
+                            Ukryj nagłówki
+                        </label>
+                    </div>
+                </div>
+                <div id="footer">
+                    <p><b>!!!ROZKŁAD STATYCZNY!!!</b></p><br>
+                    <p style="color: red"><b>!!!WERSJA EKSPERYMENTALNA!!!</b></p><br>
+                    <p onclick="">STS v0.0.6 (demo)</p>
+                    <p>Made with 💜 by <a href="https://github.com/Thundo54" target="_blank">Thundo</a></p>
+                </div>
+            </div>
+        </div>
+        <div id="container">
+<!--            <div class="fr w3" id="button-holder">-->
+<!--                <button class="menu-btn" onclick="displayMenu()">☰</button>-->
+<!--            </div>-->
+            <div id="titles">
+                <span class="title-pl">Odjazdy</span>
+                <span class="title-en">Departures</span>
+            </div>
+            <table id="description">
+                <tr>
+                    <th>
+                        Czas<br>
+                        <i>Time</i>
+                    </th>
+                    <th>
+                        Pociąg<br>
+                        <i>Train</i>
+                    </th>
+                    <th>
+                        Do<br>
+                        <i>Destination</i>
+                    </th>
+                    <th>
+                        Przez<br>
+                        <i>Via</i>
+                    </th>
+                    <th>
+                        <table id="inner-description">
+                            <tr>
+                                <td>
+                                    Uwagi<br>
+                                    <i>Remarks</i>
+                                </td>
+                                <td>
+                                    Peron<br>
+                                    <i>Platform</i>
+                                </td>
+                                <td>
+                                    Przewoźnik<br>
+                                    <i>Operator</i>
+                                </td>
+                            </tr>
+                        </table>
+                    </th>
+                </tr>
+            </table>
+            <table id="timetables">
+                <colgroup>
+                    <col style="width: 7%;">
+                    <col style="width: 9%;">
+                    <col style="width: 36%;">
+                    <col style="width: 32%;">
+                    <col style="width: 5%;">
+                    <col style="width: 4%;">
+                    <col style="width: 7%;">
+                </colgroup>
+<!--                <tr>-->
+<!--                    <td>15:38</td>-->
+<!--                    <td>-->
+<!--                        <div>-->
+<!--                            <p>IC 6200</p>-->
+<!--                        </div>-->
+<!--                    </td>-->
+<!--                    <td>-->
+<!--                           <p>wrocław-wrocław-głównywrocław-głównywrocław-główny</p>-->
+<!--                    </td>-->
+<!--                    <td><p>lódź widzew, lódź chojny, Pabianice, zduńska wola, Łask, Kalisz, Ostrów Wielkopolski, Milicz, Krotoszyn, Oleśnia Rataje, Wrocław Nadodrze, Wrocław Mikołajów</p></td>-->
+<!--                    <td>IC</td>-->
+<!--                    <td>2</td>-->
+<!--                    <td><p>Opóźniony 12min/delayed 12min/Verspattung 12min</p></td>-->
+<!--                </tr>-->
+            </table>
+            <div id="fill"></div>
+        </div>
+
+    </body>
+</html>
