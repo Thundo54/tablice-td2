@@ -95,72 +95,76 @@
                 <span class="title-pl">Odjazdy</span>
                 <span class="title-en">Departures</span>
             </div>
-            <table id="description">
-                <tr>
-                    <th>
-                        Czas<br>
-                        <i>Time</i>
-                    </th>
-                    <th>
-                        Pociąg<br>
-                        <i>Train</i>
-                    </th>
-                    <th>
-                        Do<br>
-                        <i>Destination</i>
-                    </th>
-                    <th>
-                        Przez<br>
-                        <i>Via</i>
-                    </th>
-                    <th>
-                        <table id="inner-description">
-                            <tr>
-                                <td>
-                                    Uwagi<br>
-                                    <i>Remarks</i>
-                                </td>
-                                <td>
-                                    Peron<br>
-                                    <i>Platform</i>
-                                </td>
-                                <td>
-                                    Przewoźnik<br>
-                                    <i>Operator</i>
-                                </td>
-                            </tr>
-                        </table>
-                    </th>
-                </tr>
-            </table>
-            <table id="timetables">
-                <colgroup>
-                    <col style="width: 7%;">
-                    <col style="width: 9%;">
-                    <col style="width: 36%;">
-                    <col style="width: 32%;">
-                    <col style="width: 5%;">
-                    <col style="width: 4%;">
-                    <col style="width: 7%;">
-                </colgroup>
-<!--                <tr>-->
-<!--                    <td>15:38</td>-->
-<!--                    <td>-->
-<!--                        <div>-->
-<!--                            <p>IC 6200</p>-->
-<!--                        </div>-->
-<!--                    </td>-->
-<!--                    <td>-->
-<!--                           <p>wrocław-wrocław-głównywrocław-głównywrocław-główny</p>-->
-<!--                    </td>-->
-<!--                    <td><p>lódź widzew, lódź chojny, Pabianice, zduńska wola, Łask, Kalisz, Ostrów Wielkopolski, Milicz, Krotoszyn, Oleśnia Rataje, Wrocław Nadodrze, Wrocław Mikołajów</p></td>-->
-<!--                    <td>IC</td>-->
-<!--                    <td>2</td>-->
-<!--                    <td><p>Opóźniony 12min/delayed 12min/Verspattung 12min</p></td>-->
-<!--                </tr>-->
-            </table>
-            <div id="fill"></div>
+            <div id="labels">
+                 <table>
+                    <tr>
+                        <th>
+                            Czas<br>
+                            <i>Time</i>
+                        </th>
+                        <th>
+                            Pociąg<br>
+                            <i>Train</i>
+                        </th>
+                        <th>
+                            Do<br>
+                            <i>Destination</i>
+                        </th>
+                        <th>
+                            Przez<br>
+                            <i>Via</i>
+                        </th>
+                        <th>
+                            <table id="inner-description">
+                                <tr>
+                                    <td>
+                                        Uwagi<br>
+                                        <i>Remarks</i>
+                                    </td>
+                                    <td>
+                                        Peron<br>
+                                        <i>Platform</i>
+                                    </td>
+                                    <td>
+                                        Przewoźnik<br>
+                                        <i>Operator</i>
+                                    </td>
+                                </tr>
+                            </table>
+                        </th>
+                    </tr>
+                </table>
+            </div>
+            <div id="timetables">
+                <table>
+                    <colgroup>
+                        <col class="time">
+                        <col class="trainNo">
+                        <col class="fromTo">
+                        <col class="via">
+                        <col class="operator">
+                        <col class="platform">
+                        <col class="remarks">
+                    </colgroup>
+    <!--                <tr>-->
+    <!--                    <td>15:38</td>-->
+    <!--                    <td>-->
+    <!--                        <div>-->
+    <!--                            <span>IC 6200</span>-->
+    <!--                        </div>-->
+    <!--                    </td>-->
+    <!--                    <td>-->
+    <!--                       <span>wrocław-wrocław-głównywrocław-głównywrocław-główny</span>-->
+    <!--                    </td>-->
+    <!--                    <td>-->
+    <!--                        <span>lódź widzew, lódź chojny, Pabianice, zduńska wola, Łask, Kalisz, Ostrów Wielkopolski, Milicz, Krotoszyn, Oleśnia Rataje, Wrocław Nadodrze, Wrocław Mikołajów</span>-->
+    <!--                    </td>-->
+    <!--                    <td>IC</td>-->
+    <!--                    <td>2</td>-->
+    <!--                    <td><span>Opóźniony 12min/delayed 12min/Verspattung 12min</span></td>-->
+    <!--                </tr>-->
+                </table>
+            </div>
         </div>
-
     </body>
 </html>
