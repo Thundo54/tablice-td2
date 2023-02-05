@@ -3,19 +3,25 @@ window.timetableAsJson = [];
 window.sceneriesAsJson = [];
 window.trainsSetBefore = [];
 window.isDeparture = true;
-
-
-
 $(document).ready(function() {
     // get param from url
-    // let urlParams = new URLSearchParams(window.location.search);
-    // let station = urlParams.get('station');
+    let urlParams = new URLSearchParams(window.location.search);
+    let departure = true;
+    if (urlParams.get('departure') === 'false') {
+        departure = false;
+    } else if (urlParams.get('departure') === 'true') {
+        departure = true;
+    } else {
+        departure = true;
+    }
+    let station = urlParams.get('station');
+
     loadSceneries()
-    // loadTimetables("Kleszczów", true);
-    // setInterval(function() {
-    //     loadTimetables("Kleszczów", true);
-    // }   , 50000);
-    changeBoardType(true);
+    loadTimetables(station, departure);
+    setInterval(function() {
+        loadTimetables(station, departure);
+    }   , 50000);
+    changeBoardType(departure);
 });
 
 $(window).resize(function() {
@@ -26,12 +32,12 @@ $(window).resize(function() {
 });
 
 function refreshTimetablesAnim() {
-    let tr = $('#timetables').find('tr');
+    let tr = $('#timetables table').find('tr');
     let td, p, animDuration;
     for (let i = 0; i < tr.length; i++) {
         td = $(tr[i]).find('td');
         for (let j = 0; j < td.length; j++) {
-            p = $(td[j]).find('p');
+            p = $(td[j]).find('span');
             animDuration = ((p.width() + $(td[j]).width()) * 10) / 950;
             if (p.css('animation-duration') !== animDuration) {
                 if (p.width() > $(td[j]).width()) {
@@ -89,6 +95,12 @@ function parseTimetable(station, isDeparture = true) {
                 stopList.push(capitalizeFirstLetter(data[i]['timetable']['stopList'][j]['stopNameRAW'].split(',')[0]));
             }
             if (capitalizeFirstLetter(data[i]['timetable']['stopList'][j]['stopNameRAW']) === station) {
+                if (!data[i]['timetable']['stopList'][j]['terminatesHere']
+                    && !data[i]['timetable']['stopList'][j]['beginsHere']) {
+                    if (!data[i]['timetable']['stopList'][j]['stopType'].includes('ph')) {
+                        continue;
+                    }
+                }
                 if (data[i]['timetable']['stopList'][j]['confirmed']) { continue; }
                 if (isDeparture && !data[i]['timetable']['stopList'][j]['terminatesHere']) {
                     train['beginsTerminatesHere'] = data[i]['timetable']['stopList'][j]['beginsHere'];
@@ -103,7 +115,8 @@ function parseTimetable(station, isDeparture = true) {
                 }
             }
         }
-        if (stopList.length > 0 && train['timestamp'] !== undefined) {
+
+        if (!data[i]['timetable']['category'].match(/^[LTZ]/) && train['timestamp'] !== undefined) {
             if (isDeparture) {
                 train['timetable'] = stopList.slice(stopList.indexOf(station) + 1);
             } else {
@@ -112,6 +125,7 @@ function parseTimetable(station, isDeparture = true) {
             train['category'] = data[i]['timetable']['category'];
             train['trainNo'] = data[i]['trainNo'];
             trainSet.push(train);
+            console.log(train);
         }
         stopList = [];
         train = {};
@@ -164,16 +178,16 @@ function loadTimetables(station, isDeparture = true) {
     let trainSet = parseTimetable(station, isDeparture);
     let trainsNew = trainSet.filter(m => !trainsSetBefore.map(n => n.trainNo).includes(m.trainNo)); // pociągi które są w trainSet, ale nie ma ich w trainsSetBefore
     let trainsToRemove = trainsSetBefore.filter(m => !trainSet.map(n => n.trainNo).includes(m.trainNo)); // pociągi które są w trainsSetBefore, ale nie ma ich w trainSet
-    if (trainsSetBefore.length === 0 && trainSet.length > 0 || $('#timetables tr').length === 0) {
+    if (trainsSetBefore.length === 0 && trainSet.length > 0 || $('#timetables table tr').length === 0) {
         for (let i in trainSet) {
-            $('#timetables').append(addRow(
+            $('#timetables table').append(addRow(
                 trainSet[i]['timestamp'],
                 trainSet[i]['trainNo'],
                 trainSet[i]['stationFromTo'],
                 trainSet[i]['timetable'].join(', '),
                 trainSet[i]['category'],
                 '1',
-                createRemark(trainSet[i]['delay'], isDeparture, trainSet[i]['beginsTerminatesHere']),
+                '',
                 i
             ));
         }
@@ -199,7 +213,7 @@ function loadTimetables(station, isDeparture = true) {
                     trainsNew[i]['timetable'].join(', '),
                     trainsNew[i]['category'],
                     '1',
-                    createRemark(trainsNew[i]['delay'], isDeparture, trainsNew[i]['beginsTerminatesHere']),
+                    '',
                     i
                 );
                 if (index === 0) {
@@ -212,29 +226,29 @@ function loadTimetables(station, isDeparture = true) {
         }
     }
     for (let i in trainSet) {
-        $(`#${i} td:nth-child(7) p`)
+        console.log(trainSet[i]['trainNo'], trainSet[i]['timestamp'], trainSet[i]['delay'], i);
+        $(`#${i} td:nth-child(7) span`)
             .text(createRemark(
                 trainSet[i]['delay'],
                 isDeparture,
-                trainSet[i]['beginsTerminatesHere']),
-                trainSet[i]['trainNo']
-            );
+                trainSet[i]['beginsTerminatesHere'],
+            ));
     }
     refreshTimetablesAnim();
 }
 
 function refreshIds() {
     let i = 0;
-    $('#timetables tr').each(function () {
+    $('#timetables table tr').each(function () {
         $(this).attr('id', i);
         i++;
     });
 }
 
 function convertCategory(category) {
-    if (category === 'EIE') {
+    if (category.startsWith('E')) {
         return 'IC';
-    } else if (category === 'MPE') {
+    } else if (category.startsWith('M')) {
         return 'TLK';
     } else {
         return 'R';
@@ -278,20 +292,15 @@ function createRemark (delay = 0, isDeparture = true, beginsTerminatesHere = fal
     // }
 }
 
-
-function refreshTimetables() {
-
-}
-
 function addRow(time, train, stationFromTo, via, operator, platform, remarks, rowNo) {
     let row = $('<tr>').attr('id', `${rowNo}`);
     row.append($('<td>').text(convertTime(time)));
-    row.append($('<td>').append($('<div>').append($('<p>').text(createTrainString(operator, train)))));
-    row.append($('<td>').append($('<p>').text(stationFromTo)));
-    row.append($('<td>').append($('<p>').text(via)));
+    row.append($('<td>').append($('<div>').append($('<span>').text(createTrainString(operator, train)))));
+    row.append($('<td>').append($('<span>').text(stationFromTo)));
+    row.append($('<td>').append($('<span>').text(via)));
     row.append($('<td>').text(operator));
     row.append($('<td>').text(platform));
-    row.append($('<td>').append($('<p>').text(remarks)));
+    row.append($('<td>').append($('<span>').text(remarks)));
     return row;
 }
 
@@ -300,7 +309,7 @@ function addRow(time, train, stationFromTo, via, operator, platform, remarks, ro
 
 
 function addSpecialRow(row, content) {
-    $(`#timetables tr:nth-child(${row})`)
+    $(`#timetables table tr:first-child`)
         .after($('<tr>')
             .append($('<td>').attr('colspan', 7)
                 .append($('<div>').addClass('special-row')
@@ -311,32 +320,32 @@ function addSpecialRow(row, content) {
 }
 //
 // function editRowRemarks(row, remarks) {
-//     $(`#timetables tr:nth-child(${row}) td:nth-child(7) p`).text(remarks);
+//     $(`#timetables table tr:nth-child(${row}) td:nth-child(7) p`).text(remarks);
 // }
 //
 // function deleteRow(row) {
-//     $(`#timetables tr:nth-child(${row})`).remove();
+//     $(`#timetables table tr:nth-child(${row})`).remove();
 // }
 
 
 // function generateRowsList() {
 //     let rowsList = {};
-//     $(`#timetables tr`).each(function () {
+//     $(`#timetables table tr`).each(function () {
 //         let trainNo = $(this).attr('id');
 //         rowsList[trainNo] = $(this).index() + 1;
 //     });
 //     return rowsList;
 // }
 
-function getTrainsFromRows() {
-    let train = {}, trains = {};
-    $(`#timetables tr td:nth-child(2) p`).each(function () {
-        train['rowNo'] = $(this).closest('tr').index() + 1;
-        trains[($(this).text()).split(' ')[1]] = train;
-        train = {};
-    });
-    return trains;
-}
+// function getTrainsFromRows() {
+//     let train = {}, trains = {};
+//     $(`#timetables table tr td:nth-child(2) p`).each(function () {
+//         train['rowNo'] = $(this).closest('tr').index() + 1;
+//         trains[($(this).text()).split(' ')[1]] = train;
+//         train = {};
+//     });
+//     return trains;
+// }
 
 function changeBoardType(isDeparture = true) {
     let titlePL, titleEN, description, containerColor;
@@ -351,27 +360,40 @@ function changeBoardType(isDeparture = true) {
         description = 'Z<br><i>From</i>';
         containerColor = '#F0F8FF';
     }
-    $('#title-pl').text(titlePL);
-    $('#title-en').text(titleEN);
-    $('#description th:nth-child(3)').html(description);
+    $('.title-pl').text(titlePL);
+    $('.title-en').text(titleEN);
+    $('#labels table th:nth-child(3)').html(description);
     $('#container').css('color', containerColor);
 }
 
-function displayMenu() {
-    let menu = $('#menu-holder');
-    if (menu.css('display') === 'none') {
-        menu.css('display', 'flex');
-    } else {
-        menu.css('display', 'none');
-    }
-}
-window.scenery = ""
-function changeTimetables() {
-    let option = $('#active-timetables option:selected').text();
-    $('#timetables tr').remove();
-    window.scenery = option;
-    loadTimetables(option);
-}
+// function displayMenu() {
+//     let menu = $('#menu-holder');
+//     if (menu.css('display') === 'none') {
+//         menu.css('display', 'flex');
+//     } else {
+//         menu.css('display', 'none');
+//     }
+// }
+// window.scenery = ""
+// function changeTimetables() {
+//     let option = $('#active-timetables option:selected').text();
+//     $('#timetables table tr').remove();
+//     window.scenery = option;
+//     loadTimetables(option, false);
+// }
+//
+// function changeTableVersion() {
+//     let option = $('#tables option:selected').index();
+//     $('#timetables table tr').remove();
+//     if (option === 0) {
+//         changeBoardType(true);
+//             loadTimetables(window.scenery);
+//     } else {
+//         changeBoardType(false);
+//             loadTimetables(window.scenery, false);
+//     }
+//
+// }
 
 function changeTableVersion() {
     let option = $('#tables option:selected').index();
