@@ -1,5 +1,3 @@
-@import '_reset.scss';
-
 $color_1: #FFD200;
 $color_2: #F0F8FF;
 $color_3: #140075;
@@ -10,39 +8,13 @@ $background-color_1: #000000;
 $background-color_2: #140075;
 $background-color_3: #F0F8FF;
 
-
-
-/* clear all styles */
-/* hide 5 and 6 columns if device is in portrait mode */
-/*@media (max-aspect-ratio: 4/3) {*/
-/*    #timetables td:nth-child(5) {*/
-/*        display: none;*/
-/*    }*/
-/*    #timetables td:nth-child(7) {*/
-/*        display: none;*/
-/*    }*/
-/*    #description th:nth-child(5) {*/
-/*        display: none;*/
-/*    }*/
-/*    #description th:nth-child(7) {*/
-/*        display: none;*/
-/*    }*/
-/*    .hide {*/
-/*        display: none;*/
-/*    }*/
-/*}*/
-/*#timetables p {*/
-/*    text-align: center;*/
-/*    background-color: #F0F8FF;*/
-/*    color: #140075;*/
-/*}*/
 @keyframes ticker {
 	0% {
-		transform: translate3d(var(--elementWidth),0,0);
+		transform: translate3d(var(--elementWidth), 0, 0);
 		visibility: visible;
 	}
 	100% {
-		transform: translate3d(-100%,0,0);
+		transform: translate3d(-100%, 0, 0);
 	}
 }
 
@@ -78,46 +50,55 @@ body {
 	}
 }
 
-#description {
-	font-size: 2vmin;
-	font-weight: bold;
+#labels {
 
-	th {
-		line-height: 1em;
-		padding: 2vmin 0 1.5vmin 0;
-		text-align: left;
+	table {
+		font-size: 2vmin;
+		font-weight: bold;
+		border-collapse: separate;
+		width: 100%;
 
-		&:nth-child(1) {
-			width: 7%;
-			text-align: center;
-		}
-		&:nth-child(2) {
-			width: 9%;
-			text-align: center;
-		}
-		&:nth-child(3) {
-			width: 36%;
-			padding-left: 0.7vmin;
-		}
-		&:nth-child(4) {
-			width: 24%;
-		}
-		&:nth-child(5) {
-			width: 24%;
-			vertical-align: bottom;
+		th {
+			line-height: 1em;
+			padding: 2vmin 0 1.5vmin 0;
+			text-align: left;
 
-			#inner-description {
-				font-size: 2vmin;
-				font-weight: bold;
-				white-space: nowrap;
-				float: right;
-				text-align: left;
+			&:nth-child(1) {
+				width: 7%;
+				text-align: center;
+			}
 
-				td {
+			&:nth-child(2) {
+				width: 9%;
+				text-align: center;
+			}
+
+			&:nth-child(3) {
+				border-left: 1vmin solid black;
+				width: 36%;
+			}
+
+			&:nth-child(4) {
+				width: 24%;
+			}
+
+			&:nth-child(5) {
+				vertical-align: bottom;
+				width: 24%;
+
+				#inner-description {
+					font-size: 2vmin;
+					font-weight: bold;
+					white-space: nowrap;
 					float: right;
+					text-align: left;
 
-					&:nth-child(-n+2) {
-						margin-left: 1vmin;
+					td {
+						float: right;
+
+						&:nth-child(-n+2) {
+							margin-left: 1vmin;
+						}
 					}
 				}
 			}
@@ -126,105 +107,107 @@ body {
 }
 
 #timetables {
-  font-weight: bold;
-  table-layout: fixed;
-  width: 100%;
-  border-collapse: collapse;
-  background-color: $background-color_2;
-
-  tr {
-    height: 4.5vmin;
-    width: 100%;
-    //	&:nth-child(n {
-    //		+ {
-    //			17) {
-    //				display: none;
-    //			}
-    //		}
-    //	}
-    //}
-    td {
-      &:nth-child(1) {
-        text-align: center;
-      }
-
-      &:nth-child(2) {
-        text-align: center;
-
-        div {
-          background-color: $background-color_3;
-          color: $color_3;
-          display: block;
-        }
-
-        p {
-          font-weight: 600;
-          padding-top: 0.2vmin;
-        }
-      }
-
-      &:nth-child(3) {
-        border-left: 1vmin solid #140075;
-        font-size: 2.9vmin;
-
-        p {
-          font-size: 2.9vmin;
-          display: inline-block;
-        }
-      }
-
-      &:nth-child(4) {
-        border-left: 1vmin solid #140075;
-        font-style: italic;
-        font-weight: normal;
-      }
-
-      &:nth-child(5) {
-        text-align: center;
-      }
-
-      &:nth-child(6) {
-        text-align: center;
-      }
-
-      &:nth-child(7) {
-        border-left: 1vmin solid #140075;
-      }
-
-      background-color: $background-color_2;
-      color: $color_2;
-      font-size: 3vmin;
-      overflow: hidden;
-      white-space: nowrap;
-    }
-
-    p {
-      display: inline-block;
-    }
-  }
-}
-#fill {
-	background-color: $background-color_2;
 	flex-grow: 1;
+	background-color: $background-color_2;
+
+	table {
+		font-weight: bold;
+		table-layout: fixed;
+		width: 100%;
+		border-collapse: separate;
+		background-color: $background-color_2;
+		border-spacing: 0 0.7vmin;
+
+		col {
+
+			&.time {
+				width: 7%;
+			}
+
+			&.trainNo {
+				width: 9%;
+			}
+
+			&.fromTo {
+				width: 36%;
+			}
+
+			&.via {
+				width: 32%;
+			}
+
+			&.operator {
+				width: 5%;
+			}
+
+			&.platform {
+				width: 4%;
+			}
+
+			&.remarks {
+				width: 7%;
+			}
+		}
+
+		.special-row {
+			background-color: $background-color_3;
+			color: $color_3;
+			width: 100%;
+
+			span {
+				font-weight: 600;
+				padding-top: 0.2vmin;
+			}
+		}
+
+		tr {
+			background-color: $background-color_2;
+
+			td {
+				color: $color_2;
+				font-size: 3vmin;
+				overflow: hidden;
+				white-space: nowrap;
+				text-align: center;
+				vertical-align: middle;
+
+				span {
+					display: inline-block;
+				}
+
+				&:nth-child(2) {
+					font-weight: 600;
+
+					div {
+						background-color: $background-color_3;
+						color: $color_3;
+						padding-top: 0.2vmin;
+					}
+				}
+
+				&:nth-child(3) {
+					text-align: left;
+					border-left: 1vmin solid $color_3;
+					font-size: 2.6vmin;
+				}
+
+				&:nth-child(4) {
+					text-align: left;
+					border-left: 1vmin solid $color_3;
+					font-style: italic;
+					font-weight: normal;
+				}
+
+				&:nth-child(7) {
+					border-left: 1vmin solid $color_3;
+				}
+			}
+		}
+	}
 }
 
-.fr {
-	float: right;
-}
-.m20 {
-	margin: 0 0 0 1vmin;
-}
 :root {
 	--elementwidth: 100%;
-}
-.special-row {
-	background-color: $background-color_3;
-	color: $color_3;
-	width: 100%;
-	p {
-		font-weight: 600;
-		padding-top: 0.2vmin;
-	}
 }
 
 // create slide animation to right
@@ -241,6 +224,7 @@ body {
 	color: $color_2;
 	height: 100%;
 }
+
 .menu-btn {
 	width: 100%;
 	height: 3vmin;
@@ -255,12 +239,15 @@ body {
 		color: $color_3;
 	}
 }
+
 .fl {
 	float: left;
 }
+
 .w3 {
 	width: 3vmin;
 }
+
 #button-holder {
 	display: flex;
 }
@@ -271,6 +258,7 @@ body {
 	height: 100%;
 	width: 22vmin;
 	padding: 0 1vw 0 1vw;
+
 	#menu {
 
 		flex-grow: 1;
@@ -282,6 +270,7 @@ body {
 			padding: 1vh 0 0 0;
 			color: $color_2;
 		}
+
 		#submenu-1 {
 			font-size: 1.5vmin;
 			text-align: center;
@@ -313,6 +302,7 @@ body {
 
 		}
 	}
+
 	#footer {
 		font-size: 1vmin;
 		text-align: center;
