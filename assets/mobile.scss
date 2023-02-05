@@ -1,0 +1,90 @@
+@media only screen and (hover: none) {
+	body {
+
+		#container {
+			margin: 0;
+		}
+	}
+}
+
+@media (max-aspect-ratio: 4/3) {
+	body {
+
+		#labels {
+
+			table {
+
+				th {
+					&:nth-child(1) {
+						width: 10%;
+					}
+
+					&:nth-child(2) {
+						width: 14%;
+					}
+
+					&:nth-child(3) {
+						width: 26%;
+					}
+
+					&:nth-child(4) {
+						width: 26%;
+					}
+
+					&:nth-child(5) {
+						width: 14%;
+					}
+				}
+
+				#inner-description {
+					td {
+						&:last-child {
+							display: none;
+						}
+
+						&:nth-child(2) {
+							display: none;
+						}
+					}
+				}
+			}
+		}
+
+		#timetables {
+
+			table {
+
+				col {
+
+					&.time {
+						width: 10%;
+					}
+
+					&.trainNo {
+						width: 14%;
+					}
+
+					&.fromTo {
+						width: 26%;
+					}
+
+					&.via {
+						width: 26%;
+					}
+
+					&.operator {
+						width: 0;
+					}
+
+					&.platform {
+						width: 0;
+					}
+
+					&.remarks {
+						width: 14%;
+					}
+				}
+			}
+		}
+	}
+}
