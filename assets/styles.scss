@@ -11,7 +11,6 @@ $background-color_3: #F0F8FF;
 @keyframes ticker {
 	0% {
 		transform: translate3d(var(--elementWidth), 0, 0);
-		visibility: visible;
 	}
 	100% {
 		transform: translate3d(-100%, 0, 0);
@@ -78,13 +77,8 @@ body {
 				width: 36%;
 			}
 
-			&:nth-child(4) {
-				width: 24%;
-			}
-
 			&:nth-child(5) {
 				vertical-align: bottom;
-				width: 24%;
 
 				#inner-description {
 					font-size: 2vmin;
@@ -176,7 +170,6 @@ body {
 				}
 
 				&:nth-child(2) {
-					font-weight: 600;
 
 					div {
 						background-color: $background-color_3;
@@ -210,15 +203,6 @@ body {
 	--elementwidth: 100%;
 }
 
-// create slide animation to right
-@keyframes slide {
-	0% {
-		left: 0;
-	}
-	100% {
-		left: 100%;
-	}
-}
 
 #sidebar {
 	color: $color_2;
