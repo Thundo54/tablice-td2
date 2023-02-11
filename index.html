@@ -12,88 +12,54 @@
         <script src="assets/timetables.min.js"></script>
     </head>
     <body>
-        <div id="sidebar">
-            <div class="fl" id="menu-holder">
-                <div id="menu">
-                    <div class="menu-header">
-                        <p>USTAWIENIA TABLICY</p>
-                    </div>
-                    <div id="submenu-1">
-                        <label>
-                            Stacja / Przystanek
-                            <select id="sceneries" onchange="changeTimetables(this)">
+        <div id="menu">
+            <button id="menu-button" onclick="displayMenu()">☰</button>
+            <div id="menu-box">
+                <button id="close-button" onclick=""></button>
+                <section>
+                    <div>
+                        <h2>TABLICE STACYJNE</h2>
+                        <div>
+                            <label for="sceneries">Stacja / Przystanek</label>
+                            <select id="sceneries">
                                 <optgroup label="**AKTYWNE ROZKŁADY PL**" id="active-timetables"></optgroup>
+                                <option>Bielsko-Biała Komorowice</option>
                             </select>
-                        </label>
-                        <label>
-                            Wersja tablicy
-                            <select id="tables" onchange="changeTableVersion(this)">
+                        </div>
+                        <div>
+                            <label for="table-type">Typ tablicy</label>
+                            <select id="table-type">
                                 <option>Odjazdy</option>
                                 <option>Przyjazdy</option>
                             </select>
-                        </label>
+                        </div>
+                        <div class="disable">
+                            <label for="timetable-type">Serwer TD2</label>
+                            <select id="timetable-type">
+                                <option>PL1</option>
+                            </select>
+                        </div>
                     </div>
-                    <div class="menu-header">
-                        <p>FILTRY</p>
-                    </div>
-                    <div id="submenu-2">
-                        <label>
-                            <input type="checkbox" name="checkbox" value="checkbox" disabled>
-                            Komunikaty specjalne
-                        </label><br>
-                        <label>
-                            <input type="checkbox" name="checkbox" value="checkbox" disabled>
-                            Pociągi towarowe
-                        </label><br>
-                        <label>
-                            <input type="checkbox" name="checkbox" value="checkbox" disabled>
-                            Pociągi pasażerskie
-                        </label><br>
-                        <label>
-                            <input type="checkbox" name="checkbox" value="checkbox" disabled>
-                            Pociągi bez ph
-                        </label><br>
-                        <label>
-                            <input type="checkbox" name="checkbox" value="checkbox" disabled>
-                            Pociągi offline
-                        </label><br>
-                        <label>
-                            <input type="checkbox" name="checkbox" value="checkbox" disabled>
-                            Pokazuj przewoźnika
-                        </label><br>
-                        <label>
-                            <input type="checkbox" name="checkbox" value="checkbox" disabled>
-                            Pokazuj peron
-                        </label><br>
-                        <label>
-                            <input type="checkbox" name="checkbox" value="checkbox" disabled>
-                            Pokazuj wszystkie punkty pośrednie
-                        </label><br>
-                        <label>
-                            <input type="checkbox" name="checkbox" value="checkbox" disabled>
-                            Pokazuj opóźnienie pociągów kończących bieg
-                        </label><br>
-                        <label>
-                            <input type="checkbox" name="checkbox" value="checkbox" disabled>
-                            Ukryj nagłówki
-                        </label>
-                    </div>
-                </div>
-                <div id="footer">
-                    <p><b>!!!ROZKŁAD STATYCZNY!!!</b></p><br>
-                    <p style="color: red"><b>!!!WERSJA EKSPERYMENTALNA!!!</b></p><br>
-                    <p onclick="">STS v0.0.6 (demo)</p>
-                    <p>Made with 💜 by <a href="https://github.com/Thundo54" target="_blank">Thundo</a></p>
-                </div>
+                </section>
+                <div class="vertical-line"></div>
+                <section>
+                    <h2>FILTRY</h2>
+                    <h3><i>soon...</i></h3>
+                </section>
+                <footer>
+                    <span>
+                        STS v0.0.7 |
+                        <a href="https://github.com/Thundo54" target="_blank">Made with 💜 by Thundo</a>
+                    </span>
+                    <span>Specjalne podziękowania dla Spythere 💜</span>
+                </footer>
             </div>
         </div>
         <div id="container">
-<!--            <div class="fr w3" id="button-holder">-->
-<!--                <button class="menu-btn" onclick="displayMenu()">☰</button>-->
-<!--            </div>-->
             <div id="titles">
                 <span class="title-pl">Odjazdy</span>
                 <span class="title-en">Departures</span>
+                <button onclick="fullscreen();">KLIKNIJ MNIE</button>
             </div>
             <div id="labels">
                  <table>
