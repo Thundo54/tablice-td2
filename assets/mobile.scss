@@ -1,8 +1,78 @@
 @media only screen and (hover: none) {
 	body {
+		#menu {
+			#menu-box {
+				#close-button {
+					font-size: 6vmin;
+					width: 6vmin;
+				}
+
+				section {
+					width: 65vmin;
+					height: 90vmin;
+
+					div {
+						select {
+							font-size: 2.4vmin;
+							width: 45vmin;
+							height: 5vmin;
+							padding-left: 0.6vmin;
+							margin: 2.5vmin;
+						}
+					}
+				}
+
+				h2 {
+					font-size: 4vmin;
+					padding: 4vmin;
+				}
+
+				label, h3 {
+					font-size: 2.5vmin;
+				}
+
+				footer {
+					font-size: 2vmin;
+					padding: 1vmin;
+
+					span {
+						float: right;
+
+						&:nth-child(2) {
+							display: none;
+						}
+					}
+
+				}
+			}
+		}
 
 		#container {
 			margin: 0;
+
+			#titles {
+				padding-left: 1vmin;
+			}
+
+			#inner-description {
+				padding-right: 1vmin;
+			}
+		}
+	}
+
+	@media (max-aspect-ratio: 4/3) {
+		body {
+			#menu {
+				#menu-box {
+					flex-direction: column;
+
+					.vertical-line {
+						width: auto;
+						height: 0.2vmin;
+						margin: 0 2vmin;
+					}
+				}
+			}
 		}
 	}
 }
