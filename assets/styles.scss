@@ -8,6 +8,10 @@ $background-color_1: #000000;
 $background-color_2: #140075;
 $background-color_3: #F0F8FF;
 
+:root {
+	--elementwidth: 100%;
+}
+
 @keyframes ticker {
 	0% {
 		transform: translate3d(var(--elementWidth), 0, 0);
