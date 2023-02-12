@@ -1,48 +1,105 @@
 @media only screen and (hover: none) {
 	body {
+		#menu {
+			#menu-button {
+				width: 8vmin;
+				height: 8vmin;
+				font-size: 5.5vmin;
+				line-height: 1.4em;
+			}
+
+			#menu-box {
+				section {
+					width: 65vmin;
+					height: 90vmin;
+
+					div {
+						select {
+							font-size: 2.4vmin;
+							width: 45vmin;
+							height: 5vmin;
+							padding-left: 0.6vmin;
+							margin: 2.5vmin;
+						}
+					}
+				}
+
+				h2 {
+					font-size: 4vmin;
+					padding: 4vmin;
+				}
+
+				label, h3 {
+					font-size: 2.5vmin;
+				}
+
+				footer {
+					font-size: 2vmin;
+					padding: 1vmin;
+
+					span {
+						float: right;
+
+						&:nth-child(2) {
+							display: none;
+						}
+					}
+
+				}
+			}
+		}
 
 		#container {
 			margin: 0;
+
+			#titles {
+				padding-left: 1vmin;
+			}
+
+			#inner-description {
+				padding-right: 1vmin;
+			}
+		}
+	}
+
+	@media (max-aspect-ratio: 4/3) {
+		body {
+			#menu {
+				#menu-box {
+					flex-direction: column;
+
+					.vertical-line {
+						width: auto;
+						height: 0.2vmin;
+						margin: 0 2vmin;
+					}
+				}
+			}
 		}
 	}
 }
 
-@media (max-aspect-ratio: 4/3) {
+@media (max-aspect-ratio: 4/3)  {
 	body {
-
 		#labels {
-
 			table {
-
 				th {
 					&:nth-child(1) {
 						width: 10%;
 					}
 
-					&:nth-child(2) {
+					&:nth-child(2), &:nth-child(5) {
 						width: 14%;
 					}
 
-					&:nth-child(3) {
+					&:nth-child(3),  &:nth-child(4) {
 						width: 26%;
-					}
-
-					&:nth-child(4) {
-						width: 26%;
-					}
-
-					&:nth-child(5) {
-						width: 14%;
 					}
 				}
 
 				#inner-description {
 					td {
-						&:last-child {
-							display: none;
-						}
-
-						&:nth-child(2) {
+						&:last-child, &:nth-child(2) {
 							display: none;
 						}
 					}
@@ -51,37 +108,23 @@
 		}
 
 		#timetables {
-
 			table {
-
 				col {
 
 					&.time {
 						width: 10%;
 					}
 
-					&.trainNo {
+					&.trainNo, &.remarks {
 						width: 14%;
 					}
 
-					&.fromTo {
+					&.fromTo, &.via  {
 						width: 26%;
 					}
 
-					&.via {
-						width: 26%;
-					}
-
-					&.operator {
+					&.operator, &.platform {
 						width: 0;
-					}
-
-					&.platform {
-						width: 0;
-					}
-
-					&.remarks {
-						width: 14%;
 					}
 				}
 			}

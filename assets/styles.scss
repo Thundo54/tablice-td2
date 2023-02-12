@@ -8,6 +8,10 @@ $background-color_1: #000000;
 $background-color_2: #140075;
 $background-color_3: #F0F8FF;
 
+:root {
+	--elementwidth: 100%;
+}
+
 @keyframes ticker {
 	0% {
 		transform: translate3d(var(--elementWidth), 0, 0);
@@ -30,6 +34,145 @@ body {
 	color: $color_1;
 	margin: 0 3vmin 3vmin 3vmin;
 	overflow: hidden;
+}
+
+#menu {
+	display: flex;
+	position: absolute;
+	width: 100%;
+	height: 100%;
+	align-items: center;
+	justify-content: center;
+	overflow: hidden;
+	transition: background-color 0.6s;
+
+	&.background-fade {
+		background-color: rgba(0, 0, 0, 0.4);
+	}
+
+	#menu-button {
+		position: absolute;
+		top: 0;
+		right: 0;
+		font-size: 3vmin;
+		width: 4vmin;
+		height: 4vmin;
+		color: $color_2;
+		line-height: 1.2em;
+		transition: transform 1s cubic-bezier(0, 0, 0, 1);
+
+		&:hover {
+			color: $color_1;
+		}
+
+		&:disabled {
+			color: #111;
+		}
+
+		&:after {
+			content: "☰";
+		}
+
+		&.rotate-button {
+			transform: rotate(90deg);
+		}
+	}
+
+	#menu-box {
+		display: flex;
+		position: relative;
+		background-color: #111;
+		box-shadow: 0 0 2.5vmin 0 rgba(0, 0, 0, 0.5);
+		transition: transform 1s cubic-bezier(0, 0, 0, 1);
+
+		&.slide-in {
+			transform: translate3d(0, 150%, 0);
+		}
+
+		.vertical-line {
+			width: 0.2vmin;
+			background-color: #222;
+			margin: 2vmin 0;
+			border-radius: 0.2vmin;
+		}
+
+		section {
+			overflow: hidden;
+			width: 35vmin;
+			height: 50vmin;
+
+			div {
+				display: flex;
+				flex-direction: column;
+				align-items: center;
+
+				select {
+					margin: 1.5vmin;
+					font-size: 1.5vmin;
+					width: 25vmin;
+					height: 3vmin;
+					border: 0.1vmin solid $color_2;
+					background: none;
+					color: $color_2;
+					padding-left: 0.3vmin;
+
+					optgroup, option {
+						color: black;
+					}
+
+					&:hover, &:focus {
+						border: 0.1vmin solid $color_1;
+						color: $color_1;
+					}
+				}
+
+				[disabled] {
+					opacity: 0.5;
+				}
+			}
+		}
+
+		h2 {
+			font-size: 2vmin;
+			font-weight: bold;
+			text-align: center;
+			padding: 2vmin;
+			color: $color_2;
+		}
+
+		label, h3 {
+			font-size: 1.4vmin;
+			text-align: center;
+			color: $color_2;
+		}
+
+		footer {
+			position: absolute;
+			display: inline-block;
+			bottom: 0;
+			width: 100%;
+			font-size: 1vmin;
+			padding: 0.5vmin 0.7vmin;
+			color: $color_2;
+			font-style: italic;
+			justify-content: space-around;
+			span {
+				a {
+					color: $color_2;
+					text-decoration: none;
+
+					&:hover {
+						text-decoration: underline;
+					}
+				}
+
+				&:nth-child(2) {
+					float: right;
+				}
+			}
+
+		}
+	}
 }
 
 #titles {
@@ -196,101 +339,6 @@ body {
 				}
 			}
 		}
-	}
-}
-
-:root {
-	--elementwidth: 100%;
-}
-
-
-#sidebar {
-	color: $color_2;
-	height: 100%;
-}
-
-.menu-btn {
-	width: 100%;
-	height: 3vmin;
-	font-size: 2.5vmin;
-	color: $color_2;
-	background-color: black;
-	line-height: 1.2em;
-	border: 0;
-
-	&:hover {
-		background-color: $background-color_3;
-		color: $color_3;
-	}
-}
-
-.fl {
-	float: left;
-}
-
-.w3 {
-	width: 3vmin;
-}
-
-#button-holder {
-	display: flex;
-}
-
-#menu-holder {
-	display: flex;
-	flex-direction: column;
-	height: 100%;
-	width: 22vmin;
-	padding: 0 1vw 0 1vw;
-
-	#menu {
-
-		flex-grow: 1;
-
-		.menu-header {
-			font-size: 2vmin;
-			font-weight: bold;
-			text-align: center;
-			padding: 1vh 0 0 0;
-			color: $color_2;
-		}
-
-		#submenu-1 {
-			font-size: 1.5vmin;
-			text-align: center;
-			color: $color_2;
-
-			label {
-				line-height: 2em;
-			}
-
-			select {
-				font-size: 1.2vmin;
-				background-color: $color_2;
-				border: 0;
-				width: 100%;
-				height: 2vmin;
-				padding-left: 0.5vmin;
-			}
-		}
-
-		#submenu-2 {
-			padding: 1vh 0 0 0;
-			font-size: 1.2vmin;
-			line-height: 1.5em;
-
-			input {
-				background-color: $color_2;
-				border: 0;
-			}
-
-		}
-	}
-
-	#footer {
-		font-size: 1vmin;
-		text-align: center;
-		padding-bottom: 1vh;
 	}
 }
 
