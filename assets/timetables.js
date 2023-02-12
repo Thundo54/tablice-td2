@@ -28,6 +28,14 @@ $(document).ready(function() {
         $('#menu').toggleClass('background-fade');
         $('#menu-button').toggleClass('rotate-button');
     });
+
+    $('#fullscr-button').click(function () {
+        if (!document.fullscreenElement) {
+            document.documentElement.requestFullscreen().then();
+        } else {
+            document.exitFullscreen().then();
+        }
+    });
 });
 
 $(window).resize(function() {
