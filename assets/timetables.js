@@ -22,6 +22,12 @@ $(document).ready(function() {
         loadTimetables(station, departure);
     }   , 50000);
     changeBoardType(departure);
+
+    $('#menu-button').click(function () {
+        $('#menu-box').toggleClass('slide-in');
+        $('#menu').toggleClass('background-fade');
+        $('#menu-button').toggleClass('rotate-button');
+    });
 });
 
 $(window).resize(function() {
@@ -366,14 +372,11 @@ function changeBoardType(isDeparture = true) {
     $('#container').css('color', containerColor);
 }
 
-// function displayMenu() {
-//     let menu = $('#menu-holder');
-//     if (menu.css('display') === 'none') {
-//         menu.css('display', 'flex');
-//     } else {
-//         menu.css('display', 'none');
-//     }
-// }
+
+function displayMenu() {
+   // let openButton = $('#open-button');
+   // $('#menu-box').toggleClass('slide-in');
+}
 // window.scenery = ""
 // function changeTimetables() {
 //     let option = $('#active-timetables option:selected').text();

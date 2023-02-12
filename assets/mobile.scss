@@ -1,12 +1,14 @@
 @media only screen and (hover: none) {
 	body {
 		#menu {
-			#menu-box {
-				#close-button {
-					font-size: 6vmin;
-					width: 6vmin;
-				}
+			#menu-button {
+				width: 8vmin;
+				height: 8vmin;
+				font-size: 5.5vmin;
+				line-height: 1.4em;
+			}
 
+			#menu-box {
 				section {
 					width: 65vmin;
 					height: 90vmin;

@@ -43,21 +43,38 @@ body {
 	height: 100%;
 	align-items: center;
 	justify-content: center;
-	//background-color: rgba(0, 0, 0, 0.3);
-	transition: background-color 1s;
+	overflow: hidden;
+	transition: background-color 0.6s;
+
+	&.background-fade {
+		background-color: rgba(0, 0, 0, 0.4);
+	}
 
 	#menu-button {
 		position: absolute;
 		top: 0;
 		right: 0;
-		width: 3vmin;
-		font-size: 2.5vmin;
+		font-size: 3vmin;
+		width: 4vmin;
+		height: 4vmin;
 		color: $color_2;
 		line-height: 1.2em;
+		transition: transform 1s cubic-bezier(0, 0, 0, 1);
 
 		&:hover {
-			background-color: $background-color_3;
-			color: $background-color_1;
+			color: $color_1;
+		}
+
+		&:disabled {
+			color: #111;
+		}
+
+		&:after {
+			content: "☰";
+		}
+
+		&.rotate-button {
+			transform: rotate(90deg);
 		}
 	}
 
@@ -66,21 +83,10 @@ body {
 		position: relative;
 		background-color: #111;
 		box-shadow: 0 0 2.5vmin 0 rgba(0, 0, 0, 0.5);
+		transition: transform 1s cubic-bezier(0, 0, 0, 1);
 
-		#close-button {
-			position: absolute;
-			right: 0;
-			width: 2.5vmin;
-			font-size: 2.5vmin;
-			color: $color_2;
-
-			&:hover {
-				color: $color_1;
-			}
-
-			&:after {
-				content: "×";
-			}
+		&.slide-in {
+			transform: translate3d(0, 150%, 0);
 		}
 
 		.vertical-line {
@@ -118,6 +124,10 @@ body {
 						border: 0.1vmin solid $color_1;
 						color: $color_1;
 					}
+				}
+
+				[disabled] {
+					opacity: 0.5;
 				}
 			}
 		}

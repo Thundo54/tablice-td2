@@ -13,17 +13,16 @@
     </head>
     <body>
         <div id="menu">
-            <button id="menu-button" onclick="displayMenu()">☰</button>
-            <div id="menu-box">
-                <button id="close-button" onclick=""></button>
+            <button id="menu-button"></button>
+            <div id="menu-box" class="slide-in">
                 <section>
                     <div>
                         <h2>TABLICE STACYJNE</h2>
                         <div>
                             <label for="sceneries">Stacja / Przystanek</label>
                             <select id="sceneries">
-                                <optgroup label="**AKTYWNE ROZKŁADY PL**" id="active-timetables"></optgroup>
-                                <option>Bielsko-Biała Komorowice</option>
+                                <optgroup label="**AKTYWNE ROZKŁADY PL**" id="active-timetables">
+                                </optgroup>
                             </select>
                         </div>
                         <div>
@@ -33,7 +32,7 @@
                                 <option>Przyjazdy</option>
                             </select>
                         </div>
-                        <div class="disable">
+                        <div disabled>
                             <label for="timetable-type">Serwer TD2</label>
                             <select id="timetable-type">
                                 <option>PL1</option>
