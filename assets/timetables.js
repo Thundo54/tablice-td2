@@ -367,17 +367,17 @@ function changeBoardType(isDeparture = true) {
         titlePL = 'Odjazdy';
         titleEN = 'Departures';
         description = 'Do<br><i>Destination</i>';
-        containerColor = '#FFD200';
+        containerColor = 'yellow-text';
     } else {
         titlePL = 'Przyjazdy';
         titleEN = 'Arrivals';
         description = 'Z<br><i>From</i>';
-        containerColor = '#F0F8FF';
+        containerColor = 'white-text';
     }
     $('.title-pl').text(titlePL);
     $('.title-en').text(titleEN);
     $('#labels table th:nth-child(3)').html(description);
-    $('#container').css('color', containerColor);
+    $('#container').removeClass().addClass(containerColor);
 }
 
 

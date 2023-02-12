@@ -34,6 +34,14 @@ body {
 	color: $color_1;
 	margin: 0 3vmin 3vmin 3vmin;
 	overflow: hidden;
+
+	&.yellow-text {
+		color: $color_1;
+	}
+
+	&.white-text {
+		color: $color_2;
+	}
 }
 
 #menu {
