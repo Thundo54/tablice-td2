@@ -50,24 +50,25 @@ body {
 		background-color: rgba(0, 0, 0, 0.4);
 	}
 
-	#menu-button {
+
+	#menu-button, #fullscr-button {
 		position: absolute;
-		top: 0;
 		right: 0;
 		font-size: 3vmin;
 		width: 4vmin;
 		height: 4vmin;
 		color: $color_2;
 		line-height: 1.2em;
-		transition: transform 1s cubic-bezier(0, 0, 0, 1);
+		transition: transform 1s cubic-bezier(0, 0, 0, 1), color 0.2s;
 
 		&:hover {
 			color: $color_1;
 		}
 
-		&:disabled {
-			color: #111;
-		}
+	}
+
+	#menu-button {
+		top: 0;
 
 		&:after {
 			content: "☰";
@@ -78,15 +79,23 @@ body {
 		}
 	}
 
+	#fullscr-button {
+		top: 3.2vmin;
+
+		&:after {
+			content: "⛶";
+		}
+	}
+
 	#menu-box {
 		display: flex;
 		position: relative;
 		background-color: #111;
 		box-shadow: 0 0 2.5vmin 0 rgba(0, 0, 0, 0.5);
-		transition: transform 1s cubic-bezier(0, 0, 0, 1);
+		transition: transform 1.4s cubic-bezier(0, 0, 0, 1);
 
 		&.slide-in {
-			transform: translate3d(0, 150%, 0);
+			transform: translate3d(0, 100vh, 0) scale(0.6);
 		}
 
 		.vertical-line {
@@ -285,7 +294,7 @@ body {
 				width: 7%;
 			}
 		}
-
+//⛶
 		.special-row {
 			background-color: $background-color_3;
 			color: $color_3;
