@@ -36,6 +36,8 @@ $(document).ready(function() {
     });
 
     $('#fullscr-button').click(function () {
+        $('#fullscr-button').toggleClass('resize-button');
+        setTimeout(function() { $('#fullscr-button').toggleClass('resize-button'); }, 200);
         if (!document.fullscreenElement) {
             document.documentElement.requestFullscreen().then();
         } else {
