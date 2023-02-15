@@ -29,6 +29,12 @@ $(document).ready(function() {
         $('#menu-button').toggleClass('rotate-button');
     });
 
+    $('#borderless-button').click(function () {
+        $('#container').toggleClass('no-margin');
+        $('#borderless-button').toggleClass('rotate-button');
+        setTimeout(function() { $('#borderless-button').toggleClass('rotate-button'); }, 300);
+    });
+
     $('#fullscr-button').click(function () {
         if (!document.fullscreenElement) {
             document.documentElement.requestFullscreen().then();

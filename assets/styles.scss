@@ -59,7 +59,7 @@ body {
 	}
 
 
-	#menu-button, #fullscr-button {
+	#menu-button, #fullscr-button, #borderless-button {
 		position: absolute;
 		right: 0;
 		font-size: 3vmin;
@@ -82,9 +82,6 @@ body {
 			content: "☰";
 		}
 
-		&.rotate-button {
-			transform: rotate(90deg);
-		}
 	}
 
 	#fullscr-button {
