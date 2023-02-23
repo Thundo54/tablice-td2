@@ -65,7 +65,7 @@ body {
 	}
 
 
-	#menu-button, #fullscr-button, #borderless-button {
+	#menu-button, #fullscr-button, #type-button {
 		position: absolute;
 		right: 0;
 		font-size: 3vmin;
@@ -79,12 +79,16 @@ body {
 			color: $color_1;
 		}
 
-		&.rotate-button {
+		&.rotate-button-left {
+			transform: rotate(-90deg);
+		}
+
+		&.rotate-button-right {
 			transform: rotate(90deg);
 		}
 
 		&.resize-button {
-			transform: scale(1.6);
+			transform: scale(1.2);
 		}
 	}
 
@@ -97,19 +101,19 @@ body {
 
 	}
 
-	#fullscr-button {
-		top: 3.2vmin;
-
-		&:after {
-			content: "⛶";
-		}
-	}
-
-	#borderless-button {
-		top: 6.4vmin;
+	#type-button {
+		top: 3.25vmin;
 
 		&:after {
 			content: "⮀";
+		}
+	}
+
+	#fullscr-button {
+		top: 6.5vmin;
+
+		&:after {
+			content: "⛶";
 		}
 	}
 
