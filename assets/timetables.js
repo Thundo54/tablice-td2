@@ -124,6 +124,7 @@ function loadTimetables(station, isDeparture = true) {
                 trainSet[i]['delay'],
                 isDeparture,
                 trainSet[i]['beginsTerminatesHere'],
+                trainSet[i]['stoppedHere']
             ));
     }
     refreshTimetablesAnim();

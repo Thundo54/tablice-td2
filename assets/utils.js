@@ -20,10 +20,14 @@ export function splitRoute(string) {
     return stations;
 }
 
-export function createRemark (delay = 0, isDeparture = true, beginsTerminatesHere = false) {
+export function createRemark(delay = 0, isDeparture, beginsTerminatesHere, isStopped) {
     // Można dodać przełącznik który będzie pokazywał opóźnienie jeśli pociąg kończy bieg
     if (delay > 0) {
-        return `Opóźniony ${delay}min/delayed ${delay}min/verspätung ${delay}min`;
+        if (isStopped) {
+            return `Pociąg został zatrzymany na trasie/train has been stopped on route/der Zug wurde auf der Strecke angehalten`;
+        } else {
+            return `Opóźniony o ${delay}min/delayed ${delay}min/verspätung ${delay}min`;
+        }
         // if (trainNo !== 0) {
         //     console.log(`Zmieniono opóźnienie pociągu ${trainNo} na ${delay}min`);
         // }
