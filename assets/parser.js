@@ -28,6 +28,7 @@ export function parseTimetable(station, isDeparture = true) {
                     train['delay'] = data[i]['timetable']['stopList'][j]['arrivalDelay'];
                     train['stationFromTo'] = splitRoute(data[i]['timetable']['route'])[0];
                 }
+                train['stoppedHere'] = data[i]['timetable']['stopList'][j]['stopped'];
             }
         }
 
