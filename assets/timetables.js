@@ -3,6 +3,7 @@ import * as utils from "./utils.js";
 window.trainsSetBefore = [];
 window.station = '';
 window.timetableType = true;
+window.dataAsJson = null;
 
 $(document).ready(function() {
     let urlParams = new URLSearchParams(window.location.search);
@@ -17,13 +18,14 @@ $(document).ready(function() {
         changeBoardType(timetableType);
     }
 
+    parser.getTimetables();
+    setInterval(function() {
+        parser.getTimetables();
+    }, 50000);
+
     if (urlParams.get('station') !== null) {
         window.station = urlParams.get('station');
-        loadTimetables(station, timetableType);
-        setInterval(function() {
-            loadTimetables(station, timetableType);
-            console.log('Timetables refreshed', station, timetableType);
-        }, 50000);
+        createTimetableInterval();
     }
 
     $('#menu-button').click(function () {
@@ -64,6 +66,16 @@ $(window).resize(function() {
        refreshTimetablesAnim();
     }, 250);
 });
+
+function createTimetableInterval() {
+    clearInterval(window.timetableInterval);
+    setTimeout(function() {
+            loadTimetables(station, timetableType);
+    }, 500);
+    window.timetableInterval = setInterval(function() {
+        loadTimetables(station, timetableType);
+    }, 30000);
+}
 
 function loadTimetables(station, isDeparture = true) {
     let trainsSetBefore = window.trainsSetBefore;
