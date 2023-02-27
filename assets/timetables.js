@@ -41,6 +41,14 @@ $(document).ready(function() {
         $('#menu').toggleClass('background-fade');
         $('#menu-box').toggleClass('slide-in');
         $('#menu-button').toggleClass('rotate-button-right');
+        $('#close-box').toggleClass('active');
+    });
+
+    $('#close-box').click(function () {
+        $('#close-box').toggleClass('active');
+        $('#menu').toggleClass('background-fade');
+        $('#menu-box').toggleClass('slide-in');
+        $('#menu-button').toggleClass('rotate-button-right');
     });
 
     $('#type-button').click(function () {

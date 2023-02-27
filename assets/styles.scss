@@ -65,7 +65,18 @@ body {
 	}
 
 
+	#close-box {
+		position: fixed;
+		z-index: 3;
+
+		&.active {
+			width: 100vw;
+			height: 100vh;
+		}
+	}
+
 	#menu-button, #fullscr-button, #type-button {
+		z-index: 4;
 		position: absolute;
 		right: 0;
 		font-size: 3vmin;
@@ -118,6 +129,7 @@ body {
 	}
 
 	#menu-box {
+		z-index: 4;
 		display: flex;
 		position: relative;
 		background-color: #111;
