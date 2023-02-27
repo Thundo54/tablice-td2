@@ -8,12 +8,16 @@
 				line-height: 1.4em;
 			}
 
-			#fullscr-button {
+			#type-button {
 				width: 8vmin;
 				height: 8vmin;
 				font-size: 5.5vmin;
 				line-height: 1.4em;
-				top: 6vmin;
+				top: 6.5vmin;
+			}
+
+			#fullscr-button {
+				display: none;
 			}
 
 			#menu-box {
