@@ -185,20 +185,25 @@ export function refreshTimetablesAnim() {
 }
 
 function changeBoardType(timeTableType) {
-    let titlePL, titleEN, description, containerColor;
+    let titlePL, titleEN, description, isDeparture = false
+    let container = $('#container');
+    $('#timetables table tr').remove();
     if (timeTableType) {
         titlePL = 'Odjazdy';
         titleEN = 'Departures';
         description = 'Do<br><i>Destination</i>';
-        containerColor = 'yellow-text';
+        isDeparture = true;
     } else {
         titlePL = 'Przyjazdy';
         titleEN = 'Arrivals';
         description = 'Z<br><i>From</i>';
-        containerColor = 'white-text';
     }
     $('.title-pl').text(titlePL);
     $('.title-en').text(titleEN);
     $('#labels table th:nth-child(3)').html(description);
-    $('#container').removeClass().addClass(containerColor);
+    if (!isDeparture) {
+        container.addClass('white-text');
+    } else {
+        container.removeClass('white-text');
+    }
 }
