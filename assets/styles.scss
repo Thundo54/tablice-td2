@@ -75,7 +75,7 @@ body {
 		}
 	}
 
-	#menu-button, #fullscr-button, #type-button {
+	#menu-button, #margin-button, #type-button {
 		z-index: 4;
 		position: absolute;
 		right: 0;
@@ -120,7 +120,7 @@ body {
 		}
 	}
 
-	#fullscr-button {
+	#margin-button {
 		top: 6.5vmin;
 
 		&:after {

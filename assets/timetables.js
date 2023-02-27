@@ -64,9 +64,9 @@ $(document).ready(function() {
         }
     });
 
-    $('#fullscr-button').click(function () {
-        $('#fullscr-button').toggleClass('resize-button');
-        setTimeout(function() { $('#fullscr-button').toggleClass('resize-button'); }, 350);
+    $('#margin-button').click(function () {
+        $('#margin-button').toggleClass('resize-button');
+        setTimeout(function() { $('#margin-button').toggleClass('resize-button'); }, 350);
         // if (!document.fullscreenElement) {
         //     document.documentElement.requestFullscreen().then();
         // } else {
