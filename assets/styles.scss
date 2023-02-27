@@ -157,6 +157,11 @@ body {
 
 					optgroup, option {
 						color: black;
+						text-align: left;
+					}
+
+					optgroup {
+						text-align: center;
 					}
 
 					&:hover, &:focus {

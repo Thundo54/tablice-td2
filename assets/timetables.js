@@ -1,9 +1,12 @@
 import * as parser from "./parser.js";
 import * as utils from "./utils.js";
 window.trainsSetBefore = [];
+window.stationsSet = [];
 window.station = '';
 window.timetableType = true;
-window.dataAsJson = null;
+window.timetablesAsJson = null;
+window.stationDataAsJson = null;
+window.activeStationsAsJson = null;
 
 $(document).ready(function() {
     let urlParams = new URLSearchParams(window.location.search);
@@ -18,10 +21,17 @@ $(document).ready(function() {
         changeBoardType(timetableType);
     }
 
+    parser.getStationsData();
     parser.getTimetables();
+    parser.getActiveStations();
+
     setInterval(function() {
         parser.getTimetables();
     }, 50000);
+
+    setInterval(function() {
+        parser.getActiveStations();
+    }, Math.floor(Math.random() * (90000 - 60000 + 1)) + 60000);
 
     if (urlParams.get('station') !== null) {
         window.station = urlParams.get('station');
@@ -58,6 +68,17 @@ $(document).ready(function() {
         // }
         $('#container').toggleClass('no-margin');
     });
+
+    $('#sceneries').change(function() {
+        parser.refreshCheckpointsList();
+        window.station = $('#checkpoints option').val();
+        createTimetableInterval();
+    });
+
+    $('#checkpoints').change(function() {
+        window.station = $(this).val();
+        createTimetableInterval();
+    });
 });
 
 $(window).resize(function() {
@@ -69,11 +90,13 @@ $(window).resize(function() {
 
 function createTimetableInterval() {
     clearInterval(window.timetableInterval);
+    $('#timetables table tr').remove();
     setTimeout(function() {
-            loadTimetables(station, timetableType);
+        loadTimetables(station, timetableType);
     }, 500);
     window.timetableInterval = setInterval(function() {
         loadTimetables(station, timetableType);
+        parser.refreshSceneriesList();
     }, 30000);
 }
 
