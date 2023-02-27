@@ -1,5 +1,3 @@
-//import {refreshTimetablesAnim} from "./timetables";
-
 export function capitalizeFirstLetter(string) {
     if (string === string.toUpperCase()) {
         let output = '';

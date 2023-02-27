@@ -10,7 +10,7 @@ export function parseTimetable(station, isDeparture = true) {
             if (data[i]['timetable']['stopList'][j]['stopType'].includes('ph')) {
                 stopList.push(capitalizeFirstLetter(data[i]['timetable']['stopList'][j]['stopNameRAW'].split(',')[0]));
             }
-            if (capitalizeFirstLetter(data[i]['timetable']['stopList'][j]['stopNameRAW']) === station) {
+            if (capitalizeFirstLetter(data[i]['timetable']['stopList'][j]['stopNameRAW']) === capitalizeFirstLetter(station)) {
                 if (!data[i]['timetable']['stopList'][j]['terminatesHere']
                     && !data[i]['timetable']['stopList'][j]['beginsHere']) {
                     if (!data[i]['timetable']['stopList'][j]['stopType'].includes('ph')) {
