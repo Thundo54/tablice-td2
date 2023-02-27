@@ -10,7 +10,7 @@
         <link rel="stylesheet" href="assets/reset.min.css"/>
         <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover"/>
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
-        <script type="module" src="assets/timetables.min.js"></script>
+        <script type="module" src="assets/timetables.js"></script>
     </head>
     <body>
         <div id="menu">
@@ -22,17 +22,17 @@
                     <div>
                         <h2>TABLICE STACYJNE</h2>
                         <div>
-                            <label for="sceneries">Stacja / Przystanek</label>
+                            <label for="sceneries">Sceneria</label>
                             <select id="sceneries">
-                                <optgroup label="**AKTYWNE ROZKŁADY PL**" id="active-timetables">
+                                <optgroup label="AKTYWNE SCENERIE" id="active-sceneries">
+                                </optgroup>
+                                <optgroup label="POZOSTAŁE SCENERIE" id="other-sceneries">
                                 </optgroup>
                             </select>
                         </div>
                         <div>
-                            <label for="table-type">Typ tablicy</label>
-                            <select id="table-type">
-                                <option>Odjazdy</option>
-                                <option>Przyjazdy</option>
+                            <label for="checkpoints">Posterunek</label>
+                            <select id="checkpoints">
                             </select>
                         </div>
                         <div disabled>
