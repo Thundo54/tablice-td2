@@ -3,7 +3,7 @@ import * as utils from "./utils.js";
 window.trainsSetBefore = [];
 window.stationsSet = [];
 window.station = '';
-window.timetableType = true;
+window.isDeparture = true
 window.timetablesAsJson = null;
 window.stationDataAsJson = null;
 window.activeStationsAsJson = null;
@@ -11,13 +11,13 @@ window.activeStationsAsJson = null;
 $(document).ready(function() {
     let urlParams = new URLSearchParams(window.location.search);
     if (urlParams.get('type') !== null) {
-        window.timetableType = true;
+        window.isDeparture = true;
         if (urlParams.get('type') !== 'departure' && urlParams.get('type') !== 'arrival') {
-            window.timetableType = true;
+            window.isDeparture = true;
         } else if (urlParams.get('type') === 'arrival') {
-            window.timetableType = false;
+            window.isDeparture = false;
         }
-        changeBoardType(timetableType);
+        changeBoardType(isDeparture);
     }
 
     parser.getStationsData();
@@ -44,11 +44,10 @@ $(document).ready(function() {
     });
 
     $('#type-button').click(function () {
-        window.timetableType = !window.timetableType;
-        changeBoardType(timetableType);
-        $('#timetables table tr').remove();
-        loadTimetables(station, timetableType);
-        if (window.timetableType) {
+        window.isDeparture = !window.isDeparture;
+        changeBoardType(isDeparture);
+        loadTimetables(station, isDeparture);
+        if (window.isDeparture) {
             $('#type-button').toggleClass('rotate-button-left');
             setTimeout(function() { $('#type-button').toggleClass('rotate-button-left'); }, 350);
         } else {
@@ -91,10 +90,10 @@ function createTimetableInterval() {
     clearInterval(window.timetableInterval);
     $('#timetables table tr').remove();
     setTimeout(function() {
-        loadTimetables(station, timetableType);
+        loadTimetables(station, isDeparture);
     }, 500);
     window.timetableInterval = setInterval(function() {
-        loadTimetables(station, timetableType);
+        loadTimetables(station, isDeparture);
         parser.refreshSceneriesList();
     }, 30000);
 }
