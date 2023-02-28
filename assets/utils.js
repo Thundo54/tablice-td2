@@ -1,12 +1,26 @@
+//add it to api (to be able to make changes in the future)
+let namesCorrections = {
+    'BB': 'Bielsko-Biała',
+    'Maz.': 'Mazowiecki',
+}
+function correctNames(name) {
+    for (let key in namesCorrections) {
+        if (name.includes(key)) {
+            return name.replace(key, namesCorrections[key]);
+        }
+    }
+    return name;
+}
+
 export function capitalizeFirstLetter(string) {
     if (string === string.toUpperCase()) {
         let output = '';
         string.split(' ').forEach((element) => {
             output += element.charAt(0).toUpperCase() + element.slice(1).toLowerCase() + ' '
         });
-        return output.slice(0, -1);
+        return correctNames(output.slice(0, -1));
     } else {
-        return string;
+        return correctNames(string);
     }
 }
 
