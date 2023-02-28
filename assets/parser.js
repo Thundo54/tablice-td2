@@ -57,6 +57,7 @@ function generateStationsList() {
     let stationsSet = [], station = {};
     stationsData.forEach((stationData) => {
         if (stationData['availability'] === 'abandoned') { return; }
+        if (stationData['availability'] === 'unavailable') { return; }
 
         station['name'] = stationData['name'];
         station['isActive'] = false;
@@ -135,9 +136,9 @@ export function refreshCheckpointsList() {
 
 export function getTimetables() {
     $.ajax({
-        url: 'https://spythere.pl/api/getActiveTrainList',
+        //url: 'https://spythere.pl/api/getActiveTrainList',
         dataType: 'json',
-        //url: 'https://gist.githubusercontent.com/Thundo54/bba89c9eba39921844eec0013c9c1c40/raw/96b70b491f68d7400b5ac11fce8d54f226f4047c/gistfile1.txt',
+        url: 'https://gist.githubusercontent.com/Thundo54/bba89c9eba39921844eec0013c9c1c40/raw/96b70b491f68d7400b5ac11fce8d54f226f4047c/gistfile1.txt',
         //url: 'https://gist.githubusercontent.com/Thundo54/8f66268e1b36bdf92b40f26e50f652dc/raw/090f14935868e814ff071363b6b90ca0fb7849f6/gistfile1.txt',
         success: [
             (response) => {
