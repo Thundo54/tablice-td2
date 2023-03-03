@@ -38,7 +38,7 @@ export function createRemark(delay = 0, isDeparture, beginsTerminatesHere, isSto
         if (isStopped) {
             return `Pociąg został zatrzymany na trasie/train has been stopped on route/der Zug wurde auf der Strecke angehalten`;
         } else {
-            return `Opóźniony o ${delay}min/delayed ${delay}min/verspätung ${delay}min`;
+            return `Opóźniony ${delay}min/delayed ${delay}min/verspätung ${delay}min`;
         }
         // if (trainNo !== 0) {
         //     console.log(`Zmieniono opóźnienie pociągu ${trainNo} na ${delay}min`);
