@@ -98,8 +98,12 @@ body {
 			transform: rotate(90deg);
 		}
 
-		&.resize-button {
+		&.resize-button-up {
 			transform: scale(1.2);
+		}
+
+		&.resize-button-down {
+			transform: scale(0.8);
 		}
 	}
 
