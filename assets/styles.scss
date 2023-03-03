@@ -31,7 +31,7 @@ body {
 #container {
 	display: flex;
 	flex-flow: column;
-	color: $color_1;
+	color: $background-color_1;
 	margin: 0 3vmin 3vmin 3vmin;
 	overflow: hidden;
 	transition: margin 1s cubic-bezier(0, 0, 0, 1);
@@ -216,9 +216,11 @@ body {
 				a {
 					color: $color_2;
 					text-decoration: none;
+					transition: 0.5s;
 
 					&:hover {
-						text-decoration: underline;
+						color: $color_1;
+
 					}
 				}
 
