@@ -3,22 +3,28 @@ import * as utils from "./utils.js";
 window.trainsSetBefore = [];
 window.stationsSet = [];
 window.station = '';
-window.isDeparture = true
+window.isDeparture = localStorage.getItem('isDeparture') === 'true';
+window.isMargin = localStorage.getItem('isMargin') === 'true';
 window.timetablesAsJson = null;
 window.stationDataAsJson = null;
 window.activeStationsAsJson = null;
 
 $(document).ready(function() {
     let urlParams = new URLSearchParams(window.location.search);
-    if (urlParams.get('type') !== null) {
-        window.isDeparture = true;
-        if (urlParams.get('type') !== 'departure' && urlParams.get('type') !== 'arrival') {
+    if (urlParams.get('timetables') !== null) {
+        if (urlParams.get('timetables') === 'departure') {
             window.isDeparture = true;
-        } else if (urlParams.get('type') === 'arrival') {
-            window.isDeparture = false;
+        } else {
+            window.isDeparture = urlParams.get('timetables') !== 'arrival';
         }
-        changeBoardType(isDeparture);
     }
+
+    if (urlParams.get('margin') !== null) {
+        window.isMargin = urlParams.get('margin') === 'true';
+    }
+
+    changeBoardType();
+    switchMargin();
 
     parser.getStationsData();
     parser.getTimetables();
@@ -53,6 +59,7 @@ $(document).ready(function() {
 
     $('#type-button').click(function () {
         window.isDeparture = !window.isDeparture;
+        localStorage.setItem('isDeparture', window.isDeparture);
         changeBoardType(isDeparture);
         loadTimetables(station, isDeparture);
         if (window.isDeparture) {
@@ -65,14 +72,25 @@ $(document).ready(function() {
     });
 
     $('#margin-button').click(function () {
-        $('#margin-button').toggleClass('resize-button');
-        setTimeout(function() { $('#margin-button').toggleClass('resize-button'); }, 350);
+        let marginButton = $('#margin-button');
+        window.isMargin = !window.isMargin;
+        localStorage.setItem('isMargin', window.isMargin);
+        if (!isMargin) {
+            marginButton.toggleClass('resize-button-up');
+            setTimeout(function() { marginButton.toggleClass('resize-button-up'); }, 350);
+        } else {
+             marginButton.toggleClass('resize-button-down');
+            setTimeout(function() { marginButton.toggleClass('resize-button-down'); }, 350);
+        }
+        switchMargin();
+        //$('#margin-button').toggleClass('resize-button');
+        //setTimeout(function() { $('#margin-button').toggleClass('resize-button'); }, 350);
         // if (!document.fullscreenElement) {
         //     document.documentElement.requestFullscreen().then();
         // } else {
         //     document.exitFullscreen().then();
         // }
-        $('#container').toggleClass('no-margin');
+        //$('#container').toggleClass('no-margin');
     });
 
     $('#sceneries').change(function() {
@@ -93,6 +111,15 @@ $(window).resize(function() {
        refreshTimetablesAnim();
     }, 250);
 });
+
+function switchMargin() {
+    let container = $('#container');
+    if (!window.isMargin) {
+        container.addClass('no-margin');
+    } else {
+        container.removeClass('no-margin');
+    }
+}
 
 function createTimetableInterval() {
     clearInterval(window.timetableInterval);
@@ -191,11 +218,11 @@ export function refreshTimetablesAnim() {
     }
 }
 
-function changeBoardType(timeTableType) {
+function changeBoardType() {
     let titlePL, titleEN, description, isDeparture = false
     let container = $('#container');
     $('#timetables table tr').remove();
-    if (timeTableType) {
+    if (window.isDeparture) {
         titlePL = 'Odjazdy';
         titleEN = 'Departures';
         description = 'Do<br><i>Destination</i>';
@@ -210,7 +237,9 @@ function changeBoardType(timeTableType) {
     $('#labels table th:nth-child(3)').html(description);
     if (!isDeparture) {
         container.addClass('white-text');
+        container.removeClass('yellow-text');
     } else {
+        container.addClass('yellow-text');
         container.removeClass('white-text');
     }
 }
