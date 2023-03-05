@@ -24,6 +24,7 @@ gulp.task('build:html', function () {
         .pipe(replace('timetables.js', 'timetables.min.js'))
         .pipe(replace('src/', 'assets/'))
         .pipe(replace('public/', ''))
+        .pipe(replace('.css', '.min.css'))
         .pipe(gulp.dest('public'));
 });
 
