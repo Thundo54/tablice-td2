@@ -97,13 +97,14 @@ export function refreshIds() {
 }
 
 export function convertCategory(category) {
-    if (category.startsWith('E')) {
-        return 'IC';
-    } else if (category.startsWith('M')) {
-        return 'TLK';
-    } else {
-        return 'R';
-    }
+    //if (category.startsWith('E')) {
+    //    return 'IC';
+    //} else if (category.startsWith('M')) {
+    //    return 'TLK';
+    //} else {
+    //    return 'R';
+    //}
+    return category;
 }
 
 export function convertTime (time) {
