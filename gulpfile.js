@@ -27,4 +27,4 @@ gulp.task('build:html', function () {
         .pipe(gulp.dest('public'));
 });
 
-gulp.task('build', gulp.parallel('build:css', 'build:js', 'build:html'));
+gulp.task('build:sts', gulp.parallel('build:css', 'build:js', 'build:html'));
