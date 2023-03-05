@@ -1,7 +1,7 @@
 name: Build and deploy to Firebase
 
 on:
-  merge:
+  push:
     branches:
       - master
 
