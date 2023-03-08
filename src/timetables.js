@@ -24,7 +24,7 @@ $(document).ready(function() {
     }
 
     changeBoardType();
-    switchMargin();
+    toggleMargin();
 
     parser.getStationsData();
     parser.getTimetables();
@@ -44,17 +44,11 @@ $(document).ready(function() {
     }
 
     $('#menu-button').click(function () {
-        $('#menu').toggleClass('background-fade');
-        $('#menu-box').toggleClass('slide-in');
-        $('#menu-button').toggleClass('rotate-button-right');
-        $('#close-box').toggleClass('active');
+        toggleMenu();
     });
 
     $('#close-box').click(function () {
-        $('#close-box').toggleClass('active');
-        $('#menu').toggleClass('background-fade');
-        $('#menu-box').toggleClass('slide-in');
-        $('#menu-button').toggleClass('rotate-button-right');
+        toggleMenu();
     });
 
     $('#type-button').click(function () {
@@ -82,7 +76,7 @@ $(document).ready(function() {
              marginButton.toggleClass('resize-button-down');
             setTimeout(function() { marginButton.toggleClass('resize-button-down'); }, 350);
         }
-        switchMargin();
+        toggleMargin();
         //$('#margin-button').toggleClass('resize-button');
         //setTimeout(function() { $('#margin-button').toggleClass('resize-button'); }, 350);
         // if (!document.fullscreenElement) {
@@ -112,13 +106,20 @@ $(window).resize(function() {
     }, 250);
 });
 
-function switchMargin() {
+function toggleMargin() {
     let container = $('#container');
     if (!window.isMargin) {
         container.addClass('no-margin');
     } else {
         container.removeClass('no-margin');
     }
+}
+
+function toggleMenu() {
+    $('#close-box').toggleClass('active');
+    $('#menu').toggleClass('background-fade');
+    $('#menu-box').toggleClass('slide-in');
+    $('#menu-button').toggleClass('rotate-button-right');
 }
 
 function createTimetableInterval() {

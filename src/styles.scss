@@ -87,60 +87,63 @@ body {
 		}
 	}
 
-	#menu-button, #margin-button, #type-button {
+	#button-box {
 		z-index: 4;
 		position: absolute;
 		right: 0;
-		font-size: 3vmin;
-		width: 4vmin;
-		height: 4vmin;
-		color: $color_2;
-		line-height: 1.2em;
-		transition: transform 1s cubic-bezier(0, 0, 0, 1), color 0.3s;
-
-		&:hover {
-			color: $color_1;
-		}
-
-		&.rotate-button-left {
-			transform: rotate(-90deg);
-		}
-
-		&.rotate-button-right {
-			transform: rotate(90deg);
-		}
-
-		&.resize-button-up {
-			transform: scale(1.2);
-		}
-
-		&.resize-button-down {
-			transform: scale(0.8);
-		}
-	}
-
-	#menu-button {
 		top: 0;
+		font-size: 3vmin;
+		display: flex;
+		flex-direction: column;
+		gap: 0.2vmin;
+		padding: 0.5vmin;
 
-		&:after {
-			content: "☰";
+		&.hidden {
+			display: none;
 		}
 
-	}
+		button {
+			color: $color_2;
+			transition: transform 0.8s cubic-bezier(0, 0, 0, 1), color 0.3s;
+			transform-origin: 50% 48%;
 
-	#type-button {
-		top: 3.25vmin;
+			&:hover {
+				color: $color_1;
+			}
 
-		&:after {
-			content: "⮀";
+			&.rotate-button-left {
+				transform: rotate(-90deg);
+			}
+
+			&.rotate-button-right {
+				transform: rotate(90deg);
+			}
+
+			&.resize-button-up {
+				transform: scale(1.2);
+			}
+
+			&.resize-button-down {
+				transform: scale(0.8);
+			}
 		}
-	}
 
-	#margin-button {
-		top: 6.5vmin;
+		#menu-button {
+			&:after {
+				content: "☰";
+			}
+		}
 
-		&:after {
-			content: "⛶";
+		#type-button {
+			&:before {
+				content: "⮀";
+			}
+		}
+
+		#margin-button {
+			&:after {
+				content: "⛶";
+			}
 		}
 	}
 
@@ -359,7 +362,7 @@ body {
 				width: 7%;
 			}
 		}
-//⛶
+
 		.special-row {
 			background-color: $background-color_3;
 			color: $color_3;
