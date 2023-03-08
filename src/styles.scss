@@ -36,8 +36,20 @@ body {
 	overflow: hidden;
 	transition: margin 1s cubic-bezier(0, 0, 0, 1);
 
+	#inner-description, #titles {
+		transition: padding 1s cubic-bezier(0, 0, 0, 1);
+	}
+
 	&.no-margin {
 		margin: 0;
+
+		#inner-description {
+			padding-right: 1.5vmin;
+		}
+
+		#titles {
+			padding-left: 1.5vmin;
+		}
 	}
 
 	&.yellow-text {
