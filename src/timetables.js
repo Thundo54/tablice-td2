@@ -97,6 +97,26 @@ $(document).ready(function() {
         window.station = $(this).val();
         createTimetableInterval();
     });
+
+    $(document).bind('keydown', function(e) {
+        if (e.which === 121) {
+            e.preventDefault();
+            $('#button-box').toggleClass('hidden');
+        } else if (e.which === 70) {
+            e.preventDefault();
+            toggleMenu();
+        } else if (e.which === 68) {
+            e.preventDefault();
+            $('#type-button').click();
+        }
+
+        if (e.which === 27) {
+            e.preventDefault();
+            if (!$('#menu-box').hasClass('slide-in')) {
+                toggleMenu();
+            }
+        }
+    });
 });
 
 $(window).resize(function() {
