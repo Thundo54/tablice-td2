@@ -153,10 +153,10 @@ body {
 		position: relative;
 		background-color: #111;
 		box-shadow: 0 0 2.5vmin 0 rgba(0, 0, 0, 0.5);
-		transition: transform 1.2s cubic-bezier(0, 0, 0, 1);
+		transition: transform 0.6s cubic-bezier(0, 0, 0, 1);
 
 		&.slide-in {
-			transform: translate3d(0, 100vh, 0) scale(0.8);
+			transform: translate3d(0, 200%, 0) scale(0.8);
 		}
 
 		.vertical-line {
