@@ -52,23 +52,24 @@ $(document).ready(function() {
     });
 
     $('#type-button').click(function () {
-        window.isDeparture = !window.isDeparture;
-        localStorage.setItem('isDeparture', window.isDeparture);
+        let typeButton = $('#type-button');
+        window.isDeparture = !isDeparture;
+        localStorage.isDeparture = isDeparture;
         changeBoardType(isDeparture);
         loadTimetables(station, isDeparture);
-        if (window.isDeparture) {
-            $('#type-button').toggleClass('rotate-button-left');
-            setTimeout(function() { $('#type-button').toggleClass('rotate-button-left'); }, 350);
+        if (isDeparture) {
+            typeButton.toggleClass('rotate-button-left');
+            setTimeout(function() { typeButton.toggleClass('rotate-button-left'); }, 400);
         } else {
-            $('#type-button').toggleClass('rotate-button-right');
-            setTimeout(function() { $('#type-button').toggleClass('rotate-button-right'); }, 350);
+            typeButton.toggleClass('rotate-button-right');
+            setTimeout(function() { typeButton.toggleClass('rotate-button-right'); }, 400);
         }
     });
 
     $('#margin-button').click(function () {
         let marginButton = $('#margin-button');
-        window.isMargin = !window.isMargin;
-        localStorage.setItem('isMargin', window.isMargin);
+        window.isMargin = !isMargin;
+        localStorage.setItem('isMargin', isMargin);
         if (!isMargin) {
             marginButton.toggleClass('resize-button-up');
             setTimeout(function() { marginButton.toggleClass('resize-button-up'); }, 350);
@@ -77,14 +78,6 @@ $(document).ready(function() {
             setTimeout(function() { marginButton.toggleClass('resize-button-down'); }, 350);
         }
         toggleMargin();
-        //$('#margin-button').toggleClass('resize-button');
-        //setTimeout(function() { $('#margin-button').toggleClass('resize-button'); }, 350);
-        // if (!document.fullscreenElement) {
-        //     document.documentElement.requestFullscreen().then();
-        // } else {
-        //     document.exitFullscreen().then();
-        // }
-        //$('#container').toggleClass('no-margin');
     });
 
     $('#sceneries').change(function() {
@@ -128,7 +121,7 @@ $(window).resize(function() {
 
 function toggleMargin() {
     let container = $('#container');
-    if (!window.isMargin) {
+    if (!isMargin) {
         container.addClass('no-margin');
     } else {
         container.removeClass('no-margin');
@@ -155,8 +148,8 @@ function createTimetableInterval() {
 }
 
 function loadTimetables(station, isDeparture = true) {
-    let trainsSetBefore = window.trainsSetBefore;
     let trainSet = parser.parseTimetable(station, isDeparture);
+    if (trainSet === undefined) { return; }
     let trainsNew = trainSet.filter(m => !trainsSetBefore.map(n => n.trainNo).includes(m.trainNo)); // pociągi które są w trainSet, ale nie ma ich w trainsSetBefore
     let trainsToRemove = trainsSetBefore.filter(m => !trainSet.map(n => n.trainNo).includes(m.trainNo)); // pociągi które są w trainsSetBefore, ale nie ma ich w trainSet
     if (trainsSetBefore.length === 0 && trainSet.length > 0 || $('#timetables table tr').length === 0) {
@@ -240,14 +233,13 @@ export function refreshTimetablesAnim() {
 }
 
 function changeBoardType() {
-    let titlePL, titleEN, description, isDeparture = false
+    let titlePL, titleEN, description
     let container = $('#container');
     $('#timetables table tr').remove();
-    if (window.isDeparture) {
+    if (isDeparture) {
         titlePL = 'Odjazdy';
         titleEN = 'Departures';
         description = 'Do<br><i>Destination</i>';
-        isDeparture = true;
     } else {
         titlePL = 'Przyjazdy';
         titleEN = 'Arrivals';

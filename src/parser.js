@@ -102,9 +102,8 @@ export function parseTimetable() {
 }
 
 function generateStationsList() {
-    let stationsData = window.stationDataAsJson;
     let stationsSet = [], station = {};
-    stationsData.forEach((stationData) => {
+    stationDataAsJson.forEach((stationData) => {
         if (stationData['availability'] === 'abandoned') { return; }
         if (stationData['availability'] === 'unavailable') { return; }
 
@@ -135,10 +134,10 @@ export function refreshSceneriesList() {
     activeSceneries.empty();
     otherSceneries.empty();
 
-    window.stationsSet.forEach((station) => {
+    stationsSet.forEach((station) => {
         station['isActive'] = false;
         
-        window.activeStationsAsJson.forEach((activeStation) => {
+        activeStationsAsJson.forEach((activeStation) => {
             if (activeStation['region'] !== "eu") { return; }
             if (!activeStation['isOnline']) { return; }
             if (activeStation['stationName'] === station['name']) {
@@ -164,20 +163,13 @@ export function refreshCheckpointsList() {
     let checkpoints = $('#checkpoints');
     checkpoints.empty();
 
-    window.stationsSet.forEach((station) => {
+    stationsSet.forEach((station) => {
         if (station['name'] === $('#sceneries').val()) {
             station['checkpoints'].split(';').forEach((checkpoint) => {
-                if (checkpoint === station['nameApi']) {
-                    checkpoints.append($('<option>', {
-                        value: checkpoint.replace('LCS ', ''),
-                        text: station['name'].replace('LCS ', '')
-                    }));
-                } else {
-                    checkpoints.append($('<option>', {
-                        value: checkpoint.replace('LCS ', ''),
-                        text: checkpoint.replace('LCS ', '')
-                    }));
-                }
+                checkpoints.append($('<option>', {
+                    value: checkpoint,
+                    text: utils.capitalizeFirstLetter(checkpoint)
+                }));
             });
         }
     });
