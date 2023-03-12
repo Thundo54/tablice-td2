@@ -196,7 +196,8 @@ body {
 					}
 
 					&:hover, &:focus {
-						border: 0.1vmin solid $color_1;
+						border-color: $color_1;
+						cursor: pointer;
 						color: $color_1;
 					}
 				}
@@ -273,11 +274,12 @@ body {
 			color: $color_2;
 			font-style: italic;
 			justify-content: space-around;
+
 			span {
 				a {
 					color: $color_2;
 					text-decoration: none;
-					transition: 0.5s;
+					transition: color 0.5s;
 
 					&:hover {
 						color: $color_1;
