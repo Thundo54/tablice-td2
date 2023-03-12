@@ -28,6 +28,7 @@ $(document).ready(function() {
 
     changeBoardType();
     toggleMargin();
+    initzializeMenu();
 
     parser.getStationsData();
     parser.getTimetables();
@@ -100,6 +101,29 @@ $(document).ready(function() {
 
     $('#checkpoints').change(function() {
         window.station = $(this).val();
+        createTimetableInterval();
+    });
+
+    $('.stop-type').click(function() {
+        let switchId = $(this).attr('id');
+        if (stopTypes.includes(switchId)) {
+            if (switchId === 'all') {
+                $('#stop-types').attr('disabled', false);
+            }
+            $(this).removeClass('active');
+            stopTypes.splice(stopTypes.indexOf(switchId), 1);
+        } else {
+            if (switchId === 'all') {
+                window.stopTypes = ['all'];
+                $('#stop-types').attr('disabled', true);
+                $('#stop-types a').removeClass('active');
+            } else {
+                stopTypes.push(switchId);
+            }
+            $(this).addClass('active');
+
+        }
+        localStorage.setItem('stopTypes', JSON.stringify(stopTypes));
         createTimetableInterval();
     });
 
@@ -267,4 +291,13 @@ function changeBoardType() {
         container.addClass('yellow-text');
         container.removeClass('white-text');
     }
+}
+
+function initzializeMenu () {
+    stopTypes.forEach((stopType) => {
+        $(`#${stopType}`).addClass('active');
+        if (stopType === 'all') {
+            $(`#stop-types`).attr('disabled', true);
+        }
+    });
 }
