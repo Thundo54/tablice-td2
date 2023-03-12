@@ -85,10 +85,10 @@ $(document).ready(function() {
         localStorage.setItem('isMargin', isMargin);
         if (!isMargin) {
             marginButton.toggleClass('resize-button-up');
-            setTimeout(function() { marginButton.toggleClass('resize-button-up'); }, 350);
+            setTimeout(function() { marginButton.toggleClass('resize-button-up'); }, 400);
         } else {
-             marginButton.toggleClass('resize-button-down');
-            setTimeout(function() { marginButton.toggleClass('resize-button-down'); }, 350);
+            marginButton.toggleClass('resize-button-down');
+            setTimeout(function() { marginButton.toggleClass('resize-button-down'); }, 400);
         }
         toggleMargin();
     });
@@ -141,7 +141,7 @@ $(document).ready(function() {
 
         if (e.which === 27) {
             e.preventDefault();
-            if (!$('#menu-box').hasClass('slide-in')) {
+            if ($('#menu-box').hasClass('popup')) {
                 toggleMenu();
             }
         }
@@ -167,7 +167,7 @@ function toggleMargin() {
 function toggleMenu() {
     $('#close-box').toggleClass('active');
     $('#menu').toggleClass('background-fade');
-    $('#menu-box').toggleClass('slide-in');
+    $('#menu-box').toggleClass('popup');
     $('#menu-button').toggleClass('rotate-button-right');
 }
 

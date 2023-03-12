@@ -96,7 +96,7 @@ body {
 		display: flex;
 		flex-direction: column;
 		gap: 0.2vmin;
-		padding: 0.5vmin;
+		padding: 0.4vmin 0.5vmin;
 
 		&.hidden {
 			display: none;
@@ -104,7 +104,7 @@ body {
 
 		button {
 			color: $color_2;
-			transition: transform 0.8s cubic-bezier(0, 0, 0, 1), color 0.3s;
+			transition: transform 0.3s cubic-bezier(0, 0, 0, 1), color 0.3s;
 			transform-origin: 50% 48%;
 
 			&:hover {
@@ -149,14 +149,19 @@ body {
 
 	#menu-box {
 		z-index: 4;
-		display: flex;
 		position: relative;
+		visibility: hidden;
+		opacity: 0;
+		display: flex;
 		background-color: #111;
 		box-shadow: 0 0 2.5vmin 0 rgba(0, 0, 0, 0.5);
-		transition: transform 0.6s cubic-bezier(0, 0, 0, 1);
+		transition:  opacity 0.2s cubic-bezier(0, 0, 0, 1), transform 0.3s cubic-bezier(0, 0, 0, 1), visibility 0.2s;
+		transform: scale(0.8);
 
-		&.slide-in {
-			transform: translate3d(0, 75vh, 0) scale(0.8);
+		&.popup {
+			transform: scale(1.0);
+			visibility: visible;
+			opacity: 100;
 		}
 
 		.vertical-line {
