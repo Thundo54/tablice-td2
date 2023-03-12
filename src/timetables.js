@@ -8,6 +8,9 @@ window.isMargin = localStorage.getItem('isMargin') === 'true';
 window.timetablesAsJson = null;
 window.stationDataAsJson = null;
 window.activeStationsAsJson = null;
+window.stopTypes = JSON.parse(localStorage.getItem('stopTypes')) || ['ph'];
+window.trainTypes = ['TOW', 'PAS', 'LUZ', 'UG']
+window.onlyStop = false;
 
 $(document).ready(function() {
     let urlParams = new URLSearchParams(window.location.search);

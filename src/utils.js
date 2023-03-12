@@ -32,6 +32,27 @@ export function splitRoute(string) {
     return stations;
 }
 
+export function createTrainData(stopPoint, timetable) {
+    let train = {};
+    if (isDeparture && !stopPoint['terminatesHere']) {
+        train.beginsTerminatesHere = stopPoint['beginsHere'];
+        train.timestamp = stopPoint['departureTimestamp'];
+        train.delay = stopPoint['departureDelay'];
+        train.stationFromTo = splitRoute(timetable['timetable']['route'])[1];
+    } else if (!isDeparture && !stopPoint['beginsHere']) {
+        train.beginsTerminatesHere = stopPoint['terminatesHere'];
+        train.timestamp = stopPoint['arrivalTimestamp'];
+        train.delay = stopPoint['arrivalDelay'];
+        train.stationFromTo = splitRoute(timetable['timetable']['route'])[0];
+    }
+
+    train.stoppedHere = stopPoint['stoppedHere'];
+    train.trainNo = timetable['trainNo'];
+    train.category = timetable['timetable']['category'];
+
+    return train;
+}
+
 export function createRemark(delay = 0, isDeparture, beginsTerminatesHere, isStopped) {
     // Można dodać przełącznik który będzie pokazywał opóźnienie jeśli pociąg kończy bieg
     if (delay > 0) {

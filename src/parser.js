@@ -1,4 +1,4 @@
-import { capitalizeFirstLetter, splitRoute } from './utils.js';
+import * as utils from './utils.js';
 
 // export function parseTimetable(station, isDeparture = true) {
 //     let trainSet = [], train = {}, stopList = [];
@@ -55,46 +55,52 @@ import { capitalizeFirstLetter, splitRoute } from './utils.js';
 
 export function parseTimetable() {
     let trainSet = [], train = {}, stopList = [];
-    if (window.timetablesAsJson === null) { return; }
-    window.timetablesAsJson.forEach((timetable) => {
+    if (timetablesAsJson === null) { return; }
+    if (station === '') { return; }
+    let stationSwitch = !isDeparture;
+    timetablesAsJson.forEach((timetable) => {
         if (timetable['timetable'] === undefined) { return; }
         timetable['timetable']['stopList'].forEach((stopPoint) => {
-            // if (stopPoint['stopType'].includes('ph')) {
-            //     stopList.push(capitalizeFirstLetter(stopPoint['stopNameRAW'].split(',')[0]));
-            // }
-            if (capitalizeFirstLetter(stopPoint['stopNameRAW']) === capitalizeFirstLetter(station)) {
-                if (!stopPoint['terminatesHere'] && !stopPoint['beginsHere']) {
-                     if (!stopPoint['stopType'].includes('ph')) { return; }
-                }
+            if (station.toUpperCase() === stopPoint['stopNameRAW'].toUpperCase()) {
+                stationSwitch = !stationSwitch;
                 if (stopPoint['confirmed']) { return; }
-                train['stoppedHere'] = stopPoint['stopped'];
-                if (isDeparture && !stopPoint['terminatesHere']) {
-                    train['beginsTerminatesHere'] = stopPoint['beginsHere'];
-                    train['timestamp'] = stopPoint['departureTimestamp'];
-                    train['delay'] = stopPoint['departureDelay'];
-                    train['stationFromTo'] = splitRoute(timetable['timetable']['route'])[1];
-                } else if (!isDeparture && !stopPoint['beginsHere']) {
-                    train['beginsTerminatesHere'] = stopPoint['terminatesHere'];
-                    train['timestamp'] = stopPoint['arrivalTimestamp'];
-                    train['delay'] = stopPoint['arrivalDelay'];
-                    train['stationFromTo'] = splitRoute(timetable['timetable']['route'])[0];
+                train = utils.createTrainData(stopPoint, timetable, isDeparture);
+            }
+            if (stopTypes.some(stop => stopPoint['stopType'].includes(stop.replace('all', ''))) && stationSwitch) {
+                if (!stopPoint['stopNameRAW'].toUpperCase().includes('SBL')) {
+                    stopList.push(utils.capitalizeFirstLetter(stopPoint['stopNameRAW'].split(',')[0]));
                 }
             }
         });
 
-        if (train['timestamp'] !== undefined) {
-            if (isDeparture) {
-                train['timetable'] = stopList.slice(stopList.indexOf(station) + 1);
-            } else {
-                train['timetable'] = stopList.slice(0, stopList.indexOf(station));
-            }
-            train['category'] = timetable['timetable']['category'];
-            train['trainNo'] = timetable['trainNo'];
+        stopList = stopList.filter(stop => stop !== train.stationFromTo);
+        stopList = stopList.filter(stop => stop !== utils.capitalizeFirstLetter(station));
+        stopList = stopList.filter((stop, index) => stopList.indexOf(stop) >= index);
+        train.timetable = stopList;
+
+        // let stationIndex = stopList.indexOf(utils.capitalizeFirstLetter(station));
+        // if (isDeparture) {
+        //     train.timetable = stopList.filter((stop, index)  => stationIndex < index);
+        // } else {
+        //     train.timetable = stopList.filter((stop, index) => stationIndex > index);
+        // }
+
+        if (train.timestamp !== undefined) {
+            // let stationIndex = stopList.indexOf(capitalizeFirstLetter(station));
+            // if (isDeparture) {
+            //     train['timetable'] = stopList.filter((stop, index) => index > stationIndex);
+            // } else {
+            //     train['timetable'] = stopList.filter((stop, index) => index < stationIndex);
+            // }f
+
+
+
             trainSet.push(train);
         }
 
         stopList = [];
         train = {};
+        stationSwitch = !isDeparture;
     });
 
     window.trainsSetBefore = trainSet.sort((a, b) => { return a.timestamp - b.timestamp });
