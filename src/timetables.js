@@ -41,10 +41,19 @@ $(document).ready(function() {
         parser.getActiveStations();
     }, Math.floor(Math.random() * (90000 - 60000 + 1)) + 60000);
 
-    if (urlParams.get('station') !== null) {
-        window.station = urlParams.get('station');
-        createTimetableInterval();
-    }
+    setTimeout(function() {
+        if (urlParams.get('station') !== null) {
+            window.station = urlParams.get('station').replace('_', ' ')
+            stationDataAsJson.forEach((stationData) => {
+                if (stationData['name'] === station) {
+                    if (stationData['checkpoints'] === null || stationData['checkpoints'] === '') { return; }
+                    window.station = stationData['checkpoints'].split(';')[0];
+                }
+            });
+            createTimetableInterval();
+        }
+    }, 500);
+
 
     $('#menu-button').click(function () {
         toggleMenu();
