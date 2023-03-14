@@ -1,4 +1,3 @@
-<!-- create html template -->
 <!DOCTYPE html>
 <html lang="pl">
     <head>
@@ -14,44 +13,83 @@
     </head>
     <body>
         <div id="menu">
-            <button id="menu-button"></button>
-            <button id="type-button"></button>
-            <button id="margin-button"></button>
+            <div id="button-box">
+                <button id="menu-button"></button>
+                <button id="type-button"></button>
+                <button id="margin-button"></button>
+            </div>
             <div id="close-box"></div>
             <div id="menu-box" class="slide-in">
                 <section>
+                    <h2>TABLICE STACYJNE</h2>
                     <div>
-                        <h2>TABLICE STACYJNE</h2>
-                        <div>
-                            <label for="sceneries">Sceneria</label>
-                            <select id="sceneries">
-                                <optgroup label="AKTYWNE SCENERIE" id="active-sceneries">
-                                </optgroup>
-                                <optgroup label="POZOSTAŁE SCENERIE" id="other-sceneries">
-                                </optgroup>
-                            </select>
-                        </div>
-                        <div>
-                            <label for="checkpoints">Posterunek</label>
-                            <select id="checkpoints">
-                            </select>
-                        </div>
-                        <div disabled>
-                            <label for="timetable-type">Serwer TD2</label>
-                            <select id="timetable-type">
-                                <option>PL1</option>
-                            </select>
-                        </div>
+                        <label for="sceneries">Sceneria</label>
+                        <select id="sceneries">
+                            <optgroup label="AKTYWNE SCENERIE" id="active-sceneries">
+                            </optgroup>
+                            <optgroup label="POZOSTAŁE SCENERIE" id="other-sceneries">
+                            </optgroup>
+                        </select>
+                    </div>
+                    <div>
+                        <label for="checkpoints">Posterunek</label>
+                        <select id="checkpoints">
+                        </select>
+                    </div>
+                    <div disabled>
+                        <label for="timetable-type">Serwer TD2</label>
+                        <select id="timetable-type">
+                            <option>PL1</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label for="timetable-size">Rozmiar interfejsu</label>
+                        <select id="timetable-size">
+                            <option value="normal">Normalny</option>
+                            <option value="enlarged">Powiększony</option>
+                        </select>
                     </div>
                 </section>
                 <div class="vertical-line"></div>
                 <section>
                     <h2>FILTRY</h2>
-                    <h3><i>soon...</i></h3>
+                    <div>
+                        <label>Wyświetl pociągi</label>
+                        <div class="container">
+                            <div class="inline">
+                                <a class="train-type" id="T"><span>Towarowe</span></a>
+                                <a class="train-type" id="EMRPA"><span>Pasażerskie</span></a>
+                            </div>
+                            <div class="inline">
+                                <a class="train-type" id="L"><span>Luzem</span></a>
+                                <a class="train-type" id="Z"><span>Utrz. - napr.</span></a>
+                            </div>
+                        </div>
+                    </div>
+                    <div>
+                        <label>Pokazuj punkty pośrednie</label>
+                        <div class="container">
+                            <div class="inline" id="stop-types">
+                                <a class="stop-type" id="pt"><span>pt</span></a>
+                                <a class="stop-type" id="ph"><span>ph</span></a>
+                                <a class="stop-type" id="pm"><span>pm</span></a>
+                            </div>
+                            <div>
+                                <a class="stop-type" id="all"><span>Wszystkie punkty pośrednie</span></a>
+                            </div>
+                        </div>
+                    </div>
+                     <div disabled>
+                        <label>Pozostałe opcje</label>
+                        <div class="container">
+                            <a class="switch" id="only-stop"><span>Tylko rozkłady z postojem</span></a>
+                            <a class="switch" hidden><span>Pokazuj przewoźników (BETA)</span></a>
+                        </div>
+                    </div>
                 </section>
                 <footer>
                     <span>
-                        STS v1.0.0| Made with 💜 by
+                        STS v1.0.1 | Made with 💜 by
                         <a href="https://td2.info.pl/profile/?u=6915" target="_blank">
                             Thundo
                         </a>

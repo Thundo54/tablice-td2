@@ -2,7 +2,11 @@
 let namesCorrections = {
     'BB': 'Bielsko-Biała',
     'Maz.': 'Mazowiecki',
+    'Ryb.': 'Rybnik',
+    'Dobrz.': 'Dobrzyniec',
+    'Grodz Maz': 'Grodzisk Mazowiecki',
 }
+
 function correctNames(name) {
     for (let key in namesCorrections) {
         if (name.includes(key)) {
@@ -32,7 +36,28 @@ export function splitRoute(string) {
     return stations;
 }
 
-export function createRemark(delay = 0, isDeparture, beginsTerminatesHere, isStopped) {
+export function createTrainData(stopPoint, timetable) {
+    let train = {};
+    if (isDeparture && !stopPoint['terminatesHere']) {
+        train.beginsTerminatesHere = stopPoint['beginsHere'];
+        train.timestamp = stopPoint['departureTimestamp'];
+        train.delay = stopPoint['departureDelay'];
+        train.stationFromTo = splitRoute(timetable['timetable']['route'])[1];
+    } else if (!isDeparture && !stopPoint['beginsHere']) {
+        train.beginsTerminatesHere = stopPoint['terminatesHere'];
+        train.timestamp = stopPoint['arrivalTimestamp'];
+        train.delay = stopPoint['arrivalDelay'];
+        train.stationFromTo = splitRoute(timetable['timetable']['route'])[0];
+    }
+
+    train.stoppedHere = stopPoint['stopped'];
+    train.trainNo = timetable['trainNo'];
+    train.category = timetable['timetable']['category'];
+
+    return train;
+}
+
+export function createRemark(delay = 0, beginsTerminatesHere, isStopped) {
     // Można dodać przełącznik który będzie pokazywał opóźnienie jeśli pociąg kończy bieg
     if (delay > 0) {
         if (isStopped) {
@@ -77,16 +102,16 @@ export function addRow(time, train, stationFromTo, via, operator, platform, rema
     return row;
 }
 
-export function addSpecialRow(row, content) {
-    $(`#timetables table tr:first-child`)
-        .after($('<tr>')
-            .append($('<td>').attr('colspan', 7)
-                .append($('<div>').addClass('special-row')
-                    .append($('<p>').text(content)
-    ))));
-
-   // refreshTimetablesAnim();
-}
+// export function addSpecialRow(row, content) {
+//     $(`#timetables table tr:first-child`)
+//         .after($('<tr>')
+//             .append($('<td>').attr('colspan', 7)
+//                 .append($('<div>').addClass('special-row')
+//                     .append($('<p>').text(content)
+//     ))));
+//
+//    // refreshTimetablesAnim();
+// }
 
 export function refreshIds() {
     let i = 0;
@@ -107,7 +132,7 @@ export function convertCategory(category) {
     return category;
 }
 
-export function convertTime (time) {
+export function convertTime(time) {
     return new Date(time).toLocaleTimeString('pl-PL', {hour: '2-digit', minute: '2-digit'});
 }
 

@@ -1,110 +1,45 @@
-import { capitalizeFirstLetter, splitRoute } from './utils.js';
-
-// export function parseTimetable(station, isDeparture = true) {
-//     let trainSet = [], train = {}, stopList = [];
-//     let data = window.timetablesAsJson;
-//     if (data === null) { return; }
-//     for (let i in data) {
-//         if (data[i]['timetable'] === undefined) { continue; }
-//         for (let j in data[i]['timetable']['stopList']) {
-//             if (data[i]['timetable']['stopList'][j]['stopType'].includes('ph')) {
-//                 stopList.push(capitalizeFirstLetter(data[i]['timetable']['stopList'][j]['stopNameRAW'].split(',')[0]));
-//             }
-//             if (capitalizeFirstLetter(data[i]['timetable']['stopList'][j]['stopNameRAW']) === capitalizeFirstLetter(station)) {
-//                 if (!data[i]['timetable']['stopList'][j]['terminatesHere']
-//                     && !data[i]['timetable']['stopList'][j]['beginsHere']) {
-//                     if (!data[i]['timetable']['stopList'][j]['stopType'].includes('ph')) {
-//                         continue;
-//                     }
-//                 }
-//                 if (data[i]['timetable']['stopList'][j]['confirmed']) { continue; }
-//                 if (isDeparture && !data[i]['timetable']['stopList'][j]['terminatesHere']) {
-//                     train['beginsTerminatesHere'] = data[i]['timetable']['stopList'][j]['beginsHere'];
-//                     train['timestamp'] = data[i]['timetable']['stopList'][j]['departureTimestamp'];
-//                     train['delay'] = data[i]['timetable']['stopList'][j]['departureDelay'];
-//                     train['stationFromTo'] = splitRoute(data[i]['timetable']['route'])[1];
-//                 } else if (!isDeparture && !data[i]['timetable']['stopList'][j]['beginsHere']) {
-//                     train['beginsTerminatesHere'] = data[i]['timetable']['stopList'][j]['terminatesHere'];
-//                     train['timestamp'] = data[i]['timetable']['stopList'][j]['arrivalTimestamp'];
-//                     train['delay'] = data[i]['timetable']['stopList'][j]['arrivalDelay'];
-//                     train['stationFromTo'] = splitRoute(data[i]['timetable']['route'])[0];
-//                 }
-//                 train['stoppedHere'] = data[i]['timetable']['stopList'][j]['stopped'];
-//             }
-//         }
-//
-//         if (!data[i]['timetable']['category'].match(/^[LTZ]/) && train['timestamp'] !== undefined) {
-//             if (isDeparture) {
-//                 train['timetable'] = stopList.slice(stopList.indexOf(station) + 1);
-//             } else {
-//                 train['timetable'] = stopList.slice(0, stopList.indexOf(station));
-//             }
-//             train['category'] = data[i]['timetable']['category'];
-//             train['trainNo'] = data[i]['trainNo'];
-//             trainSet.push(train);
-//             //console.log(train);
-//         }
-//         stopList = [];
-//         train = {};
-//     }
-//
-//     window.trainsSetBefore = trainSet.sort((a, b) => { return a.timestamp - b.timestamp });
-//     return trainSet.sort((a, b) => { return a.timestamp - b.timestamp });
-// }
-
+import * as utils from './utils.js';
 
 export function parseTimetable() {
     let trainSet = [], train = {}, stopList = [];
-    if (window.timetablesAsJson === null) { return; }
-    window.timetablesAsJson.forEach((timetable) => {
+    if (timetablesAsJson === null) { return; }
+    if (station === '') { return; }
+    let stationSwitch = !isDeparture;
+    timetablesAsJson.forEach((timetable) => {
         if (timetable['timetable'] === undefined) { return; }
         timetable['timetable']['stopList'].forEach((stopPoint) => {
-            // if (stopPoint['stopType'].includes('ph')) {
-            //     stopList.push(capitalizeFirstLetter(stopPoint['stopNameRAW'].split(',')[0]));
-            // }
-            if (capitalizeFirstLetter(stopPoint['stopNameRAW']) === capitalizeFirstLetter(station)) {
-                if (!stopPoint['terminatesHere'] && !stopPoint['beginsHere']) {
-                     if (!stopPoint['stopType'].includes('ph')) { return; }
-                }
+            if (station.toUpperCase() === stopPoint['stopNameRAW'].toUpperCase()) {
+                stationSwitch = !stationSwitch;
                 if (stopPoint['confirmed']) { return; }
-                train['stoppedHere'] = stopPoint['stopped'];
-                if (isDeparture && !stopPoint['terminatesHere']) {
-                    train['beginsTerminatesHere'] = stopPoint['beginsHere'];
-                    train['timestamp'] = stopPoint['departureTimestamp'];
-                    train['delay'] = stopPoint['departureDelay'];
-                    train['stationFromTo'] = splitRoute(timetable['timetable']['route'])[1];
-                } else if (!isDeparture && !stopPoint['beginsHere']) {
-                    train['beginsTerminatesHere'] = stopPoint['terminatesHere'];
-                    train['timestamp'] = stopPoint['arrivalTimestamp'];
-                    train['delay'] = stopPoint['arrivalDelay'];
-                    train['stationFromTo'] = splitRoute(timetable['timetable']['route'])[0];
+                train = utils.createTrainData(stopPoint, timetable, isDeparture);
+            }
+            if (stopTypes.some(stop => stopPoint['stopType'].includes(stop.replace('all', ''))) && stationSwitch) {
+                if (!stopPoint['stopNameRAW'].toUpperCase().includes('SBL')) {
+                    stopList.push(utils.capitalizeFirstLetter(stopPoint['stopNameRAW'].split(',')[0]));
                 }
             }
         });
 
-        if (train['timestamp'] !== undefined) {
-            if (isDeparture) {
-                train['timetable'] = stopList.slice(stopList.indexOf(station) + 1);
-            } else {
-                train['timetable'] = stopList.slice(0, stopList.indexOf(station));
-            }
-            train['category'] = timetable['timetable']['category'];
-            train['trainNo'] = timetable['trainNo'];
-            trainSet.push(train);
-        }
+        stopList = stopList.filter(stop => stop !== train.stationFromTo);
+        stopList = stopList.filter(stop => stop !== utils.capitalizeFirstLetter(station));
+        stopList = stopList.filter((stop, index) => stopList.indexOf(stop) >= index);
+        train.timetable = stopList;
 
+        if (train.timestamp !== undefined) {
+            if (train.category.match(new RegExp(`\\b[${trainTypes.join('')}]`))) { trainSet.push(train); }
+        }
         stopList = [];
         train = {};
+        stationSwitch = !isDeparture;
     });
 
     window.trainsSetBefore = trainSet.sort((a, b) => { return a.timestamp - b.timestamp });
-    return trainSet.sort((a, b) => { return a.timestamp - b.timestamp });
+    return trainsSetBefore;
 }
 
 function generateStationsList() {
-    let stationsData = window.stationDataAsJson;
     let stationsSet = [], station = {};
-    stationsData.forEach((stationData) => {
+    stationDataAsJson.forEach((stationData) => {
         if (stationData['availability'] === 'abandoned') { return; }
         if (stationData['availability'] === 'unavailable') { return; }
 
@@ -135,10 +70,10 @@ export function refreshSceneriesList() {
     activeSceneries.empty();
     otherSceneries.empty();
 
-    window.stationsSet.forEach((station) => {
+    stationsSet.forEach((station) => {
         station['isActive'] = false;
         
-        window.activeStationsAsJson.forEach((activeStation) => {
+        activeStationsAsJson.forEach((activeStation) => {
             if (activeStation['region'] !== "eu") { return; }
             if (!activeStation['isOnline']) { return; }
             if (activeStation['stationName'] === station['name']) {
@@ -164,20 +99,13 @@ export function refreshCheckpointsList() {
     let checkpoints = $('#checkpoints');
     checkpoints.empty();
 
-    window.stationsSet.forEach((station) => {
+    stationsSet.forEach((station) => {
         if (station['name'] === $('#sceneries').val()) {
             station['checkpoints'].split(';').forEach((checkpoint) => {
-                if (checkpoint === station['nameApi']) {
-                    checkpoints.append($('<option>', {
-                        value: checkpoint.replace('LCS ', ''),
-                        text: station['name'].replace('LCS ', '')
-                    }));
-                } else {
-                    checkpoints.append($('<option>', {
-                        value: checkpoint.replace('LCS ', ''),
-                        text: checkpoint.replace('LCS ', '')
-                    }));
-                }
+                checkpoints.append($('<option>', {
+                    value: checkpoint,
+                    text: utils.capitalizeFirstLetter(checkpoint)
+                }));
             });
         }
     });

@@ -117,12 +117,29 @@
 					}
 				}
 			}
+
+			&.enlarged {
+				table {
+					th {
+						&:nth-child(1) {
+							width: 12%;
+						}
+
+						&:nth-child(2), &:nth-child(5) {
+							width: 15%;
+						}
+
+						&:nth-child(3),  &:nth-child(4) {
+							width: 26%;
+						}
+					}
+				}
+			}
 		}
 
 		#timetables {
 			table {
 				col {
-
 					&.time {
 						width: 10%;
 					}
@@ -137,6 +154,28 @@
 
 					&.operator, &.platform {
 						width: 0;
+					}
+				}
+			}
+
+			&.enlarged {
+				table {
+					col {
+						&.time {
+							width: 12%;
+						}
+
+						&.trainNo, &.remarks {
+							width: 15%;
+						}
+
+						&.fromTo, &.via  {
+							width: 26%;
+						}
+
+						&.operator, &.platform {
+							width: 0;
+						}
 					}
 				}
 			}

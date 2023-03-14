@@ -42,4 +42,6 @@ src/**/*.map
 # node_modules
 node_modules/
 
+# cache
+.firebase/**/*.cache
 
