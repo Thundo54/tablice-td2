@@ -11,12 +11,10 @@ window.trainTypes = JSON.parse(localStorage.getItem('trainTypes')) || ['EMRPA'];
 window.timetablesAsJson = null;
 window.stationDataAsJson = null;
 window.activeStationsAsJson = null;
-window.stopTypes = JSON.parse(localStorage.getItem('stopTypes')) || ['ph'];
-window.trainTypes = ['TOW', 'PAS', 'LUZ', 'UG']
-window.onlyStop = false;
 
 $(document).ready(function() {
     let urlParams = new URLSearchParams(window.location.search);
+
     if (urlParams.get('timetables') !== null) {
         if (urlParams.get('timetables') === 'departure') {
             window.isDeparture = true;
@@ -71,8 +69,8 @@ $(document).ready(function() {
         let typeButton = $('#type-button');
         window.isDeparture = !isDeparture;
         localStorage.isDeparture = isDeparture;
-        changeBoardType(isDeparture);
-        loadTimetables(station, isDeparture);
+        changeBoardType();
+        loadTimetables();
         if (isDeparture) {
             typeButton.toggleClass('rotate-button-left');
             setTimeout(function() { typeButton.toggleClass('rotate-button-left'); }, 400);
@@ -85,7 +83,7 @@ $(document).ready(function() {
     $('#margin-button').click(function () {
         let marginButton = $('#margin-button');
         window.isMargin = !isMargin;
-        localStorage.setItem('isMargin', isMargin);
+        localStorage.isMargin = isMargin;
         if (!isMargin) {
             marginButton.toggleClass('resize-button-up');
             setTimeout(function() { marginButton.toggleClass('resize-button-up'); }, 400);
@@ -209,11 +207,12 @@ function toggleMenu() {
 function createTimetableInterval() {
     clearInterval(window.timetableInterval);
     $('#timetables table tr').remove();
-    setTimeout(function() {
-        loadTimetables(station, isDeparture);
-    }, 500);
+    // setTimeout(function() {
+    //     loadTimetables();
+    // }, 500);
+    loadTimetables();
     window.timetableInterval = setInterval(function() {
-        loadTimetables(station, isDeparture);
+        loadTimetables();
         parser.refreshSceneriesList();
     }, 30000);
 }
@@ -275,7 +274,6 @@ function loadTimetables(station, isDeparture = true) {
         $(`#${i} td:nth-child(7) span`)
             .text(utils.createRemark(
                 trainSet[i]['delay'],
-                isDeparture,
                 trainSet[i]['beginsTerminatesHere'],
                 trainSet[i]['stoppedHere']
             ));
