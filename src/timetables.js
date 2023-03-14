@@ -217,8 +217,9 @@ function createTimetableInterval() {
     }, 30000);
 }
 
-function loadTimetables(station, isDeparture = true) {
-    let trainSet = parser.parseTimetable(station, isDeparture);
+function loadTimetables() {
+    let trainsSetBefore = window.trainsSetBefore;
+    let trainSet = parser.parseTimetable();
     if (trainSet === undefined) { return; }
     let trainsNew = trainSet.filter(m => !trainsSetBefore.map(n => n.trainNo).includes(m.trainNo)); // pociągi które są w trainSet, ale nie ma ich w trainsSetBefore
     let trainsToRemove = trainsSetBefore.filter(m => !trainSet.map(n => n.trainNo).includes(m.trainNo)); // pociągi które są w trainsSetBefore, ale nie ma ich w trainSet
@@ -228,25 +229,23 @@ function loadTimetables(station, isDeparture = true) {
                 trainSet[i]['timestamp'],
                 trainSet[i]['trainNo'],
                 trainSet[i]['stationFromTo'],
-                trainSet[i]['timetable'].join(', '),
+                '',
                 trainSet[i]['category'],
                 '1',
                 '',
                 i
             ));
         }
-        utils.refreshIds()
+        utils.refreshIds();
     } else {
         if (trainsToRemove.length > 0) {
             for (let i in trainsToRemove) {
                 let index = trainsSetBefore.indexOf(trainsToRemove[i])
-                // console.log(`Usunięto pociąg ${trainsToRemove[i]['trainNo']} (${utils.convertTime(trainsToRemove[i]['timestamp'])}) => INDEX ${index}`)
                 $(`#${index}`).remove();
-                utils.refreshIds()
             }
+            utils.refreshIds();
         }
         if (trainsNew.length > 0) {
-            // console.log("Pociągi do dodania", trainsNew);
             for (let i in trainsNew) {
                 let index = trainSet.indexOf(trainsNew[i])
                 // console.log(`Dodano pociąg ${trainsNew[i]['trainNo']} (${utils.convertTime(trainsNew[i]['timestamp'])}) => INDEX ${index}`)
@@ -254,18 +253,18 @@ function loadTimetables(station, isDeparture = true) {
                     trainsNew[i]['timestamp'],
                     trainsNew[i]['trainNo'],
                     trainsNew[i]['stationFromTo'],
-                    trainsNew[i]['timetable'].join(', '),
+                    '',
                     trainsNew[i]['category'],
                     '1',
                     '',
                     i
                 );
                 if (index === 0) {
-                    $(`#1`).before(row);
+                     $('#timetables table').prepend(row);
                 } else {
                     $(`#${index-1}`).after(row);
                 }
-                utils.refreshIds()
+                utils.refreshIds();
             }
         }
     }
