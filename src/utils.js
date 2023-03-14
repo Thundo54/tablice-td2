@@ -2,7 +2,11 @@
 let namesCorrections = {
     'BB': 'Bielsko-Biała',
     'Maz.': 'Mazowiecki',
+    'Ryb.': 'Rybnik',
+    'Dobrz.': 'Dobrzyniec',
+    'Grodz Maz': 'Grodzisk Mazowiecki',
 }
+
 function correctNames(name) {
     for (let key in namesCorrections) {
         if (name.includes(key)) {
