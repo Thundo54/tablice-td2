@@ -253,6 +253,10 @@ body {
 				opacity: 0.5;
 			}
 
+			[hidden] {
+				display: none;
+			}
+
 		}
 
 		h2 {
