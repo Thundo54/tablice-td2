@@ -78,33 +78,16 @@ export function parseTimetable() {
         stopList = stopList.filter((stop, index) => stopList.indexOf(stop) >= index);
         train.timetable = stopList;
 
-        // let stationIndex = stopList.indexOf(utils.capitalizeFirstLetter(station));
-        // if (isDeparture) {
-        //     train.timetable = stopList.filter((stop, index)  => stationIndex < index);
-        // } else {
-        //     train.timetable = stopList.filter((stop, index) => stationIndex > index);
-        // }
-
         if (train.timestamp !== undefined) {
-            // let stationIndex = stopList.indexOf(capitalizeFirstLetter(station));
-            // if (isDeparture) {
-            //     train['timetable'] = stopList.filter((stop, index) => index > stationIndex);
-            // } else {
-            //     train['timetable'] = stopList.filter((stop, index) => index < stationIndex);
-            // }f
-
-
-
-            trainSet.push(train);
+            if (train.category.match(new RegExp(`\\b[${trainTypes.join('')}]`))) { trainSet.push(train); }
         }
-
         stopList = [];
         train = {};
         stationSwitch = !isDeparture;
     });
 
     window.trainsSetBefore = trainSet.sort((a, b) => { return a.timestamp - b.timestamp });
-    return trainSet.sort((a, b) => { return a.timestamp - b.timestamp });
+    return trainsSetBefore;
 }
 
 function generateStationsList() {

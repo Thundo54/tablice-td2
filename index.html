@@ -42,6 +42,13 @@
                             <option>PL1</option>
                         </select>
                     </div>
+                    <div>
+                        <label for="timetable-size">Rozmiar interfejsu</label>
+                        <select id="timetable-size">
+                            <option value="normal">Normalny</option>
+                            <option value="enlarged">Powiększony</option>
+                        </select>
+                    </div>
                 </section>
                 <div class="vertical-line"></div>
                 <section>
@@ -50,12 +57,12 @@
                         <label>Wyświetl pociągi</label>
                         <div class="container">
                             <div class="inline">
-                                <a class="switch" id="tow"><span>Towarowe</span></a>
-                                <a class="switch" id="pas"><span>Pasażerskie</span></a>
+                                <a class="train-type" id="T"><span>Towarowe</span></a>
+                                <a class="train-type" id="EMRPA"><span>Pasażerskie</span></a>
                             </div>
                             <div class="inline">
-                                <a class="switch" id="luz"><span>Luzem</span></a>
-                                <a class="switch" id="ug"><span>Utrz. - gosp.</span></a>
+                                <a class="train-type" id="L"><span>Luzem</span></a>
+                                <a class="train-type" id="Z"><span>Utrz. - napr.</span></a>
                             </div>
                         </div>
                     </div>
@@ -72,11 +79,11 @@
                             </div>
                         </div>
                     </div>
-                     <div>
+                     <div disabled>
                         <label>Pozostałe opcje</label>
                         <div class="container">
                             <a class="switch" id="only-stop"><span>Tylko rozkłady z postojem</span></a>
-                            <a class="switch" disabled><span>Pokazuj przewoźników (BETA)</span></a>
+                            <a class="switch" hidden><span>Pokazuj przewoźników (BETA)</span></a>
                         </div>
                     </div>
                 </section>

@@ -5,6 +5,9 @@ window.stationsSet = [];
 window.station = '';
 window.isDeparture = localStorage.getItem('isDeparture') === 'true';
 window.isMargin = localStorage.getItem('isMargin') === 'true';
+window.timetableSize = localStorage.getItem('timetableSize') || 'normal';
+window.stopTypes = JSON.parse(localStorage.getItem('stopTypes')) || ['ph'];
+window.trainTypes = JSON.parse(localStorage.getItem('trainTypes')) || ['EMRPA'];
 window.timetablesAsJson = null;
 window.stationDataAsJson = null;
 window.activeStationsAsJson = null;
@@ -104,27 +107,46 @@ $(document).ready(function() {
         createTimetableInterval();
     });
 
+    $('#timetable-size').change(function() {
+        window.timetableSize = $(this).val();
+        localStorage.timetableSize = timetableSize;
+        toggleSize();
+    });
+
     $('.stop-type').click(function() {
         let switchId = $(this).attr('id');
         if (stopTypes.includes(switchId)) {
-            if (switchId === 'all') {
-                $('#stop-types').attr('disabled', false);
-            }
             $(this).removeClass('active');
             stopTypes.splice(stopTypes.indexOf(switchId), 1);
         } else {
             if (switchId === 'all') {
                 window.stopTypes = ['all'];
-                $('#stop-types').attr('disabled', true);
                 $('#stop-types a').removeClass('active');
             } else {
+                $('#all').removeClass('active');
+                if (stopTypes.includes('all')) {
+                    stopTypes.splice(stopTypes.indexOf('all'), 1);
+                }
                 stopTypes.push(switchId);
             }
             $(this).addClass('active');
 
         }
         localStorage.setItem('stopTypes', JSON.stringify(stopTypes));
-        createTimetableInterval();
+        loadTimetables();
+    });
+
+    $('.train-type').click(function() {
+        let switchId = $(this).attr('id');
+        if (trainTypes.includes(switchId)) {
+            $(this).removeClass('active');
+            trainTypes.splice(trainTypes.indexOf(switchId), 1);
+        } else {
+            $(this).addClass('active');
+            trainTypes.push(switchId);
+        }
+        localStorage.setItem('trainTypes', JSON.stringify(trainTypes));
+        loadTimetables();
     });
 
     $(document).bind('keydown', function(e) {
@@ -162,6 +184,19 @@ function toggleMargin() {
     } else {
         container.removeClass('no-margin');
     }
+}
+
+function toggleSize() {
+    let timetables = $('#timetables');
+    let labels = $('#labels');
+    if (timetableSize === 'normal') {
+        timetables.removeClass('enlarged');
+        labels.removeClass('enlarged');
+    } else {
+        timetables.addClass('enlarged');
+        labels.addClass('enlarged');
+    }
+    refreshTimetablesAnim();
 }
 
 function toggleMenu() {
@@ -244,6 +279,9 @@ function loadTimetables(station, isDeparture = true) {
                 trainSet[i]['beginsTerminatesHere'],
                 trainSet[i]['stoppedHere']
             ));
+
+        $(`#${i} td:nth-child(4) span`)
+            .text(trainSet[i]['timetable'].join(', '));
     }
     refreshTimetablesAnim();
 }
@@ -296,8 +334,12 @@ function changeBoardType() {
 function initzializeMenu () {
     stopTypes.forEach((stopType) => {
         $(`#${stopType}`).addClass('active');
-        if (stopType === 'all') {
-            $(`#stop-types`).attr('disabled', true);
-        }
     });
+
+    trainTypes.forEach((trainType) => {
+        $(`#${trainType}`).addClass('active');
+    });
+
+    $('#timetable-size').val(timetableSize);
+    toggleSize();
 }

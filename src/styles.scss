@@ -367,6 +367,34 @@ body {
 			}
 		}
 	}
+
+	&.enlarged {
+		table {
+			th {
+				&:nth-child(1) {
+					width: 9%;
+				}
+
+				&:nth-child(2) {
+					width: 11%;
+				}
+
+				&:nth-child(3) {
+					width: 33%;
+				}
+
+				&:nth-child(5) {
+					#inner-description {
+						td {
+							&:nth-child(-n+2) {
+								margin-left: 1.5vmin;
+							}
+						}
+					}
+				}
+			}
+		}
+	}
 }
 
 #timetables {
@@ -462,6 +490,52 @@ body {
 
 				&:nth-child(7) {
 					border-left: 1vmin solid $color_3;
+				}
+			}
+		}
+	}
+
+	&.enlarged {
+		table {
+			border-spacing: 0 1.1vmin;
+
+			col {
+				&.time {
+					width: 9%;
+				}
+
+				&.trainNo {
+					width: 11%;
+				}
+
+				&.fromTo {
+					width: 33%;
+				}
+
+				&.via {
+					width: 29%;
+				}
+
+				&.operator {
+					width: 6%;
+				}
+
+				&.remarks {
+					width: 8%;
+				}
+			}
+
+			tr {
+				td {
+					font-size: 4vmin;
+
+					&:nth-child(3) {
+						font-size: 3.6vmin;
+					}
+
+					//&:nth-child(5) {
+					//	border-left: 1vmin solid $color_3;
+					//}
 				}
 			}
 		}
