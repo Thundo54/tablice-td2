@@ -1,8 +1,8 @@
 {
-  "name": "sts",
-  "version": "0.0.8",
+  "name": "tablice-td2",
+  "version": "1.0.2",
   "scripts": {
-    "build": "gulp build:sts"
+    "build": "gulp build:tablice-td2"
   },
   "devDependencies": {
     "gulp": "^4.0.2",
