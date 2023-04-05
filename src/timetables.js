@@ -322,13 +322,15 @@ export function loadTimetables() {
 }
 
 export function refreshTimetablesAnim() {
-    let tr = $('#timetables table').find('tr');
-    let td, p, animDuration;
+    let tr = $('#timetables table tr');
+    let td, span, animDuration;
+
     for (let i = 0; i < tr.length; i++) {
         td = $(tr[i]).find('td');
+        if (i >= 12) { return; }
         for (let j = 0; j < td.length; j++) {
-            p = $(td[j]).find('span');
-            animDuration = ((p.width() + $(td[j]).width()) * 10) / 950;
+            span = $(td[j]).find('span');
+            animDuration = ((span.width() + $(td[j]).width()) * 10) / 850;
             if (p.css('animation-duration') !== animDuration) {
                 if (p.width() > $(td[j]).width()) {
                     p.css('animation', `ticker linear ${animDuration}s infinite`);
