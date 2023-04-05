@@ -200,12 +200,10 @@ function toggleMenu() {
 }
 
 function createTimetableInterval() {
-    clearInterval(window.timetableInterval);
+    clearInterval(timetableInterval);
     $('#timetables table tr').remove();
-    // setTimeout(function() {
-    //     loadTimetables();
-    // }, 500);
     loadTimetables();
+    document.title = `${utils.capitalizeFirstLetter(station)} - Tablice Zbiorcze`
     window.timetableInterval = setInterval(function() {
         loadTimetables();
         parser.refreshSceneriesList();
