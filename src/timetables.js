@@ -31,19 +31,18 @@ $(document).ready(function() {
     toggleMargin();
     initzializeMenu();
 
-    parser.getStationsData();
-    parser.getTimetables();
-    parser.getActiveStations();
+    parser.getTimetables().then();
 
-    setInterval(function() {
-        parser.getTimetables();
+    window.getTimetablesInterval = setInterval(function() {
+        parser.getTimetables().then();
     }, 50000);
 
-    setInterval(function() {
-        parser.getActiveStations();
-    }, Math.floor(Math.random() * (90000 - 60000 + 1)) + 60000);
+    window.getActiveStationsInterval = setInterval(function() {
+        parser.getActiveStations().then();
+    }, 50000);
 
-    setTimeout(function() {
+    parser.getStationsData().then(() => {
+        parser.getActiveStations().then(() => parser.generateStationsList());
         if (urlParams.get('station') !== null) {
             window.station = urlParams.get('station').replace('_', ' ')
             stationDataAsJson.forEach((stationData) => {
@@ -54,7 +53,7 @@ $(document).ready(function() {
             });
             createTimetableInterval();
         }
-    }, 500);
+    });
 
 
     $('#menu-button').click(function () {
