@@ -8,6 +8,7 @@ window.isMargin = localStorage.getItem('isMargin') === 'true';
 window.timetableSize = localStorage.getItem('timetableSize') || 'normal';
 window.stopTypes = JSON.parse(localStorage.getItem('stopTypes')) || ['ph'];
 window.trainTypes = JSON.parse(localStorage.getItem('trainTypes')) || ['EMRPA'];
+window.region = localStorage.getItem('region') || 'eu';
 window.timetablesAsJson = null;
 window.stationDataAsJson = null;
 window.activeStationsAsJson = null;
@@ -99,7 +100,13 @@ $(document).ready(function() {
         toggleSize();
     });
 
-    $('.stop-type').click(function() {
+    $('#region').change(function() {
+        window.region = $(this).val();
+        localStorage.region = region;
+        toggleRegion();
+    });
+
+    $('.stop-type').mousedown(function() {
         let switchId = $(this).attr('id');
         if (stopTypes.includes(switchId)) {
             $(this).removeClass('active');
@@ -187,6 +194,11 @@ function toggleSize() {
         labels.addClass('enlarged');
     }
     refreshTimetablesAnim();
+}
+
+function toggleRegion() {
+    parser.refreshSceneriesList();
+    loadTimetables();
 }
 
 function toggleMenu() {
@@ -335,5 +347,7 @@ function initzializeMenu () {
         }
 
     $('#timetable-size').val(timetableSize);
+    $('#region').val(region);
+    toggleRegion();
     toggleSize();
 }
