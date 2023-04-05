@@ -138,7 +138,7 @@ body {
 		}
 	}
 
-	#menu-box {
+	#menu-box, #menu-box-2 {
 		z-index: 4;
 		position: relative;
 		visibility: hidden;
@@ -317,6 +317,10 @@ body {
 			}
 
 		}
+	}
+
+	#menu-box-2 {
+		position: absolute;
 	}
 }
 

@@ -18,7 +18,7 @@
 				}
 			}
 
-			#menu-box {
+			#menu-box, #menu-box-2 {
 				section {
 					width: 65vmin;
 					height: 90vmin;
@@ -30,6 +30,23 @@
 							height: 5vmin;
 							padding-left: 0.6vmin;
 							margin: 2.5vmin;
+						}
+
+						a {
+							width: 45vmin;
+							height: 5vmin;
+							font-size: 2.4vmin;
+						}
+
+						.container {
+							width: 45vmin;
+							margin: 2.5vmin;
+							gap: 1.25vmin;
+
+							div {
+								width: 100%;
+								gap: 1.25vmin;
+							}
 						}
 					}
 				}

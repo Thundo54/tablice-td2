@@ -142,6 +142,33 @@ $(document).ready(function() {
         loadTimetables();
     });
 
+    $('.train-category').mousedown(function() {
+        let switchId = $(this).attr('id');
+        if (trainCategory.includes(switchId)) {
+            $(this).removeClass('active');
+            trainCategory.splice(trainCategory.indexOf(switchId), 1);
+        } else {
+            $(this).addClass('active');
+            trainCategory.push(switchId);
+        }
+        loadTimetables();
+    });
+
+    $('#reset-filter').mousedown(function() {
+        localStorage.removeItem('stopTypes');
+        localStorage.removeItem('trainTypes');
+        localStorage.removeItem('trainCategory');
+        window.stopTypes = ['ph'];
+        window.trainTypes = ['EMRPA'];
+        window.trainCategory = ['EI', 'MP', 'RP', 'RO', 'TM', 'LT', 'TK', 'ZG', 'ZX'];
+        initzializeMenu();
+        loadTimetables();
+    });
+
+    $('#titles').mousedown(function() {
+            document.documentElement.requestFullscreen().then();
+    });
+
     $(document).bind('keydown', function(e) {
         if (e.which === 121) {
             e.preventDefault();
@@ -156,7 +183,7 @@ $(document).ready(function() {
 
         if (e.which === 27) {
             e.preventDefault();
-            if ($('#menu-box').hasClass('popup')) {
+            if ($('#menu-box').hasClass('popup') || $('#menu-box-2').hasClass('popup')) {
                 toggleMenu();
             }
         }
@@ -202,10 +229,18 @@ function toggleRegion() {
 }
 
 function toggleMenu() {
+    let menuBox = $('#menu-box');
+    let menuBox2 = $('#menu-box-2');
     $('#close-box').toggleClass('active');
     $('#menu').toggleClass('background-fade');
+    $('#menu-button').toggleClass('fill');
+    if (menuBox2.hasClass('popup')) { menuBox2.toggleClass('popup'); }
+    else { menuBox.toggleClass('popup');}
+}
+
+function switchMenuPage() {
     $('#menu-box').toggleClass('popup');
-    $('#menu-button').toggleClass('rotate-button-right');
+    $('#menu-box-2').toggleClass('popup');
 }
 
 function createTimetableInterval() {
