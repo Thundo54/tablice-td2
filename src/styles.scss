@@ -94,60 +94,51 @@ body {
 		top: 0;
 		font-size: 3vmin;
 		display: flex;
-		flex-direction: column;
-		gap: 0.2vmin;
-		padding: 0.4vmin 0.5vmin;
+		flex-direction: row;
+		padding: 0.4vmin 0.3vmin;
+		text-align: center;
+
+		a {
+			font-size: 3.3vmin;
+			color: $color_2;
+			transition: color 0.3s cubic-bezier(0, 0, 0, 1), transform 0.3s cubic-bezier(0, 0, 0, 1);
+			transform-origin: 50% 49%;
+			user-select: none;
+
+			&:hover {
+				color: $color_1;
+				cursor: pointer;
+				transform: scale(0.95);
+			}
+
+			&:active {
+				transform: scale(0.85);
+			}
+
+			&.fill {
+				font-variation-settings:
+				'FILL' 1;
+			}
+
+			&.turn {
+				transform: scaleX(-1);
+			}
+
+			&.scale-down {
+				transform: scale(0.9);
+			}
+
+			&.scale-up {
+				transform: scale(1.1);
+			}
+		}
 
 		&.hidden {
 			display: none;
 		}
-
-		button {
-			color: $color_2;
-			transition: transform 0.3s cubic-bezier(0, 0, 0, 1), color 0.3s;
-			transform-origin: 50% 48%;
-
-			&:hover {
-				color: $color_1;
-			}
-
-			&.rotate-button-left {
-				transform: rotate(-90deg);
-			}
-
-			&.rotate-button-right {
-				transform: rotate(90deg);
-			}
-
-			&.resize-button-up {
-				transform: scale(1.2);
-			}
-
-			&.resize-button-down {
-				transform: scale(0.8);
-			}
-		}
-
-		#menu-button {
-			&:after {
-				content: "☰";
-			}
-		}
-
-		#type-button {
-			&:before {
-				content: "⮀";
-			}
-		}
-
-		#margin-button {
-			&:after {
-				content: "⛶";
-			}
-		}
 	}
 
-	#menu-box {
+	#menu-box, #menu-box-2 {
 		z-index: 4;
 		position: relative;
 		visibility: hidden;
@@ -159,7 +150,7 @@ body {
 		transform: scale(0.8);
 
 		&.popup {
-			transform: scale(1.0);
+			transform: scale(1);
 			visibility: visible;
 			opacity: 100;
 		}
@@ -169,6 +160,30 @@ body {
 			background-color: #222;
 			margin: 2vmin 0;
 			border-radius: 0.2vmin;
+		}
+
+
+		.menu-page-switcher {
+			color: $color_2;
+			position: absolute;
+			padding: 0.2vmin;
+			font-size: 3vmin;
+			font-variation-settings: 'FILL' 1;
+
+			&:hover {
+				color: $color_1;
+			}
+		}
+
+		#next-page {
+			right: 0;
+			cursor: pointer;
+			user-select: none;
+		}
+
+		#previous-page {
+			cursor: pointer;
+			user-select: none;
 		}
 
 		section {
@@ -189,7 +204,7 @@ body {
 					border: 0.1vmin solid $color_2;
 					background: none;
 					color: $color_2;
-					padding-left: 0.3vmin;
+					padding-left: 0.4vmin;
 
 					optgroup, option {
 						color: black;
@@ -227,9 +242,14 @@ body {
 					}
 
 					&:hover {
+						cursor: pointer;
+					}
+
+					&:active {
 						color: $color_1;
 						border-color: $color_1;
-						cursor: pointer;
+						transform: scale(0.95);
+						opacity: 0.8;
 					}
 				}
 
@@ -302,6 +322,10 @@ body {
 			}
 
 		}
+	}
+
+	#menu-box-2 {
+		position: absolute;
 	}
 }
 
@@ -380,11 +404,11 @@ body {
 				}
 
 				&:nth-child(2) {
-					width: 11%;
+					width: 12%;
 				}
 
 				&:nth-child(3) {
-					width: 33%;
+					width: 32%;
 				}
 
 				&:nth-child(5) {
@@ -495,6 +519,10 @@ body {
 					border-left: 1vmin solid $color_3;
 				}
 			}
+
+			&:nth-child(n+14) {
+				display: none;
+			}
 		}
 	}
 
@@ -508,11 +536,11 @@ body {
 				}
 
 				&.trainNo {
-					width: 11%;
+					width: 12%;
 				}
 
 				&.fromTo {
-					width: 33%;
+					width: 32%;
 				}
 
 				&.via {

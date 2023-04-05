@@ -1,26 +1,24 @@
 @media only screen and (hover: none) {
 	body {
 		#menu {
-			#menu-button {
-				width: 8vmin;
-				height: 8vmin;
-				font-size: 5.5vmin;
-				line-height: 1.4em;
+			#button-box {
+				padding: 0.8vmin 1vmin;
+				flex-direction: column;
+
+				a {
+					font-size: 5.5vmin;
+				}
+
+				#type-button {
+					order: 2;
+				}
+
+				#margin-button {
+					display: none;
+				}
 			}
 
-			#type-button {
-				width: 8vmin;
-				height: 8vmin;
-				font-size: 5.5vmin;
-				line-height: 1.4em;
-				top: 6.5vmin;
-			}
-
-			#margin-button {
-				display: none;
-			}
-
-			#menu-box {
+			#menu-box, #menu-box-2 {
 				section {
 					width: 65vmin;
 					height: 90vmin;
@@ -32,6 +30,23 @@
 							height: 5vmin;
 							padding-left: 0.6vmin;
 							margin: 2.5vmin;
+						}
+
+						a {
+							width: 45vmin;
+							height: 5vmin;
+							font-size: 2.4vmin;
+						}
+
+						.container {
+							width: 45vmin;
+							margin: 2.5vmin;
+							gap: 1.25vmin;
+
+							div {
+								width: 100%;
+								gap: 1.25vmin;
+							}
 						}
 					}
 				}
@@ -45,18 +60,14 @@
 					font-size: 2.5vmin;
 				}
 
-				footer {
-					font-size: 2vmin;
+				.menu-page-switcher {
+					font-size: 6vmin;
 					padding: 1vmin;
+				}
 
-					span {
-						float: right;
-
-						&:nth-child(2) {
-							display: none;
-						}
-					}
-
+				footer {
+					font-size: 2.2vmin;
+					padding: 1.2vmin;
 				}
 			}
 		}
@@ -74,16 +85,28 @@
 		}
 	}
 
-	@media (max-aspect-ratio: 4/3) {
+	@media (orientation: portrait) {
 		body {
 			#menu {
-				#menu-box {
+				#menu-box, #menu-box-2 {
 					flex-direction: column;
 
 					.vertical-line {
 						width: auto;
 						height: 0.2vmin;
 						margin: 0 2vmin;
+					}
+				}
+
+				footer {
+					font-size: 2.2vmin;
+					display: flex !important;
+
+					span {
+
+						&:nth-child(2) {
+							display: none;
+						}
 					}
 				}
 			}

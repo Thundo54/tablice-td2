@@ -6,8 +6,11 @@ export function parseTimetable() {
     if (station === '') { return; }
     let stationSwitch = !isDeparture;
     timetablesAsJson.forEach((timetable) => {
-        if (timetable['timetable'] === undefined) { return; }
+        if (timetable.timetable === undefined) { return; }
+        if (timetable.region !== region) { return; }
         timetable['timetable']['stopList'].forEach((stopPoint) => {
+            if (stopPoint['stopTime'] === null) { stopPoint['stopTime'] = 0; }
+            if (stopPoint['stopTime'] > 0 && stopPoint['stopType'] === '') { stopPoint['stopType'] = 'pt'; }
             if (station.toUpperCase() === stopPoint['stopNameRAW'].toUpperCase()) {
                 stationSwitch = !stationSwitch;
                 if (stopPoint['confirmed']) { return; }
@@ -21,13 +24,20 @@ export function parseTimetable() {
         });
 
         stopList = stopList.filter(stop => stop !== train.stationFromTo);
-        stopList = stopList.filter(stop => stop !== utils.capitalizeFirstLetter(station));
+        stopList = stopList.filter(stop => stop !== utils.capitalizeFirstLetter(station).split(',')[0]);
         stopList = stopList.filter((stop, index) => stopList.indexOf(stop) >= index);
         train.timetable = stopList;
 
         if (train.timestamp !== undefined) {
-            if (train.category.match(new RegExp(`\\b[${trainTypes.join('')}]`))) { trainSet.push(train); }
+            if (train.category.match(new RegExp(`\\b[${trainTypes.join('')}]`))) {
+                trainCategory.forEach((category) => {
+                    if (train.category.includes(category)) {
+                         trainSet.push(train);
+                    }
+                });
+            }
         }
+
         stopList = [];
         train = {};
         stationSwitch = !isDeparture;
@@ -37,21 +47,22 @@ export function parseTimetable() {
     return trainsSetBefore;
 }
 
-function generateStationsList() {
+export function generateStationsList() {
     let stationsSet = [], station = {};
     stationDataAsJson.forEach((stationData) => {
+
         if (stationData['availability'] === 'abandoned') { return; }
         if (stationData['availability'] === 'unavailable') { return; }
 
-        station['name'] = stationData['name'];
-        station['isActive'] = false;
+        station.name = stationData.name;
+        station.isActive = false;
 
         if (stationData['checkpoints'] === null || stationData['checkpoints'] === '') {
-            station['nameApi'] = station['name'];
-            station['checkpoints'] = station['name'];
+            station.nameApi = station.name;
+            station.checkpoints = station.name;
         } else {
-            station['nameApi'] = stationData['checkpoints'].split(';')[0];
-            station['checkpoints'] = stationData['checkpoints'];
+            station.nameApi = stationData.checkpoints.split(';')[0];
+            station.checkpoints = stationData.checkpoints;
         }
 
         stationsSet.push(station);
@@ -71,23 +82,23 @@ export function refreshSceneriesList() {
     otherSceneries.empty();
 
     stationsSet.forEach((station) => {
-        station['isActive'] = false;
+        station.isActive = false;
         
         activeStationsAsJson.forEach((activeStation) => {
-            if (activeStation['region'] !== "eu") { return; }
+            if (activeStation['region'] !== region) { return; }
             if (!activeStation['isOnline']) { return; }
-            if (activeStation['stationName'] === station['name']) {
-                station['isActive'] = true;
+            if (activeStation['stationName'] === station.name) {
+                station.isActive = true;
             }
         });
 
-        if (station['isActive']) {
+        if (station.isActive) {
             activeSceneries.append($('<option>', {
-                text: station['name'],
+                text: station.name
             }));
         } else {
             otherSceneries.append($('<option>', {
-                text: station['name']
+                text: station.name
             }));
         }
     });
@@ -100,8 +111,8 @@ export function refreshCheckpointsList() {
     checkpoints.empty();
 
     stationsSet.forEach((station) => {
-        if (station['name'] === $('#sceneries').val()) {
-            station['checkpoints'].split(';').forEach((checkpoint) => {
+        if (station.name === $('#sceneries').val()) {
+            station.checkpoints.split(';').forEach((checkpoint) => {
                 checkpoints.append($('<option>', {
                     value: checkpoint,
                     text: utils.capitalizeFirstLetter(checkpoint)
@@ -112,41 +123,41 @@ export function refreshCheckpointsList() {
 }
 
 export function getTimetables() {
-    $.ajax({
-        url: 'https://spythere.pl/api/getActiveTrainList',
-        dataType: 'json',
-        //url: 'https://gist.githubusercontent.com/Thundo54/bba89c9eba39921844eec0013c9c1c40/raw/96b70b491f68d7400b5ac11fce8d54f226f4047c/gistfile1.txt',
-        //url: 'https://gist.githubusercontent.com/Thundo54/8f66268e1b36bdf92b40f26e50f652dc/raw/090f14935868e814ff071363b6b90ca0fb7849f6/gistfile1.txt',
-        success: [
-            (response) => {
+    return new Promise((resolve) => {
+        $.ajax({
+            url: timetablesAPI,
+            dataType: 'json',
+            success: (response) => {
                 window.timetablesAsJson = response;
+                resolve();
             }
-        ]
+        });
     });
 }
 
 export function getStationsData() {
-    $.ajax({
-        url: 'https://spythere.pl/api/getSceneries',
-        dataType: 'json',
-        success: [
-            (response) => {
+    return new Promise((resolve) => {
+        $.ajax({
+            url: 'https://spythere.pl/api/getSceneries',
+            dataType: 'json',
+            success: (response) => {
                 window.stationDataAsJson = response;
-                generateStationsList();
+                resolve();
             }
-        ]
+        });
     });
 }
 
 export function getActiveStations() {
-    $.ajax({
-        url: 'https://api.td2.info.pl/?method=getStationsOnline',
-        dataType: 'json',
-        success: [
-            (response) => {
+    return new Promise((resolve) => {
+        $.ajax({
+            url: 'https://api.td2.info.pl/?method=getStationsOnline',
+            dataType: 'json',
+            success: (response) => {
                 window.activeStationsAsJson = response['message'];
+                resolve();
             }
-        ]
+        });
     });
 }
 
