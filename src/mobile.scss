@@ -1,23 +1,21 @@
 @media only screen and (hover: none) {
 	body {
 		#menu {
-			#menu-button {
-				width: 8vmin;
-				height: 8vmin;
-				font-size: 5.5vmin;
-				line-height: 1.4em;
-			}
+			#button-box {
+				padding: 0.8vmin 1vmin;
+				flex-direction: column;
 
-			#type-button {
-				width: 8vmin;
-				height: 8vmin;
-				font-size: 5.5vmin;
-				line-height: 1.4em;
-				top: 6.5vmin;
-			}
+				a {
+					font-size: 5.5vmin;
+				}
 
-			#margin-button {
-				display: none;
+				#type-button {
+					order: 2;
+				}
+
+				#margin-button {
+					display: none;
+				}
 			}
 
 			#menu-box {

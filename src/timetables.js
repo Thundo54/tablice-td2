@@ -72,11 +72,9 @@ $(document).ready(function() {
         changeBoardType();
         loadTimetables();
         if (isDeparture) {
-            typeButton.toggleClass('rotate-button-left');
-            setTimeout(function() { typeButton.toggleClass('rotate-button-left'); }, 400);
+            typeButton.addClass('turn');
         } else {
-            typeButton.toggleClass('rotate-button-right');
-            setTimeout(function() { typeButton.toggleClass('rotate-button-right'); }, 400);
+            typeButton.removeClass('turn');
         }
     });
 
@@ -84,13 +82,6 @@ $(document).ready(function() {
         let marginButton = $('#margin-button');
         window.isMargin = !isMargin;
         localStorage.isMargin = isMargin;
-        if (!isMargin) {
-            marginButton.toggleClass('resize-button-up');
-            setTimeout(function() { marginButton.toggleClass('resize-button-up'); }, 400);
-        } else {
-            marginButton.toggleClass('resize-button-down');
-            setTimeout(function() { marginButton.toggleClass('resize-button-down'); }, 400);
-        }
         toggleMargin();
     });
 
@@ -166,6 +157,10 @@ $(document).ready(function() {
             }
         }
     });
+
+    $('.menu-page-switcher').mousedown(function() {
+        switchMenuPage();
+    });
 });
 
 $(window).resize(function() {
@@ -230,7 +225,7 @@ function loadTimetables() {
                 train.trainNo,
                 train.stationFromTo,
                 '',
-                trainSet[i]['category'],
+                train.category,
                 '1',
                 '',
                 index
@@ -333,6 +328,16 @@ function initzializeMenu () {
     trainTypes.forEach((trainType) => {
         $(`#${trainType}`).addClass('active');
     });
+
+    trainCategory.forEach((trainCategory) => {
+        $(`#${trainCategory}`).addClass('active');
+    });
+
+    if (isDeparture) {
+            $('#type-button').addClass('turn');
+        } else {
+            $('#type-button').removeClass('turn');
+        }
 
     $('#timetable-size').val(timetableSize);
     toggleSize();

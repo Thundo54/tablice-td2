@@ -94,56 +94,47 @@ body {
 		top: 0;
 		font-size: 3vmin;
 		display: flex;
-		flex-direction: column;
-		gap: 0.2vmin;
-		padding: 0.4vmin 0.5vmin;
+		flex-direction: row;
+		padding: 0.4vmin 0.3vmin;
+		text-align: center;
 
-		&.hidden {
-			display: none;
-		}
-
-		button {
+		a {
+			font-size: 3.3vmin;
 			color: $color_2;
-			transition: transform 0.3s cubic-bezier(0, 0, 0, 1), color 0.3s;
-			transform-origin: 50% 48%;
+			transition: color 0.3s cubic-bezier(0, 0, 0, 1), transform 0.3s cubic-bezier(0, 0, 0, 1);
+			transform-origin: 50% 49%;
+			user-select: none;
 
 			&:hover {
 				color: $color_1;
+				cursor: pointer;
+				transform: scale(0.95);
 			}
 
-			&.rotate-button-left {
-				transform: rotate(-90deg);
+			&:active {
+				transform: scale(0.85);
 			}
 
-			&.rotate-button-right {
-				transform: rotate(90deg);
+			&.fill {
+				font-variation-settings:
+				'FILL' 1;
 			}
 
-			&.resize-button-up {
-				transform: scale(1.2);
+			&.turn {
+				transform: scaleX(-1);
 			}
 
-			&.resize-button-down {
-				transform: scale(0.8);
+			&.scale-down {
+				transform: scale(0.9);
+			}
+
+			&.scale-up {
+				transform: scale(1.1);
 			}
 		}
 
-		#menu-button {
-			&:after {
-				content: "☰";
-			}
-		}
-
-		#type-button {
-			&:before {
-				content: "⮀";
-			}
-		}
-
-		#margin-button {
-			&:after {
-				content: "⛶";
-			}
+		&.hidden {
+			display: none;
 		}
 	}
 
@@ -169,6 +160,30 @@ body {
 			background-color: #222;
 			margin: 2vmin 0;
 			border-radius: 0.2vmin;
+		}
+
+
+		.menu-page-switcher {
+			color: $color_2;
+			position: absolute;
+			padding: 0.2vmin;
+			font-size: 3vmin;
+			font-variation-settings: 'FILL' 1;
+
+			&:hover {
+				color: $color_1;
+			}
+		}
+
+		#next-page {
+			right: 0;
+			cursor: pointer;
+			user-select: none;
+		}
+
+		#previous-page {
+			cursor: pointer;
+			user-select: none;
 		}
 
 		section {
