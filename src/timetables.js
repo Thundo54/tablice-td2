@@ -331,12 +331,12 @@ export function refreshTimetablesAnim() {
         for (let j = 0; j < td.length; j++) {
             span = $(td[j]).find('span');
             animDuration = ((span.width() + $(td[j]).width()) * 10) / 850;
-            if (p.css('animation-duration') !== animDuration) {
-                if (p.width() > $(td[j]).width()) {
-                    p.css('animation', `ticker linear ${animDuration}s infinite`);
-                    p.css('--elementWidth', $(td[j]).width());
+            if (span.css('animation-duration') !== animDuration) {
+                if (span.width() > $(td[j]).width()) {
+                    span.css('animation', `ticker linear ${animDuration}s infinite`);
+                    span.css('--elementWidth', $(td[j]).width());
                 } else {
-                    p.css('animation', '');
+                    span.css('animation', '');
                 }
             }
         }
