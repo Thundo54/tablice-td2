@@ -38,7 +38,7 @@ export function parseTimetable() {
     return trainsSetBefore;
 }
 
-function generateStationsList() {
+export function generateStationsList() {
     let stationsSet = [], station = {};
     stationDataAsJson.forEach((stationData) => {
 

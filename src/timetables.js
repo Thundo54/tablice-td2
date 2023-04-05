@@ -209,7 +209,7 @@ function createTimetableInterval() {
     }, 30000);
 }
 
-function loadTimetables() {
+export function loadTimetables() {
     let trainsSetBefore = window.trainsSetBefore;
     let trainSet = parser.parseTimetable();
     if (trainSet === undefined) { return; }

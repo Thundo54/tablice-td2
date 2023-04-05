@@ -1,4 +1,7 @@
 //add it to api (to be able to make changes in the future)
+import * as parser from "./parser.js";
+import { loadTimetables } from "./timetables.js";
+
 let namesCorrections = {
     'BB': 'Bielsko-Biała',
     'Maz.': 'Mazowiecki',
@@ -138,4 +141,12 @@ export function convertTime(time) {
 
 export function createTrainString(category, trainNo) {
     return convertCategory(category) + ' ' + trainNo;
+}
+
+window.loadTimetablesFromUrl = function(url) {
+    clearInterval(timetableInterval);
+    clearInterval(getTimetablesInterval);
+    clearInterval(getActiveStationsInterval);
+    window.timetablesAPI = url;
+    parser.getTimetables().then(() => loadTimetables());
 }
