@@ -54,6 +54,7 @@ export function createTrainData(stopPoint, timetable) {
     }
 
     train.stoppedHere = stopPoint['stopped'];
+    train.stopTime = stopPoint['stopTime'];
     train.trainNo = timetable['trainNo'];
     train.category = timetable['timetable']['category'];
 

@@ -9,6 +9,8 @@ export function parseTimetable() {
         if (timetable.timetable === undefined) { return; }
         if (timetable.region !== region) { return; }
         timetable['timetable']['stopList'].forEach((stopPoint) => {
+            if (stopPoint['stopTime'] === null) { stopPoint['stopTime'] = 0; }
+            if (stopPoint['stopTime'] > 0 && stopPoint['stopType'] === '') { stopPoint['stopType'] = 'pt'; }
             if (station.toUpperCase() === stopPoint['stopNameRAW'].toUpperCase()) {
                 stationSwitch = !stationSwitch;
                 if (stopPoint['confirmed']) { return; }
