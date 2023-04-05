@@ -12,6 +12,10 @@ window.region = localStorage.getItem('region') || 'eu';
 window.timetablesAsJson = null;
 window.stationDataAsJson = null;
 window.activeStationsAsJson = null;
+window.timetableInterval = null;
+window.timetablesAPI = 'https://spythere.pl/api/getActiveTrainList';
+window.trainCategory = JSON.parse(localStorage.getItem('trainCategory')) ||
+    ['EI', 'MP', 'RP', 'RO', 'TM', 'LT', 'TK', 'ZG', 'ZX'];
 
 $(document).ready(function() {
     let urlParams = new URLSearchParams(window.location.search);
