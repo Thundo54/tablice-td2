@@ -24,7 +24,7 @@ export function parseTimetable() {
         });
 
         stopList = stopList.filter(stop => stop !== train.stationFromTo);
-        stopList = stopList.filter(stop => stop !== utils.capitalizeFirstLetter(station));
+        stopList = stopList.filter(stop => stop !== utils.capitalizeFirstLetter(station).split(',')[0]);
         stopList = stopList.filter((stop, index) => stopList.indexOf(stop) >= index);
         train.timetable = stopList;
 

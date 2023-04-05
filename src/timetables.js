@@ -363,6 +363,10 @@ function changeBoardType() {
 }
 
 function initzializeMenu () {
+    $(`.train-type`).removeClass('active');
+    $(`.stop-type`).removeClass('active');
+    $(`.train-category`).removeClass('active');
+
     stopTypes.forEach((stopType) => {
         $(`#${stopType}`).addClass('active');
     });
