@@ -55,8 +55,7 @@ $(document).ready(function() {
         }
     });
 
-
-    $('#menu-button').click(function () {
+    $('#menu-button').mousedown(function () {
         toggleMenu();
     });
 
@@ -64,7 +63,7 @@ $(document).ready(function() {
         toggleMenu();
     });
 
-    $('#type-button').click(function () {
+    $('#type-button').mousedown(function () {
         let typeButton = $('#type-button');
         window.isDeparture = !isDeparture;
         localStorage.isDeparture = isDeparture;
@@ -77,8 +76,7 @@ $(document).ready(function() {
         }
     });
 
-    $('#margin-button').click(function () {
-        let marginButton = $('#margin-button');
+    $('#margin-button').mousedown(function () {
         window.isMargin = !isMargin;
         localStorage.isMargin = isMargin;
         toggleMargin();
@@ -124,7 +122,7 @@ $(document).ready(function() {
         loadTimetables();
     });
 
-    $('.train-type').click(function() {
+    $('.train-type').mousedown(function() {
         let switchId = $(this).attr('id');
         if (trainTypes.includes(switchId)) {
             $(this).removeClass('active');
@@ -146,7 +144,7 @@ $(document).ready(function() {
             toggleMenu();
         } else if (e.which === 68) {
             e.preventDefault();
-            $('#type-button').click();
+            $('#type-button').mousedown();
         }
 
         if (e.which === 27) {
