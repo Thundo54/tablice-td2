@@ -221,43 +221,41 @@ function loadTimetables() {
     let trainsSetBefore = window.trainsSetBefore;
     let trainSet = parser.parseTimetable();
     if (trainSet === undefined) { return; }
-    let trainsNew = trainSet.filter(m => !trainsSetBefore.map(n => n.trainNo).includes(m.trainNo)); // pociągi które są w trainSet, ale nie ma ich w trainsSetBefore
-    let trainsToRemove = trainsSetBefore.filter(m => !trainSet.map(n => n.trainNo).includes(m.trainNo)); // pociągi które są w trainsSetBefore, ale nie ma ich w trainSet
+    let trainsNew = trainSet.filter(m => !trainsSetBefore.map(n => n.trainNo).includes(m.trainNo));
+    let trainsToRemove = trainsSetBefore.filter(m => !trainSet.map(n => n.trainNo).includes(m.trainNo));
     if (trainsSetBefore.length === 0 && trainSet.length > 0 || $('#timetables table tr').length === 0) {
-        for (let i in trainSet) {
+        trainSet.forEach((train, index) => {
             $('#timetables table').append(utils.addRow(
-                trainSet[i]['timestamp'],
-                trainSet[i]['trainNo'],
-                trainSet[i]['stationFromTo'],
+                train.timestamp,
+                train.trainNo,
+                train.stationFromTo,
                 '',
                 trainSet[i]['category'],
                 '1',
                 '',
-                i
+                index
             ));
-        }
+        });
         utils.refreshIds();
     } else {
         if (trainsToRemove.length > 0) {
-            for (let i in trainsToRemove) {
-                let index = trainsSetBefore.indexOf(trainsToRemove[i])
-                $(`#${index}`).remove();
-            }
+            trainsToRemove.forEach((train) => {
+                $(`#${trainsSetBefore.indexOf(train)}`).remove();
+            });
             utils.refreshIds();
         }
         if (trainsNew.length > 0) {
-            for (let i in trainsNew) {
-                let index = trainSet.indexOf(trainsNew[i])
-                // console.log(`Dodano pociąg ${trainsNew[i]['trainNo']} (${utils.convertTime(trainsNew[i]['timestamp'])}) => INDEX ${index}`)
+            trainsNew.forEach((train) => {
+                let index = trainSet.indexOf(train);
                 let row = utils.addRow(
-                    trainsNew[i]['timestamp'],
-                    trainsNew[i]['trainNo'],
-                    trainsNew[i]['stationFromTo'],
+                    train.timestamp,
+                    train.trainNo,
+                    train.stationFromTo,
                     '',
-                    trainsNew[i]['category'],
+                    train.category,
                     '1',
                     '',
-                    i
+                    index
                 );
                 if (index === 0) {
                      $('#timetables table').prepend(row);
@@ -265,21 +263,20 @@ function loadTimetables() {
                     $(`#${index-1}`).after(row);
                 }
                 utils.refreshIds();
-            }
+            });
         }
     }
-    for (let i in trainSet) {
-        //console.log(trainSet[i]['trainNo'], trainSet[i]['timestamp'], trainSet[i]['delay'], i);
-        $(`#${i} td:nth-child(7) span`)
+    trainSet.forEach((train, index) => {
+        $(`#${index} td:nth-child(7) span`)
             .text(utils.createRemark(
-                trainSet[i]['delay'],
-                trainSet[i]['beginsTerminatesHere'],
-                trainSet[i]['stoppedHere']
+                train.delay,
+                train.beginsTerminatesHere,
+                train.stoppedHere
             ));
 
-        $(`#${i} td:nth-child(4) span`)
-            .text(trainSet[i]['timetable'].join(', '));
-    }
+        $(`#${index} td:nth-child(4) span`)
+            .text(train.timetable.join(', '));
+    });
     refreshTimetablesAnim();
 }
 

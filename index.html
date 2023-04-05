@@ -2,12 +2,15 @@
 <html lang="pl">
     <head>
         <meta charset="utf-8">
-        <title>Tablice Stacyjne</title>
-        <link rel="icon" href="public/favicon.ico"/>
-        <link rel="stylesheet" href="src/mobile.css"/>
-        <link rel="stylesheet" href="src/styles.css"/>
-        <link rel="stylesheet" href="src/reset.css"/>
-        <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover"/>
+        <title>Tablice Zbiorcze</title>
+        <link rel="icon" href="public/favicon.ico">
+        <link rel="stylesheet" href="src/mobile.css">
+        <link rel="stylesheet" href="src/styles.css">
+        <link rel="stylesheet" href="src/scale.css">
+        <link rel="stylesheet" href="src/reset.css">
+<!--        <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded">-->
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@250,0..1">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
         <script type="module" src="src/timetables.js"></script>
     </head>
@@ -25,16 +28,13 @@
                     <div>
                         <label for="sceneries">Sceneria</label>
                         <select id="sceneries">
-                            <optgroup label="AKTYWNE SCENERIE" id="active-sceneries">
-                            </optgroup>
-                            <optgroup label="POZOSTAŁE SCENERIE" id="other-sceneries">
-                            </optgroup>
+                            <optgroup label="AKTYWNE SCENERIE" id="active-sceneries"></optgroup>
+                            <optgroup label="POZOSTAŁE SCENERIE" id="other-sceneries"></optgroup>
                         </select>
                     </div>
                     <div>
                         <label for="checkpoints">Posterunek</label>
-                        <select id="checkpoints">
-                        </select>
+                        <select id="checkpoints"></select>
                     </div>
                     <div disabled>
                         <label for="timetable-type">Serwer TD2</label>
@@ -57,8 +57,8 @@
                         <label>Wyświetl pociągi</label>
                         <div class="container">
                             <div class="inline">
-                                <a class="train-type" id="T"><span>Towarowe</span></a>
                                 <a class="train-type" id="EMRPA"><span>Pasażerskie</span></a>
+                                <a class="train-type" id="T"><span>Towarowe</span></a>
                             </div>
                             <div class="inline">
                                 <a class="train-type" id="L"><span>Luzem</span></a>
@@ -79,7 +79,7 @@
                             </div>
                         </div>
                     </div>
-                     <div disabled>
+                     <div>
                         <label>Pozostałe opcje</label>
                         <div class="container">
                             <a class="switch" id="only-stop"><span>Tylko rozkłady z postojem</span></a>

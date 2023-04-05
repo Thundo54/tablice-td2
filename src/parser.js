@@ -6,7 +6,8 @@ export function parseTimetable() {
     if (station === '') { return; }
     let stationSwitch = !isDeparture;
     timetablesAsJson.forEach((timetable) => {
-        if (timetable['timetable'] === undefined) { return; }
+        if (timetable.timetable === undefined) { return; }
+        if (timetable.region !== region) { return; }
         timetable['timetable']['stopList'].forEach((stopPoint) => {
             if (station.toUpperCase() === stopPoint['stopNameRAW'].toUpperCase()) {
                 stationSwitch = !stationSwitch;
@@ -40,18 +41,19 @@ export function parseTimetable() {
 function generateStationsList() {
     let stationsSet = [], station = {};
     stationDataAsJson.forEach((stationData) => {
+
         if (stationData['availability'] === 'abandoned') { return; }
         if (stationData['availability'] === 'unavailable') { return; }
 
-        station['name'] = stationData['name'];
-        station['isActive'] = false;
+        station.name = stationData.name;
+        station.isActive = false;
 
         if (stationData['checkpoints'] === null || stationData['checkpoints'] === '') {
-            station['nameApi'] = station['name'];
-            station['checkpoints'] = station['name'];
+            station.nameApi = station.name;
+            station.checkpoints = station.name;
         } else {
-            station['nameApi'] = stationData['checkpoints'].split(';')[0];
-            station['checkpoints'] = stationData['checkpoints'];
+            station.nameApi = stationData.checkpoints.split(';')[0];
+            station.checkpoints = stationData.checkpoints;
         }
 
         stationsSet.push(station);
@@ -71,23 +73,23 @@ export function refreshSceneriesList() {
     otherSceneries.empty();
 
     stationsSet.forEach((station) => {
-        station['isActive'] = false;
+        station.isActive = false;
         
         activeStationsAsJson.forEach((activeStation) => {
-            if (activeStation['region'] !== "eu") { return; }
+            if (activeStation['region'] !== region) { return; }
             if (!activeStation['isOnline']) { return; }
-            if (activeStation['stationName'] === station['name']) {
-                station['isActive'] = true;
+            if (activeStation['stationName'] === station.name) {
+                station.isActive = true;
             }
         });
 
-        if (station['isActive']) {
+        if (station.isActive) {
             activeSceneries.append($('<option>', {
-                text: station['name'],
+                text: station.name
             }));
         } else {
             otherSceneries.append($('<option>', {
-                text: station['name']
+                text: station.name
             }));
         }
     });
@@ -100,8 +102,8 @@ export function refreshCheckpointsList() {
     checkpoints.empty();
 
     stationsSet.forEach((station) => {
-        if (station['name'] === $('#sceneries').val()) {
-            station['checkpoints'].split(';').forEach((checkpoint) => {
+        if (station.name === $('#sceneries').val()) {
+            station.checkpoints.split(';').forEach((checkpoint) => {
                 checkpoints.append($('<option>', {
                     value: checkpoint,
                     text: utils.capitalizeFirstLetter(checkpoint)
