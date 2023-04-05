@@ -61,17 +61,8 @@
 				}
 
 				footer {
-					font-size: 2vmin;
-					padding: 1vmin;
-
-					span {
-						float: right;
-
-						&:nth-child(2) {
-							display: none;
-						}
-					}
-
+					font-size: 2.2vmin;
+					padding: 1.2vmin;
 				}
 			}
 		}
@@ -89,16 +80,28 @@
 		}
 	}
 
-	@media (max-aspect-ratio: 4/3) {
+	@media (orientation: portrait) {
 		body {
 			#menu {
-				#menu-box {
+				#menu-box, #menu-box-2 {
 					flex-direction: column;
 
 					.vertical-line {
 						width: auto;
 						height: 0.2vmin;
 						margin: 0 2vmin;
+					}
+				}
+
+				footer {
+					font-size: 2.2vmin;
+					display: flex !important;
+
+					span {
+
+						&:nth-child(2) {
+							display: none;
+						}
 					}
 				}
 			}

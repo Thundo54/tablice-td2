@@ -150,7 +150,7 @@ body {
 		transform: scale(0.8);
 
 		&.popup {
-			transform: scale(1.0);
+			transform: scale(1);
 			visibility: visible;
 			opacity: 100;
 		}
@@ -204,7 +204,7 @@ body {
 					border: 0.1vmin solid $color_2;
 					background: none;
 					color: $color_2;
-					padding-left: 0.3vmin;
+					padding-left: 0.4vmin;
 
 					optgroup, option {
 						color: black;
@@ -242,9 +242,14 @@ body {
 					}
 
 					&:hover {
+						cursor: pointer;
+					}
+
+					&:active {
 						color: $color_1;
 						border-color: $color_1;
-						cursor: pointer;
+						transform: scale(0.95);
+						opacity: 0.8;
 					}
 				}
 
@@ -399,11 +404,11 @@ body {
 				}
 
 				&:nth-child(2) {
-					width: 11%;
+					width: 12%;
 				}
 
 				&:nth-child(3) {
-					width: 33%;
+					width: 32%;
 				}
 
 				&:nth-child(5) {
@@ -514,6 +519,10 @@ body {
 					border-left: 1vmin solid $color_3;
 				}
 			}
+
+			&:nth-child(n+14) {
+				display: none;
+			}
 		}
 	}
 
@@ -527,11 +536,11 @@ body {
 				}
 
 				&.trainNo {
-					width: 11%;
+					width: 12%;
 				}
 
 				&.fromTo {
-					width: 33%;
+					width: 32%;
 				}
 
 				&.via {
