@@ -14,6 +14,7 @@ export function parseTimetable() {
             if (station.toUpperCase() === stopPoint['stopNameRAW'].toUpperCase()) {
                 stationSwitch = !stationSwitch;
                 if (stopPoint['confirmed']) { return; }
+                if (isStopped && stopPoint['stopType'] === '') { return; }
                 train = utils.createTrainData(stopPoint, timetable, isDeparture);
             }
             if (stopTypes.some(stop => stopPoint['stopType'].includes(stop.replace('all', ''))) && stationSwitch) {

@@ -5,6 +5,7 @@ window.stationsSet = [];
 window.station = '';
 window.isDeparture = localStorage.getItem('isDeparture') === 'true';
 window.isMargin = localStorage.getItem('isMargin') === 'true';
+window.isStopped = localStorage.getItem('isStopped') === 'true';
 window.timetableSize = localStorage.getItem('timetableSize') || 'normal';
 window.stopTypes = JSON.parse(localStorage.getItem('stopTypes')) || ['ph'];
 window.trainTypes = JSON.parse(localStorage.getItem('trainTypes')) || ['EMRPA'];
@@ -158,10 +159,16 @@ $(document).ready(function() {
         loadTimetables();
     });
 
+    $('#toggle-stop').mousedown(function() {
+        window.isStopped = !isStopped;
+        localStorage.isStopped = isStopped;
+        toggleStopped();
+    });
     $('#reset-filter').mousedown(function() {
         localStorage.removeItem('stopTypes');
         localStorage.removeItem('trainTypes');
         localStorage.removeItem('trainCategory');
+        localStorage.removeItem('isStopped');
         window.stopTypes = ['ph'];
         window.trainTypes = ['EMRPA'];
         window.trainCategory = ['EI', 'MP', 'RP', 'RO', 'TM', 'LT', 'TK', 'ZG', 'ZX'];
@@ -205,6 +212,15 @@ $(window).resize(function() {
     }, 250);
 });
 
+function toggleStopped() {
+    let toggleStop = $('#toggle-stop');
+    if (isStopped) {
+        toggleStop.addClass('active');
+    } else {
+        toggleStop.removeClass('active');
+    }
+    loadTimetables();
+}
 function toggleMargin() {
     let container = $('#container');
     if (!isMargin) {
@@ -393,6 +409,7 @@ function initzializeMenu () {
 
     $('#timetable-size').val(timetableSize);
     $('#region').val(region);
+    toggleStopped();
     toggleRegion();
     toggleSize();
 }
