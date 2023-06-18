@@ -34,10 +34,13 @@ export function parseTimetable() {
         train.timetable = stopList;
 
         if (train.timestamp !== undefined) {
-            if (train.category.match(new RegExp(`\\b[${trainTypes.join('')}]`))) {
+            if (train.gameCategory.match(new RegExp(`\\b[${trainTypes.join('')}]`))) {
                 trainCategory.forEach((category) => {
-                    if (train.category.includes(category)) {
-                         trainSet.push(train);
+                    if (showOperators) {
+                        train = utils.convertOperator(train);
+                    }
+                    if (train.gameCategory.includes(category)) {
+                        trainSet.push(train);
                     }
                 });
             }

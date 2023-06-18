@@ -9,10 +9,14 @@ window.isStopped = localStorage.getItem('isStopped') === 'true';
 window.timetableSize = localStorage.getItem('timetableSize') || 'normal';
 window.stopTypes = JSON.parse(localStorage.getItem('stopTypes')) || ['ph'];
 window.trainTypes = JSON.parse(localStorage.getItem('trainTypes')) || ['EMRPA'];
+window.overlayName = localStorage.getItem('overlayName') || 'krakow';
+window.showOperators = localStorage.getItem('showOperators') || 'false';
 window.region = localStorage.getItem('region') || 'eu';
 window.timetablesAsJson = null;
 window.stationDataAsJson = null;
 window.activeStationsAsJson = null;
+window.operatorsAsJson = null;
+window.namesCorrectionsAsJson = null;
 window.timetableInterval = null;
 window.timetablesAPI = 'https://spythere.pl/api/getActiveTrainList';
 window.activeStationsAPI = 'https://api.td2.info.pl/?method=getStationsOnline';
@@ -177,6 +181,13 @@ $(document).ready(() => {
         localStorage.isStopped = isStopped;
         toggleStopped();
     });
+
+    $('#toggle-operators').mousedown(function() {
+        window.showOperators = !showOperators;
+        localStorage.showOperators = showOperators;
+        toggleOperators();
+    });
+
     $('#reset-filter').mousedown(function() {
         localStorage.removeItem('stopTypes');
         localStorage.removeItem('trainTypes');
@@ -261,6 +272,17 @@ function toggleStopped() {
     }
     loadTimetables();
 }
+
+function toggleOperators() {
+    let toggleOperators = $('#toggle-operators');
+    if (showOperators) {
+        toggleOperators.addClass('active');
+    } else {
+        toggleOperators.removeClass('active');
+    }
+    loadTimetables();
+}
+
 function toggleMargin() {
     let container = $('#container');
     if (!isMargin) {
@@ -329,6 +351,7 @@ export function loadTimetables() {
                 train.trainNo,
                 train.stationFromTo,
                 '',
+                train.operator,
                 train.category,
                 '1',
                 '',
@@ -351,6 +374,7 @@ export function loadTimetables() {
                     train.trainNo,
                     train.stationFromTo,
                     '',
+                    train.operator,
                     train.category,
                     '1',
                     '',
@@ -480,6 +504,7 @@ function initzializeMenu () {
     $('#region').val(region);
     $('#overlay').val(overlayName)
     toggleStopped();
+    toggleOperators();
     toggleRegion();
     toggleSize();
 }

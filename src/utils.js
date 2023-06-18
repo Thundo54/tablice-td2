@@ -1,4 +1,3 @@
-//add it to api (to be able to make changes in the future)
 import * as parser from "./parser.js";
 import { loadTimetables } from "./timetables.js";
 
@@ -9,6 +8,14 @@ function correctNames(name) {
         }
     }
     return name;
+}
+
+function getMostCommon(array) {
+    let counts = {};
+    array.forEach((element) => {
+        counts[element] = (counts[element] || 0) + 1;
+    });
+    return Object.keys(counts).reduce((a, b) => counts[a] > counts[b] ? a : b);
 }
 
 export function capitalizeFirstLetter(string) {
@@ -48,7 +55,11 @@ export function createTrainData(stopPoint, timetable) {
     train.stoppedHere = stopPoint['stopped'];
     train.stopTime = stopPoint['stopTime'];
     train.trainNo = timetable['trainNo'];
-    train.category = timetable['timetable']['category'];
+    train.trainCars = timetable['stockString'];
+    train.gameCategory = timetable['timetable']['category'];
+    train.category = train.gameCategory;
+    train.operator = train.gameCategory;
+    train.trainName = '';
 
     return train;
 }
@@ -137,23 +148,60 @@ export function refreshIds() {
     });
 }
 
-export function convertCategory(category) {
-    //if (category.startsWith('E')) {
-    //    return 'IC';
-    //} else if (category.startsWith('M')) {
-    //    return 'TLK';
-    //} else {
-    //    return 'R';
-    //}
-    return category;
-}
-
 export function convertTime(time) {
     return new Date(time).toLocaleTimeString('pl-PL', {hour: '2-digit', minute: '2-digit'});
 }
 
 export function createTrainString(category, trainNo) {
-    return convertCategory(category) + ' ' + trainNo;
+    return category + ' ' + trainNo;
+}
+
+export function resizeTimetableRow() {
+    if (timetableRows !== null) {
+        $('#timetables table tr').css('height', $('#timetables').height() / timetableRows);
+    }
+}
+
+export function convertOperator(trainData) {
+    let operatorProb = [];
+    operatorsAsJson.forEach((element) => {
+        //trainData.category = '';
+        trainData.trainCars.split(';').forEach((car) => {
+            if (element['operators'][car]) {
+                operatorProb.push.apply(operatorProb, element['operators'][car]);
+            }
+        });
+        if (operatorProb.length !== 0) {
+            trainData.operator = getMostCommon(operatorProb);
+            element['categories'].forEach((category) => {
+                if (category.operator === getMostCommon(operatorProb)) {
+                    trainData.operator = category.operator;
+                    trainData.category = category.category[trainData.gameCategory.substring(0, 2)];
+                    if (trainData.category === undefined) {
+                        trainData.category = '';
+                    }
+                }
+            });
+            element['overwrite'].forEach((overwrite) => {
+                if (overwrite['operator'] === trainData.operator) {
+                    overwrite['trainNoStartsWith'].forEach((trainNo) => {
+                        if (trainData.trainNo.toString().startsWith(trainNo.toString())) {
+                            trainData.operator = overwrite['operatorOverwrite'];
+                            trainData.category = overwrite.category[trainData.gameCategory.substring(0, 2)];
+                            trainData.trainName = overwrite['remarks'];
+                        }
+                    });
+                }
+            });
+            element['trainNames'].forEach((trainName) => {
+                if (trainName['trainNo:'].includes(trainData.trainNo.toString())) {
+                    trainData.trainName = trainName['trainName'];
+                    trainData.category = trainName['categoryOverwrite'];
+                }
+            });
+        }
+    });
+    return trainData;
 }
 
 window.loadTimetablesFromUrl = (url) => {
