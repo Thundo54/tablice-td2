@@ -6,7 +6,8 @@
         <link rel="icon" href="public/favicon.ico">
         <link rel="stylesheet" href="src/mobile.css">
         <link rel="stylesheet" href="src/styles.css">
-        <link rel="stylesheet" href="src/scale.css">
+        <link rel="stylesheet" href="src/tomaszow.css">
+<!--        <link rel="stylesheet" href="src/scale.css">-->
         <link rel="stylesheet" href="src/reset.css">
 <!--        <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded">-->
         <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@250,0..1">
@@ -48,7 +49,14 @@
                         </select>
                     </div>
                     <div>
-                        <label for="timetable-size">Rozmiar interfejsu</label>
+                        <label class="category-header" for="overlay">Wygląd tablic</label>
+                        <select id="overlay">
+                            <option value="tomaszow">Tomaszów Mazowiecki</option>
+                            <option value="krakow">Kraków Główny</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="category-header" for="timetable-size">Rozmiar interfejsu</label>
                         <select id="timetable-size">
                             <option value="normal">Normalny</option>
                             <option value="enlarged">Powiększony</option>

@@ -94,15 +94,35 @@ export function createRemark(delay = 0, beginsTerminatesHere, isStopped) {
     // }
 }
 
-export function addRow(time, train, stationFromTo, via, operator, platform, remarks, rowNo) {
+export function addRow(time, trainNo, stationFromTo, via, operator, category, platform, remarks, rowNo) {
     let row = $('<tr>').attr('id', `${rowNo}`);
-    row.append($('<td>').text(convertTime(time)));
-    row.append($('<td>').append($('<div>').append($('<span>').text(createTrainString(operator, train)))));
-    row.append($('<td>').append($('<span>').text(stationFromTo)));
-    row.append($('<td>').append($('<span>').text(via)));
-    row.append($('<td>').text(operator));
-    row.append($('<td>').text(platform));
-    row.append($('<td>').append($('<span>').text(remarks)));
+    if (overlayName === 'tomaszow') {
+        row.append($('<td>').text(convertTime(time)));
+        row.append($('<td>').append($('<div>').append($('<span>').text(createTrainString(category, trainNo)))));
+        row.append($('<td>').append($('<span>').text(stationFromTo)));
+        row.append($('<td>').append($('<span>').text(via)));
+        row.append($('<td>').text(operator));
+        row.append($('<td>').text(platform));
+        row.append($('<td>').append($('<span>').text(remarks)));
+    } else {
+        row.append($('<td>')
+            .append($('<p>').text(convertTime(time)))
+            .append($('<div>').addClass('indented')
+                .append($('<span>').text(createTrainString(category, trainNo)))
+            )
+        );
+        row.append($('<td>').text(operator));
+        row.append($('<td>')
+            .append($('<div>')
+                .append($('<span>').text(stationFromTo))
+            )
+            .append($('<div>').addClass('indented')
+                .append($('<span>'))
+            )
+        );
+        row.append($('<td>').append($('<span>')));
+        row.append($('<td>').text(platform));
+    }
     return row;
 }
 

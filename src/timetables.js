@@ -18,7 +18,7 @@ window.timetablesAPI = 'https://spythere.pl/api/getActiveTrainList';
 window.trainCategory = JSON.parse(localStorage.getItem('trainCategory')) ||
     ['EI', 'MP', 'RP', 'RO', 'TM', 'LT', 'TK', 'ZG', 'ZX'];
 
-$(document).ready(function() {
+$(document).ready(() => {
     let urlParams = new URLSearchParams(window.location.search);
 
     if (urlParams.get('timetables') !== null) {
@@ -33,8 +33,7 @@ $(document).ready(function() {
         window.isMargin = urlParams.get('margin') === 'true';
     }
 
-    changeBoardType();
-    toggleMargin();
+    initzializeOverlay();
     initzializeMenu();
 
     parser.getTimetables().then();
@@ -109,6 +108,13 @@ $(document).ready(function() {
         window.region = $(this).val();
         localStorage.region = region;
         toggleRegion();
+    });
+
+    $('#overlay').change(function() {
+        window.currentOverlay = overlayName;
+        window.overlayName = $(this).val();
+        localStorage.overlayName = overlayName;
+        changeOverlay();
     });
 
     $('.stop-type').mousedown(function() {
@@ -209,8 +215,33 @@ $(window).resize(function() {
     clearTimeout(window.resizedFinished);
     window.resizedFinished = setTimeout(function(){
        refreshTimetablesAnim();
+       utils.resizeTimetableRow();
     }, 250);
 });
+
+
+$(document).on('webkitfullscreenchange mozfullscreenchange fullscreenchange', () => {
+    refreshTimetablesAnim();
+    utils.resizeTimetableRow();
+});
+
+function changeOverlay() {
+    $('#board').load(`src/overlays/${overlayName}.html`, () => {
+        $(`link[href="src/${currentOverlay}.css"]`).attr('href',`src/${overlayName}.css`);
+        if (overlayName === 'tomaszow') {
+            window.timetableRows = 0;
+        } else {
+            window.timetableRows = 12;
+        }
+
+        setTimeout(() => {
+            changeBoardType();
+            loadTimetables();
+            toggleSize();
+        }, 10);
+        refreshTimetablesAnim();
+    });
+}
 
 function toggleStopped() {
     let toggleStop = $('#toggle-stop');
@@ -228,6 +259,7 @@ function toggleMargin() {
     } else {
         container.removeClass('no-margin');
     }
+    utils.resizeTimetableRow();
 }
 
 function toggleSize() {
@@ -241,6 +273,7 @@ function toggleSize() {
         labels.addClass('enlarged');
     }
     refreshTimetablesAnim();
+    utils.resizeTimetableRow();
 }
 
 function toggleRegion() {
@@ -324,17 +357,44 @@ export function loadTimetables() {
         }
     }
     trainSet.forEach((train, index) => {
-        $(`#${index} td:nth-child(7) span`)
-            .text(utils.createRemark(
+        let remark = utils.createRemark(
                 train.delay,
                 train.beginsTerminatesHere,
                 train.stoppedHere
-            ));
+        );
+
+        if (train.trainName !== '') {
+            train.trainName = `*** ${train.trainName.toUpperCase()} *** ${remark}`;
+        } else {
+            train.trainName = remark;
+        }
+
+        if (overlayName === 'tomaszow') {
+            $(`#${index} td:nth-child(2) span`)
+                .text(`${train.category} ${train.trainNo}`);
+            $(`#${index} td:nth-child(7) span`)
+                .text(train.trainName);
+        } else {
+            $(`#${index} td:nth-child(1) p:last-child`)
+                .text(`${train.category} ${train.trainNo}`);
+
+            $(`#${index} td:nth-child(2)`)
+                .text(train.operator);
+
+            $(`#${index} td:nth-child(3) .indented span`)
+                .text(train.trainName+' '+remark);
+        }
 
         $(`#${index} td:nth-child(4) span`)
             .text(train.timetable.join(', '));
     });
+    if (timetableRows > 0) {
+        for (let i = timetableRows; i < trainSet.length; i++) {
+            $(`#${i}`).remove();
+        }
+    }
     refreshTimetablesAnim();
+    utils.resizeTimetableRow()
 }
 
 export function refreshTimetablesAnim() {
@@ -409,7 +469,19 @@ function initzializeMenu () {
 
     $('#timetable-size').val(timetableSize);
     $('#region').val(region);
+    $('#overlay').val(overlayName)
     toggleStopped();
     toggleRegion();
     toggleSize();
+}
+
+function initzializeOverlay() {
+    $('#board').load(`src/overlays/${overlayName}.html`, () => {
+        $(`link[href="src/tomaszow.css"]`).attr('href',`src/${overlayName}.css`);
+        if (overlayName === 'krakow') { window.timetableRows = 10; }
+        utils.resizeTimetableRow();
+        changeBoardType();
+        toggleSize();
+        toggleMargin();
+    });
 }
