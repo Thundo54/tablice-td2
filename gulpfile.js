@@ -14,7 +14,12 @@ gulp.task('build:css', () => {
 gulp.task('build:js', function () {
   return gulp.src('src/*.js')
     .pipe(terser())
-    .pipe(replace(/\.js/g, '.min.js'))
+    .pipe(replace('.js', '.min.js'))
+    .pipe(replace('.css', '.min.css'))
+    .pipe(replace('src/', 'assets/'))
+    .pipe(replace('.min.json', '.json'))
+    .pipe(replace('.min.css(', '.css('))
+    .pipe(replace('assets/overlays/', 'overlays/'))
     .pipe(rename({ suffix: '.min' }))
     .pipe(gulp.dest('public/assets'));
 });
@@ -28,4 +33,9 @@ gulp.task('build:html', function () {
         .pipe(gulp.dest('public'));
 });
 
-gulp.task('build:tablice-td2', gulp.parallel('build:css', 'build:js', 'build:html'));
+gulp.task('build:overlays', function () {
+    return gulp.src('src/overlays/*.html')
+        .pipe(gulp.dest('public/overlays'));
+});
+
+gulp.task('build:tablice-td2', gulp.parallel('build:css', 'build:js', 'build:html', 'build:overlays'));
