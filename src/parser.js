@@ -85,7 +85,7 @@ export function refreshSceneriesList() {
     stationsSet.forEach((station) => {
         station.isActive = false;
         
-        activeStationsAsJson.forEach((activeStation) => {
+        activeStationsAsJson['message'].forEach((activeStation) => {
             if (activeStation['region'] !== region) { return; }
             if (!activeStation['isOnline']) { return; }
             if (activeStation['stationName'] === station.name) {
@@ -123,39 +123,13 @@ export function refreshCheckpointsList() {
     });
 }
 
-export function getTimetables() {
+export function makeAjaxRequest(url, variableName) {
     return new Promise((resolve) => {
         $.ajax({
-            url: timetablesAPI,
+            url: url,
             dataType: 'json',
             success: (response) => {
-                window.timetablesAsJson = response;
-                resolve();
-            }
-        });
-    });
-}
-
-export function getStationsData() {
-    return new Promise((resolve) => {
-        $.ajax({
-            url: 'https://spythere.pl/api/getSceneries',
-            dataType: 'json',
-            success: (response) => {
-                window.stationDataAsJson = response;
-                resolve();
-            }
-        });
-    });
-}
-
-export function getActiveStations() {
-    return new Promise((resolve) => {
-        $.ajax({
-            url: 'https://api.td2.info.pl/?method=getStationsOnline',
-            dataType: 'json',
-            success: (response) => {
-                window.activeStationsAsJson = response['message'];
+                window[variableName] = response;
                 resolve();
             }
         });

@@ -2,18 +2,10 @@
 import * as parser from "./parser.js";
 import { loadTimetables } from "./timetables.js";
 
-let namesCorrections = {
-    'BB': 'Bielsko-Biała',
-    'Maz.': 'Mazowiecki',
-    'Ryb.': 'Rybnik',
-    'Dobrz.': 'Dobrzyniec',
-    'Grodz Maz': 'Grodzisk Mazowiecki',
-}
-
 function correctNames(name) {
-    for (let key in namesCorrections) {
+    for (let key in namesCorrectionsAsJson) {
         if (name.includes(key)) {
-            return name.replace(key, namesCorrections[key]);
+            return name.replace(key, namesCorrectionsAsJson[key]);
         }
     }
     return name;
@@ -164,10 +156,10 @@ export function createTrainString(category, trainNo) {
     return convertCategory(category) + ' ' + trainNo;
 }
 
-window.loadTimetablesFromUrl = function(url) {
+window.loadTimetablesFromUrl = (url) => {
     clearInterval(timetableInterval);
     clearInterval(getTimetablesInterval);
     clearInterval(getActiveStationsInterval);
     window.timetablesAPI = url;
-    parser.getTimetables().then(() => loadTimetables());
+    parser.makeAjaxRequest(timetablesAPI, 'timetablesAsJson').then(() => loadTimetables());
 }

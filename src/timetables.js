@@ -15,6 +15,10 @@ window.stationDataAsJson = null;
 window.activeStationsAsJson = null;
 window.timetableInterval = null;
 window.timetablesAPI = 'https://spythere.pl/api/getActiveTrainList';
+window.activeStationsAPI = 'https://api.td2.info.pl/?method=getStationsOnline';
+window.stationAPI = 'https://spythere.pl/api/getSceneries';
+window.operatorsAPI = 'https://raw.githubusercontent.com/Thundo54/tablice-td2-api/master/operatorConvert.json';
+window.namesCorrectionsAPI = 'https://raw.githubusercontent.com/Thundo54/tablice-td2-api/master/namesCorrections.json';
 window.trainCategory = JSON.parse(localStorage.getItem('trainCategory')) ||
     ['EI', 'MP', 'RP', 'RO', 'TM', 'LT', 'TK', 'ZG', 'ZX'];
 
@@ -36,18 +40,21 @@ $(document).ready(() => {
     initzializeOverlay();
     initzializeMenu();
 
-    parser.getTimetables().then();
+    parser.makeAjaxRequest(timetablesAPI, 'timetablesAsJson').then();
+    parser.makeAjaxRequest(operatorsAPI, 'operatorsAsJson').then();
+    parser.makeAjaxRequest(namesCorrectionsAPI, 'namesCorrectionsAsJson').then();
 
-    window.getTimetablesInterval = setInterval(function() {
-        parser.getTimetables().then();
+    window.getTimetablesInterval = setInterval(() => {
+        parser.makeAjaxRequest(timetablesAPI, 'timetablesAsJson').then();
     }, 50000);
 
-    window.getActiveStationsInterval = setInterval(function() {
-        parser.getActiveStations().then();
+    window.getActiveStationsInterval = setInterval(() => {
+        parser.makeAjaxRequest(activeStationsAPI, 'activeStationsAsJson').then();
     }, 50000);
 
-    parser.getStationsData().then(() => {
-        parser.getActiveStations().then(() => parser.generateStationsList());
+    parser.makeAjaxRequest(stationAPI, 'stationDataAsJson').then(() => {
+        parser.makeAjaxRequest(activeStationsAPI, 'activeStationsAsJson')
+            .then(() => parser.generateStationsList());
         if (urlParams.get('station') !== null) {
             window.station = urlParams.get('station').replace('_', ' ')
             stationDataAsJson.forEach((stationData) => {
