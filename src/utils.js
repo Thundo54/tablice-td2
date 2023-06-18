@@ -1,5 +1,5 @@
 import * as parser from "./parser.js";
-import { loadTimetables } from "./timetables.js";
+import {loadTimetables} from "./timetables.js";
 
 function correctNames(name) {
     for (let key in namesCorrectionsAsJson) {
@@ -65,21 +65,18 @@ export function createTrainData(stopPoint, timetable) {
 }
 
 export function createRemark(delay = 0, beginsTerminatesHere, isStopped) {
-    // Można dodać przełącznik który będzie pokazywał opóźnienie jeśli pociąg kończy bieg
+    // Można dodać przełącznik, który będzie pokazywał opóźnienie, jeśli pociąg kończy bieg
     if (delay > 0) {
         if (isStopped) {
-            return `Pociąg został zatrzymany na trasie/train has been stopped on route/der Zug wurde auf der Strecke angehalten`;
+            return `Pociąg został zatrzymany na trasie/train has been stopped on route/Der Zug wurde auf der Strecke angehalten`;
         } else {
-            return `Opóźniony ${delay}min/delayed ${delay}min/verspätung ${delay}min`;
+            return `Opóźniony ${delay}min/delayed ${delay}min/Verspätung ${delay}min`;
         }
-        // if (trainNo !== 0) {
-        //     console.log(`Zmieniono opóźnienie pociągu ${trainNo} na ${delay}min`);
-        // }
     } else if (beginsTerminatesHere) {
         if (isDeparture) {
-            return 'Pociąg rozpoczyna bieg/train begins here/zug beginnt hier';
+            return 'Pociąg rozpoczyna bieg/train begins here/Zug beginnt hier';
         } else {
-            return 'Pociąg kończy bieg/train terminates here/zug endet hier';
+            return 'Pociąg kończy bieg/train terminates here/Zug endet hier';
         }
     } else {
         return '';
@@ -130,11 +127,11 @@ export function addRow(time, trainNo, stationFromTo, via, operator, category, pl
 }
 
 // export function addSpecialRow(row, content) {
-//     $(`#timetables table tr:first-child`)
+//     $(`#timetables table tr:nth-child(${row})`)
 //         .after($('<tr>')
 //             .append($('<td>').attr('colspan', 7)
 //                 .append($('<div>').addClass('special-row')
-//                     .append($('<p>').text(content)
+//                     .append($('<span>').text(content.toUpperCase())
 //     ))));
 //
 //    // refreshTimetablesAnim();

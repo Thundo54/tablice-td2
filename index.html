@@ -29,19 +29,19 @@
                 <section>
                     <h2>TABLICE ZBIORCZE</h2>
                     <div>
-                        <label for="sceneries">Sceneria</label>
+                        <label class="category-header" for="sceneries">Sceneria</label>
                         <select id="sceneries">
                             <optgroup label="AKTYWNE SCENERIE" id="active-sceneries"></optgroup>
                             <optgroup label="POZOSTAŁE SCENERIE" id="other-sceneries"></optgroup>
                         </select>
                     </div>
                     <div>
-                        <label for="checkpoints">Posterunek</label>
+                        <label class="category-header" for="checkpoints">Posterunek</label>
                         <select id="checkpoints"></select>
                     </div>
                     <div>
-                        <label for="region">Serwer TD2</label>
-                        <select id="region">
+                        <label class="category-header" for="td2-region">Serwer TD2</label>
+                        <select id="td2-region">
                             <option value="eu">PL1</option>
                             <option value="cae">PL2</option>
                             <option value="usw">DE</option>
@@ -67,8 +67,8 @@
                 <section>
                     <h2>FILTRY</h2>
                     <div>
-                        <label>Wyświetl pociągi</label>
-                        <div class="container">
+                        <span class="category-header">Wyświetl pociągi</span>
+                        <div id="trains-type" class="container">
                             <div class="inline">
                                 <a class="train-type" id="EMRPA"><span>Pasażerskie</span></a>
                                 <a class="train-type" id="T"><span>Towarowe</span></a>
@@ -80,7 +80,7 @@
                         </div>
                     </div>
                     <div>
-                        <label>Pokazuj punkty pośrednie</label>
+                        <span class="category-header">Pokazuj punkty pośrednie</span>
                         <div class="container">
                             <div class="inline" id="stop-types">
                                 <a class="stop-type" id="pt"><span>pt</span></a>
@@ -93,9 +93,8 @@
                         </div>
                     </div>
                      <div>
-                        <label>Pozostałe opcje</label>
-                        <div class="container">
-                            <a class="switch" hidden><span>Pokazuj przewoźników (BETA)</span></a>
+                        <span class="category-header">Pozostałe opcje</span>
+                        <div id="misc" class="container">
                             <a id="toggle-stop"><span>Tylko rozkłady z postojem</span></a>
                             <a id="toggle-operators"><span>Pokazuj przewoźników<sup> beta</sup></span></a>
                             <a id="test" hidden><span>Komunikaty specjalne<sup> beta</sup></span></a>
@@ -123,7 +122,7 @@
                 <section>
                     <h2>KATEGORIE</h2>
                     <div>
-                        <label>Pociągi pażerskie</label>
+                        <span class="category-header">Pociągi pażerskie</span>
                         <div class="container">
                             <div id="EMRPA-group">
                                 <a class="train-category" id="EI" title="EIE, EIJ, EIS">
@@ -145,7 +144,7 @@
                         </div>
                     </div>
                     <div>
-                        <label>Pociągi towarowe</label>
+                        <span class="category-header">Pociągi towarowe</span>
                         <div class="container">
                             <div id="T-group">
                                 <a class="train-category" id="TM" title="TME, TMS">
@@ -162,7 +161,7 @@
                 <section>
                     <h2>POCIAGÓW</h2>
                     <div>
-                        <label>Pociągi utrzymaniowo-naprawcze</label>
+                        <span class="category-header">Pociągi utrzymaniowo-naprawcze</span>
                         <div class="container">
                             <div id="Z-group">
                                 <a class="train-category" id="ZG" title="ZGE, ZGS">

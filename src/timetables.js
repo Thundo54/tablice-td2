@@ -71,11 +71,11 @@ $(document).ready(() => {
         }
     });
 
-    $('#menu-button').mousedown(function () {
+    $('#menu-button').mousedown(() => {
         toggleMenu();
     });
 
-    $('#close-box').click(function () {
+    $('#close-box').click(() => {
         toggleMenu();
     });
 
@@ -104,7 +104,7 @@ $(document).ready(() => {
         createTimetableInterval();
     });
 
-    $('#checkpoints').change(function() {
+    $('#checkpoints').change(function(){
         window.station = $(this).val();
         createTimetableInterval();
     });
@@ -115,7 +115,7 @@ $(document).ready(() => {
         toggleSize();
     });
 
-    $('#region').change(function() {
+    $('#td2-region').change(function() {
         window.region = $(this).val();
         localStorage.region = region;
         toggleRegion();
@@ -202,38 +202,42 @@ $(document).ready(() => {
         loadTimetables();
     });
 
-    $('#titles').mousedown(function() {
-            document.documentElement.requestFullscreen().then();
-    });
-
-    $(document).bind('keydown', function(e) {
-        if (e.which === 121) {
-            e.preventDefault();
-            $('#button-box').toggleClass('hidden');
-        } else if (e.which === 70) {
-            e.preventDefault();
-            toggleMenu();
-        } else if (e.which === 68) {
-            e.preventDefault();
-            $('#type-button').mousedown();
-        }
-
-        if (e.which === 27) {
-            e.preventDefault();
-            if ($('#menu-box').hasClass('popup') || $('#menu-box-2').hasClass('popup')) {
+    $(document).bind('keydown', (e) => {
+        switch (e.which) {
+            case 121:
+                e.preventDefault();
+                $('#button-box').toggleClass('hidden');
+            break;
+            case 70:
+                e.preventDefault();
                 toggleMenu();
-            }
+            break;
+            case 68:
+                e.preventDefault();
+                $('#type-button').mousedown();
+            break;
+            case 122:
+                setTimeout(() => {
+                    utils.resizeTimetableRow();
+                }, 10);
+            break;
+            case 27:
+                e.preventDefault();
+                if ($('#menu-box').hasClass('popup') || $('#menu-box-2').hasClass('popup')) {
+                toggleMenu();
+                }
+            break;
         }
     });
 
-    $('.menu-page-switcher').mousedown(function() {
+    $('.menu-page-switcher').mousedown(() => {
         switchMenuPage();
     });
 });
 
 $(window).resize(function() {
-    clearTimeout(window.resizedFinished);
-    window.resizedFinished = setTimeout(function(){
+    clearTimeout(resizedFinished);
+    window.resizedFinished = setTimeout(() => {
        refreshTimetablesAnim();
        utils.resizeTimetableRow();
     }, 250);
@@ -299,9 +303,15 @@ function toggleSize() {
     if (timetableSize === 'normal') {
         timetables.removeClass('enlarged');
         labels.removeClass('enlarged');
+        if (timetableRows !== 0) {
+            window.timetableRows = 10;
+        }
     } else {
         timetables.addClass('enlarged');
         labels.addClass('enlarged');
+        if (timetableRows !== 0) {
+            window.timetableRows = 6;
+        }
     }
     refreshTimetablesAnim();
     utils.resizeTimetableRow();
@@ -495,10 +505,10 @@ function initzializeMenu () {
     });
 
     if (isDeparture) {
-            $('#type-button').addClass('turn');
-        } else {
-            $('#type-button').removeClass('turn');
-        }
+        $('#type-button').addClass('turn');
+    } else {
+        $('#type-button').removeClass('turn');
+    }
 
     $('#timetable-size').val(timetableSize);
     $('#region').val(region);
