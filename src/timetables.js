@@ -445,20 +445,26 @@ export function loadTimetables() {
 
 export function refreshTimetablesAnim() {
     let tr = $('#timetables table tr');
-    let td, span, animDuration;
+    let td, span, animDuration, fieldWidth;
 
     for (let i = 0; i < tr.length; i++) {
         td = $(tr[i]).find('td');
         if (i >= 12) { return; }
         for (let j = 0; j < td.length; j++) {
             span = $(td[j]).find('span');
-            animDuration = ((span.width() + $(td[j]).width()) * 10) / 850;
-            if (span.css('animation-duration') !== animDuration) {
-                if (span.width() > $(td[j]).width()) {
-                    span.css('animation', `ticker linear ${animDuration}s infinite`);
-                    span.css('--elementWidth', $(td[j]).width());
-                } else {
-                    span.css('animation', '');
+            for (let k = 0; k < span.length; k++) {
+                fieldWidth = $(td[j]).width();
+                if ($(span[k]).parents('.indented').length > 0) {
+                    fieldWidth = $(td[j]).find('div.indented').width();
+                }
+                animDuration = (($(span[k]).width() + fieldWidth) * 10) / 400;
+                if ($(span[k]).css('animation-duration') !== animDuration) {
+                    if ($(span[k]).width() > $(td[j]).width()*0.9) {
+                        $(span[k]).css('animation', `ticker linear ${animDuration}s infinite`);
+                        $(span[k]).css('--elementWidth', fieldWidth);
+                    } else {
+                        $(span[k]).css('animation', '');
+                    }
                 }
             }
         }
