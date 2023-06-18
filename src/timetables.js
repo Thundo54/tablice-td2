@@ -185,6 +185,8 @@ $(document).ready(() => {
         window.stopTypes = ['ph'];
         window.trainTypes = ['EMRPA'];
         window.trainCategory = ['EI', 'MP', 'RP', 'RO', 'TM', 'LT', 'TK', 'ZG', 'ZX'];
+        window.isStopped = false;
+        window.showOperators = false;
         initzializeMenu();
         loadTimetables();
     });
