@@ -5,19 +5,31 @@ window.stationsSet = [];
 window.station = '';
 window.isDeparture = localStorage.getItem('isDeparture') === 'true';
 window.isMargin = localStorage.getItem('isMargin') === 'true';
+window.isStopped = localStorage.getItem('isStopped') === 'true';
 window.timetableSize = localStorage.getItem('timetableSize') || 'normal';
 window.stopTypes = JSON.parse(localStorage.getItem('stopTypes')) || ['ph'];
 window.trainTypes = JSON.parse(localStorage.getItem('trainTypes')) || ['EMRPA'];
+window.overlayName = localStorage.getItem('overlayName') || 'krakow';
+window.showOperators = localStorage.getItem('showOperators') || 'false';
 window.region = localStorage.getItem('region') || 'eu';
 window.timetablesAsJson = null;
 window.stationDataAsJson = null;
 window.activeStationsAsJson = null;
+window.operatorsAsJson = null;
+window.namesCorrectionsAsJson = null;
 window.timetableInterval = null;
+window.currentOverlay = null;
+window.timetableRows = null;
+window.resizedFinished = null;
 window.timetablesAPI = 'https://spythere.pl/api/getActiveTrainList';
+window.activeStationsAPI = 'https://api.td2.info.pl/?method=getStationsOnline';
+window.stationAPI = 'https://spythere.pl/api/getSceneries';
+window.operatorsAPI = 'https://raw.githubusercontent.com/Thundo54/tablice-td2-api/master/operatorConvert.json';
+window.namesCorrectionsAPI = 'https://raw.githubusercontent.com/Thundo54/tablice-td2-api/master/namesCorrections.json';
 window.trainCategory = JSON.parse(localStorage.getItem('trainCategory')) ||
     ['EI', 'MP', 'RP', 'RO', 'TM', 'LT', 'TK', 'ZG', 'ZX'];
 
-$(document).ready(function() {
+$(document).ready(() => {
     let urlParams = new URLSearchParams(window.location.search);
 
     if (urlParams.get('timetables') !== null) {
@@ -32,22 +44,24 @@ $(document).ready(function() {
         window.isMargin = urlParams.get('margin') === 'true';
     }
 
-    changeBoardType();
-    toggleMargin();
+    initzializeOverlay();
     initzializeMenu();
 
-    parser.getTimetables().then();
+    parser.makeAjaxRequest(timetablesAPI, 'timetablesAsJson').then();
+    parser.makeAjaxRequest(operatorsAPI, 'operatorsAsJson').then();
+    parser.makeAjaxRequest(namesCorrectionsAPI, 'namesCorrectionsAsJson').then();
 
-    window.getTimetablesInterval = setInterval(function() {
-        parser.getTimetables().then();
+    window.getTimetablesInterval = setInterval(() => {
+        parser.makeAjaxRequest(timetablesAPI, 'timetablesAsJson').then();
     }, 50000);
 
-    window.getActiveStationsInterval = setInterval(function() {
-        parser.getActiveStations().then();
+    window.getActiveStationsInterval = setInterval(() => {
+        parser.makeAjaxRequest(activeStationsAPI, 'activeStationsAsJson').then();
     }, 50000);
 
-    parser.getStationsData().then(() => {
-        parser.getActiveStations().then(() => parser.generateStationsList());
+    parser.makeAjaxRequest(stationAPI, 'stationDataAsJson').then(() => {
+        parser.makeAjaxRequest(activeStationsAPI, 'activeStationsAsJson')
+            .then(() => parser.generateStationsList());
         if (urlParams.get('station') !== null) {
             window.station = urlParams.get('station').replace('_', ' ')
             stationDataAsJson.forEach((stationData) => {
@@ -60,11 +74,11 @@ $(document).ready(function() {
         }
     });
 
-    $('#menu-button').mousedown(function () {
+    $('#menu-button').mousedown(() => {
         toggleMenu();
     });
 
-    $('#close-box').click(function () {
+    $('#close-box').click(() => {
         toggleMenu();
     });
 
@@ -93,7 +107,7 @@ $(document).ready(function() {
         createTimetableInterval();
     });
 
-    $('#checkpoints').change(function() {
+    $('#checkpoints').change(function(){
         window.station = $(this).val();
         createTimetableInterval();
     });
@@ -104,10 +118,17 @@ $(document).ready(function() {
         toggleSize();
     });
 
-    $('#region').change(function() {
+    $('#td2-region').change(function() {
         window.region = $(this).val();
         localStorage.region = region;
         toggleRegion();
+    });
+
+    $('#overlay').change(function() {
+        window.currentOverlay = overlayName;
+        window.overlayName = $(this).val();
+        localStorage.overlayName = overlayName;
+        changeOverlay();
     });
 
     $('.stop-type').mousedown(function() {
@@ -158,52 +179,116 @@ $(document).ready(function() {
         loadTimetables();
     });
 
+    $('#toggle-stop').mousedown(function() {
+        window.isStopped = !isStopped;
+        localStorage.isStopped = isStopped;
+        toggleStopped();
+    });
+
+    $('#toggle-operators').mousedown(function() {
+        window.showOperators = !showOperators;
+        localStorage.showOperators = showOperators;
+        toggleOperators();
+    });
+
     $('#reset-filter').mousedown(function() {
         localStorage.removeItem('stopTypes');
         localStorage.removeItem('trainTypes');
         localStorage.removeItem('trainCategory');
+        localStorage.removeItem('isStopped');
         window.stopTypes = ['ph'];
         window.trainTypes = ['EMRPA'];
         window.trainCategory = ['EI', 'MP', 'RP', 'RO', 'TM', 'LT', 'TK', 'ZG', 'ZX'];
+        window.isStopped = false;
+        window.showOperators = false;
         initzializeMenu();
         loadTimetables();
     });
 
-    $('#titles').mousedown(function() {
-            document.documentElement.requestFullscreen().then();
-    });
-
-    $(document).bind('keydown', function(e) {
-        if (e.which === 121) {
-            e.preventDefault();
-            $('#button-box').toggleClass('hidden');
-        } else if (e.which === 70) {
-            e.preventDefault();
-            toggleMenu();
-        } else if (e.which === 68) {
-            e.preventDefault();
-            $('#type-button').mousedown();
-        }
-
-        if (e.which === 27) {
-            e.preventDefault();
-            if ($('#menu-box').hasClass('popup') || $('#menu-box-2').hasClass('popup')) {
+    $(document).bind('keydown', (e) => {
+        switch (e.which) {
+            case 121:
+                e.preventDefault();
+                $('#button-box').toggleClass('hidden');
+            break;
+            case 70:
+                e.preventDefault();
                 toggleMenu();
-            }
+            break;
+            case 68:
+                e.preventDefault();
+                $('#type-button').mousedown();
+            break;
+            case 122:
+                setTimeout(() => {
+                    utils.resizeTimetableRow();
+                }, 10);
+            break;
+            case 27:
+                e.preventDefault();
+                if ($('#menu-box').hasClass('popup') || $('#menu-box-2').hasClass('popup')) {
+                toggleMenu();
+                }
+            break;
         }
     });
 
-    $('.menu-page-switcher').mousedown(function() {
+    $('.menu-page-switcher').mousedown(() => {
         switchMenuPage();
     });
 });
 
 $(window).resize(function() {
-    clearTimeout(window.resizedFinished);
-    window.resizedFinished = setTimeout(function(){
+    clearTimeout(resizedFinished);
+    window.resizedFinished = setTimeout(() => {
        refreshTimetablesAnim();
+       utils.resizeTimetableRow();
     }, 250);
 });
+
+
+$(document).on('webkitfullscreenchange mozfullscreenchange fullscreenchange', () => {
+    refreshTimetablesAnim();
+    utils.resizeTimetableRow();
+});
+
+function changeOverlay() {
+    $('#board').load(`src/overlays/${overlayName}.html`, () => {
+        $(`link[href="src/${currentOverlay}.css"]`).attr('href',`src/${overlayName}.css`);
+        if (overlayName === 'tomaszow') {
+            window.timetableRows = 0;
+        } else {
+            window.timetableRows = 12;
+        }
+
+        setTimeout(() => {
+            changeBoardType();
+            loadTimetables();
+            toggleSize();
+        }, 10);
+        refreshTimetablesAnim();
+    });
+}
+
+function toggleStopped() {
+    let toggleStop = $('#toggle-stop');
+    if (isStopped) {
+        toggleStop.addClass('active');
+    } else {
+        toggleStop.removeClass('active');
+    }
+    loadTimetables();
+}
+
+function toggleOperators() {
+    let toggleOperators = $('#toggle-operators');
+    if (showOperators) {
+        toggleOperators.addClass('active');
+    } else {
+        toggleOperators.removeClass('active');
+    }
+    loadTimetables();
+}
 
 function toggleMargin() {
     let container = $('#container');
@@ -212,6 +297,7 @@ function toggleMargin() {
     } else {
         container.removeClass('no-margin');
     }
+    utils.resizeTimetableRow();
 }
 
 function toggleSize() {
@@ -220,11 +306,18 @@ function toggleSize() {
     if (timetableSize === 'normal') {
         timetables.removeClass('enlarged');
         labels.removeClass('enlarged');
+        if (timetableRows !== 0) {
+            window.timetableRows = 10;
+        }
     } else {
         timetables.addClass('enlarged');
         labels.addClass('enlarged');
+        if (timetableRows !== 0) {
+            window.timetableRows = 6;
+        }
     }
     refreshTimetablesAnim();
+    utils.resizeTimetableRow();
 }
 
 function toggleRegion() {
@@ -271,6 +364,7 @@ export function loadTimetables() {
                 train.trainNo,
                 train.stationFromTo,
                 '',
+                train.operator,
                 train.category,
                 '1',
                 '',
@@ -293,6 +387,7 @@ export function loadTimetables() {
                     train.trainNo,
                     train.stationFromTo,
                     '',
+                    train.operator,
                     train.category,
                     '1',
                     '',
@@ -308,35 +403,70 @@ export function loadTimetables() {
         }
     }
     trainSet.forEach((train, index) => {
-        $(`#${index} td:nth-child(7) span`)
-            .text(utils.createRemark(
+        let remark = utils.createRemark(
                 train.delay,
                 train.beginsTerminatesHere,
                 train.stoppedHere
-            ));
+        );
+
+        if (train.trainName !== '') {
+            train.trainName = `*** ${train.trainName.toUpperCase()} *** ${remark}`;
+        } else {
+            train.trainName = remark;
+        }
+
+        if (overlayName === 'tomaszow') {
+            $(`#${index} td:nth-child(2) span`)
+                .text(`${train.category} ${train.trainNo}`);
+            $(`#${index} td:nth-child(5)`)
+                .text(train.operator);
+            $(`#${index} td:nth-child(7) span`)
+                .text(train.trainName);
+        } else {
+            $(`#${index} td:nth-child(1) p:last-child`)
+                .text(`${train.category} ${train.trainNo}`);
+
+            $(`#${index} td:nth-child(2)`)
+                .text(train.operator);
+
+            $(`#${index} td:nth-child(3) .indented span`)
+                .text(train.trainName+' '+remark);
+        }
 
         $(`#${index} td:nth-child(4) span`)
             .text(train.timetable.join(', '));
     });
+    if (timetableRows > 0) {
+        for (let i = timetableRows; i < trainSet.length; i++) {
+            $(`#${i}`).remove();
+        }
+    }
     refreshTimetablesAnim();
+    utils.resizeTimetableRow()
 }
 
 export function refreshTimetablesAnim() {
     let tr = $('#timetables table tr');
-    let td, span, animDuration;
+    let td, span, animDuration, fieldWidth;
 
     for (let i = 0; i < tr.length; i++) {
         td = $(tr[i]).find('td');
         if (i >= 12) { return; }
         for (let j = 0; j < td.length; j++) {
             span = $(td[j]).find('span');
-            animDuration = ((span.width() + $(td[j]).width()) * 10) / 850;
-            if (span.css('animation-duration') !== animDuration) {
-                if (span.width() > $(td[j]).width()) {
-                    span.css('animation', `ticker linear ${animDuration}s infinite`);
-                    span.css('--elementWidth', $(td[j]).width());
-                } else {
-                    span.css('animation', '');
+            for (let k = 0; k < span.length; k++) {
+                fieldWidth = $(td[j]).width();
+                if ($(span[k]).parents('.indented').length > 0) {
+                    fieldWidth = $(td[j]).find('div.indented').width();
+                }
+                animDuration = (($(span[k]).width() + fieldWidth) * 10) / 400;
+                if ($(span[k]).css('animation-duration') !== animDuration) {
+                    if ($(span[k]).width() > $(td[j]).width()*0.9) {
+                        $(span[k]).css('animation', `ticker linear ${animDuration}s infinite`);
+                        $(span[k]).css('--elementWidth', fieldWidth);
+                    } else {
+                        $(span[k]).css('animation', '');
+                    }
                 }
             }
         }
@@ -386,13 +516,31 @@ function initzializeMenu () {
     });
 
     if (isDeparture) {
-            $('#type-button').addClass('turn');
-        } else {
-            $('#type-button').removeClass('turn');
-        }
+        $('#type-button').addClass('turn');
+    } else {
+        $('#type-button').removeClass('turn');
+    }
 
     $('#timetable-size').val(timetableSize);
     $('#region').val(region);
+    $('#overlay').val(overlayName)
+    toggleStopped();
+    toggleOperators();
     toggleRegion();
     toggleSize();
+}
+
+function initzializeOverlay() {
+    $('#board').load(`src/overlays/${overlayName}.html`, () => {
+        $(`link[href="src/tomaszow.css"]`).attr('href',`src/${overlayName}.css`);
+        if (overlayName === 'krakow') {
+            window.timetableRows = 10;
+        } else {
+            window.timetableRows = 0;
+        }
+        utils.resizeTimetableRow();
+        changeBoardType();
+        toggleSize();
+        toggleMargin();
+    });
 }

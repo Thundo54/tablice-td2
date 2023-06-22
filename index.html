@@ -6,10 +6,12 @@
         <link rel="icon" href="public/favicon.ico">
         <link rel="stylesheet" href="src/mobile.css">
         <link rel="stylesheet" href="src/styles.css">
-        <link rel="stylesheet" href="src/scale.css">
+        <link rel="stylesheet" href="src/tomaszow.css">
+<!--        <link rel="stylesheet" href="src/scale.css">-->
         <link rel="stylesheet" href="src/reset.css">
 <!--        <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded">-->
         <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@250,0..1">
+        <link href="https://fonts.googleapis.com/css2?family=Sofia+Sans+Condensed" rel="stylesheet">
         <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
         <script type="module" src="src/timetables.js"></script>
@@ -27,19 +29,19 @@
                 <section>
                     <h2>TABLICE ZBIORCZE</h2>
                     <div>
-                        <label for="sceneries">Sceneria</label>
+                        <label class="category-header" for="sceneries">Sceneria</label>
                         <select id="sceneries">
                             <optgroup label="AKTYWNE SCENERIE" id="active-sceneries"></optgroup>
                             <optgroup label="POZOSTAŁE SCENERIE" id="other-sceneries"></optgroup>
                         </select>
                     </div>
                     <div>
-                        <label for="checkpoints">Posterunek</label>
+                        <label class="category-header" for="checkpoints">Posterunek</label>
                         <select id="checkpoints"></select>
                     </div>
                     <div>
-                        <label for="region">Serwer TD2</label>
-                        <select id="region">
+                        <label class="category-header" for="td2-region">Serwer TD2</label>
+                        <select id="td2-region">
                             <option value="eu">PL1</option>
                             <option value="cae">PL2</option>
                             <option value="usw">DE</option>
@@ -47,7 +49,14 @@
                         </select>
                     </div>
                     <div>
-                        <label for="timetable-size">Rozmiar interfejsu</label>
+                        <label class="category-header" for="overlay">Wygląd tablic</label>
+                        <select id="overlay">
+                            <option value="tomaszow">Tomaszów Mazowiecki</option>
+                            <option value="krakow">Kraków Główny</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="category-header" for="timetable-size">Rozmiar interfejsu</label>
                         <select id="timetable-size">
                             <option value="normal">Normalny</option>
                             <option value="enlarged">Powiększony</option>
@@ -58,8 +67,8 @@
                 <section>
                     <h2>FILTRY</h2>
                     <div>
-                        <label>Wyświetl pociągi</label>
-                        <div class="container">
+                        <span class="category-header">Wyświetl pociągi</span>
+                        <div id="trains-type" class="container">
                             <div class="inline">
                                 <a class="train-type" id="EMRPA"><span>Pasażerskie</span></a>
                                 <a class="train-type" id="T"><span>Towarowe</span></a>
@@ -71,7 +80,7 @@
                         </div>
                     </div>
                     <div>
-                        <label>Pokazuj punkty pośrednie</label>
+                        <span class="category-header">Pokazuj punkty pośrednie</span>
                         <div class="container">
                             <div class="inline" id="stop-types">
                                 <a class="stop-type" id="pt"><span>pt</span></a>
@@ -84,17 +93,20 @@
                         </div>
                     </div>
                      <div>
-                        <label>Pozostałe opcje</label>
-                        <div class="container">
-                            <a class="switch" id="only-stop" hidden><span>Tylko rozkłady z postojem</span></a>
-                            <a class="switch" hidden><span>Pokazuj przewoźników (BETA)</span></a>
+                        <span class="category-header">Pozostałe opcje</span>
+                        <div id="misc" class="container">
+                            <a id="toggle-stop"><span>Tylko rozkłady z postojem</span></a>
+                            <a id="toggle-operators"><span>Pokazuj przewoźników<sup> beta</sup></span></a>
+                            <a id="test" hidden><span>Komunikaty specjalne<sup> beta</sup></span></a>
                             <a id="reset-filter"><span>Resetuj filtry</span></a>
                         </div>
                     </div>
                 </section>
                 <footer>
                     <span>
-                        tablice-td2 v1.2.0 | Made with 💜 by
+                        <a href="https://github.com/Thundo54/tablice-td2" target="_blank">
+                            tablice-td2 v1.3.0
+                        </a>| Made with💜 by
                         <a href="https://td2.info.pl/profile/?u=6915" target="_blank">
                             Thundo
                         </a>
@@ -102,7 +114,11 @@
                     <span>
                         Specjalne podziękowania dla
                         <a href="https://td2.info.pl/profile/?u=20777" target="_blank">
-                            Spythere 💜
+                            Spythere
+                        </a>
+                        oraz
+                        <a href="https://td2.info.pl/profile/?u=1417" target="_blank">
+                            Stasia💜
                         </a>
                     </span>
                 </footer>
@@ -112,7 +128,7 @@
                 <section>
                     <h2>KATEGORIE</h2>
                     <div>
-                        <label>Pociągi pażerskie</label>
+                        <span class="category-header">Pociągi pażerskie</span>
                         <div class="container">
                             <div id="EMRPA-group">
                                 <a class="train-category" id="EI" title="EIE, EIJ, EIS">
@@ -134,7 +150,7 @@
                         </div>
                     </div>
                     <div>
-                        <label>Pociągi towarowe</label>
+                        <span class="category-header">Pociągi towarowe</span>
                         <div class="container">
                             <div id="T-group">
                                 <a class="train-category" id="TM" title="TME, TMS">
@@ -151,7 +167,7 @@
                 <section>
                     <h2>POCIAGÓW</h2>
                     <div>
-                        <label>Pociągi utrzymaniowo-naprawcze</label>
+                        <span class="category-header">Pociągi utrzymaniowo-naprawcze</span>
                         <div class="container">
                             <div id="Z-group">
                                 <a class="train-category" id="ZG" title="ZGE, ZGS">
@@ -166,64 +182,6 @@
                 </section>
             </div>
         </div>
-        <div id="container">
-            <div id="titles">
-                <span class="title-pl">Odjazdy</span>
-                <span class="title-en">Departures</span>
-            </div>
-            <div id="labels">
-                 <table>
-                    <tr>
-                        <th>
-                            Czas<br>
-                            <i>Time</i>
-                        </th>
-                        <th>
-                            Pociąg<br>
-                            <i>Train</i>
-                        </th>
-                        <th>
-                            Do<br>
-                            <i>Destination</i>
-                        </th>
-                        <th>
-                            Przez<br>
-                            <i>Via</i>
-                        </th>
-                        <th>
-                            <table id="inner-description">
-                                <tr>
-                                    <td>
-                                        Uwagi<br>
-                                        <i>Remarks</i>
-                                    </td>
-                                    <td>
-                                        Peron<br>
-                                        <i>Platform</i>
-                                    </td>
-                                    <td>
-                                        Przewoźnik<br>
-                                        <i>Operator</i>
-                                    </td>
-                                </tr>
-                            </table>
-                        </th>
-                    </tr>
-                </table>
-            </div>
-            <div id="timetables">
-                <table>
-                    <colgroup>
-                        <col class="time">
-                        <col class="trainNo">
-                        <col class="fromTo">
-                        <col class="via">
-                        <col class="operator">
-                        <col class="platform">
-                        <col class="remarks">
-                    </colgroup>
-                </table>
-            </div>
-        </div>
+        <div id="board"></div>
     </body>
 </html>
