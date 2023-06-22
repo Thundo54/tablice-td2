@@ -418,6 +418,8 @@ export function loadTimetables() {
         if (overlayName === 'tomaszow') {
             $(`#${index} td:nth-child(2) span`)
                 .text(`${train.category} ${train.trainNo}`);
+            $(`#${index} td:nth-child(5)`)
+                .text(train.operator);
             $(`#${index} td:nth-child(7) span`)
                 .text(train.trainName);
         } else {
@@ -531,7 +533,11 @@ function initzializeMenu () {
 function initzializeOverlay() {
     $('#board').load(`src/overlays/${overlayName}.html`, () => {
         $(`link[href="src/tomaszow.css"]`).attr('href',`src/${overlayName}.css`);
-        if (overlayName === 'krakow') { window.timetableRows = 10; }
+        if (overlayName === 'krakow') {
+            window.timetableRows = 10;
+        } else {
+            window.timetableRows = 0;
+        }
         utils.resizeTimetableRow();
         changeBoardType();
         toggleSize();
