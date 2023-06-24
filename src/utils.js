@@ -162,7 +162,7 @@ export function resizeTimetableRow() {
 export function convertOperator(trainData) {
     let operatorProb = [];
     operatorsAsJson.forEach((element) => {
-        //trainData.category = '';
+        trainData.category = '';
         trainData.trainCars.split(';').forEach((car) => {
             if (element['operators'][car]) {
                 operatorProb.push.apply(operatorProb, element['operators'][car]);
@@ -191,7 +191,7 @@ export function convertOperator(trainData) {
                 }
             });
             element['trainNames'].forEach((trainName) => {
-                if (trainName['trainNo:'].includes(trainData.trainNo.toString())) {
+                if (trainName['trainNo'].includes(trainData.trainNo.toString())) {
                     trainData.trainName = trainName['trainName'];
                     trainData.category = trainName['categoryOverwrite'];
                 }
