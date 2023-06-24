@@ -96,7 +96,11 @@ body {
 			}
 
 			&:nth-child(4) {
-				width: 40%;
+				width: 41%;
+			}
+
+			&:nth-child(5) {
+				width: 5.5%;
 			}
 		}
 	}
@@ -122,6 +126,10 @@ body {
 
 				&:nth-child(4) {
 					width: 36%;
+				}
+
+				&:nth-child(5) {
+					width: 0;
 				}
 			}
 		}
