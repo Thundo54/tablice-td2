@@ -191,7 +191,7 @@ export function convertOperator(trainData) {
                 }
             });
             element['trainNames'].forEach((trainName) => {
-                if (trainName['trainNo:'].includes(trainData.trainNo.toString())) {
+                if (trainName['trainNo'].includes(trainData.trainNo.toString())) {
                     trainData.trainName = trainName['trainName'];
                     trainData.category = trainName['categoryOverwrite'];
                 }
