@@ -162,7 +162,7 @@ export function resizeTimetableRow() {
 export function convertOperator(trainData) {
     let operatorProb = [];
     operatorsAsJson.forEach((element) => {
-        //trainData.category = '';
+        trainData.category = '';
         trainData.trainCars.split(';').forEach((car) => {
             if (element['operators'][car]) {
                 operatorProb.push.apply(operatorProb, element['operators'][car]);

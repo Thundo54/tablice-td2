@@ -423,14 +423,14 @@ export function loadTimetables() {
             $(`#${index} td:nth-child(7) span`)
                 .text(train.trainName);
         } else {
-            $(`#${index} td:nth-child(1) p:last-child`)
+            $(`#${index} td:nth-child(1) span:last-child`)
                 .text(`${train.category} ${train.trainNo}`);
 
             $(`#${index} td:nth-child(2)`)
                 .text(train.operator);
 
             $(`#${index} td:nth-child(3) .indented span`)
-                .text(train.trainName+' '+remark);
+                .text(train.trainName);
         }
 
         $(`#${index} td:nth-child(4) span`)
