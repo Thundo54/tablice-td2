@@ -126,17 +126,6 @@ export function addRow(time, trainNo, stationFromTo, via, operator, category, pl
     return row;
 }
 
-// export function addSpecialRow(row, content) {
-//     $(`#timetables table tr:nth-child(${row})`)
-//         .after($('<tr>')
-//             .append($('<td>').attr('colspan', 7)
-//                 .append($('<div>').addClass('special-row')
-//                     .append($('<span>').text(content.toUpperCase())
-//     ))));
-//
-//    // refreshTimetablesAnim();
-// }
-
 export function refreshIds() {
     let i = 0;
     $('#timetables table tr').each(function () {
@@ -159,46 +148,41 @@ export function resizeTimetableRow() {
     }
 }
 
-export function convertOperator(trainData) {
+export function convertOperator(train) {
     let operatorProb = [];
-    operatorsAsJson.forEach((element) => {
-        trainData.category = '';
-        trainData.trainCars.split(';').forEach((car) => {
-            if (element['operators'][car]) {
-                operatorProb.push.apply(operatorProb, element['operators'][car]);
-            }
-        });
-        if (operatorProb.length !== 0) {
-            trainData.operator = getMostCommon(operatorProb);
-            element['categories'].forEach((category) => {
-                if (category.operator === getMostCommon(operatorProb)) {
-                    trainData.operator = category.operator;
-                    trainData.category = category.category[trainData.gameCategory.substring(0, 2)];
-                    if (trainData.category === undefined) {
-                        trainData.category = '';
-                    }
-                }
-            });
-            element['overwrite'].forEach((overwrite) => {
-                if (overwrite['operator'] === trainData.operator) {
-                    overwrite['trainNoStartsWith'].forEach((trainNo) => {
-                        if (trainData.trainNo.toString().startsWith(trainNo.toString())) {
-                            trainData.operator = overwrite['operatorOverwrite'];
-                            trainData.category = overwrite.category[trainData.gameCategory.substring(0, 2)];
-                            trainData.trainName = overwrite['remarks'];
-                        }
-                    });
-                }
-            });
-            element['trainNames'].forEach((trainName) => {
-                if (trainName['trainNo'].includes(trainData.trainNo.toString())) {
-                    trainData.trainName = trainName['trainName'];
-                    trainData.category = trainName['categoryOverwrite'];
-                }
-            });
+    train.category = '';
+    train.trainCars.split(';').forEach((car) => {
+        if (operatorsAsJson['operators'][car]) {
+            operatorProb.push.apply(operatorProb, operatorsAsJson['operators'][car]);
         }
     });
-    return trainData;
+    if (operatorProb.length !== 0) {
+        train.operator = getMostCommon(operatorProb);
+        operatorsAsJson['categories'].forEach((category) => {
+            if (category.operator === train.operator) {
+                train.operator = category.operator;
+                train.category = category.category[train.gameCategory.substring(0, 2)];
+            }
+        });
+        operatorsAsJson['overwrite'].forEach((overwrite) => {
+            if (overwrite.operator === train.operator) {
+                if (overwrite['trainNoStartsWith'].some(a => train.trainNo.toString().startsWith(a))) {
+                    train.operator = overwrite['operatorOverwrite'];
+                    train.category = overwrite.category[train.gameCategory.substring(0, 2)];
+                    train.trainName = overwrite['remarks'];
+                }
+            }
+        });
+        operatorsAsJson['trainNames'].forEach((trainName) => {
+            if (trainName.operator === train.operator) {
+                if (trainName['trainNo'].includes(train.trainNo.toString())) {
+                    train.trainName = trainName['trainName'];
+                    train.category = trainName['categoryOverwrite'];
+                }
+            }
+        });
+    }
+    return train;
 }
 
 window.loadTimetablesFromUrl = (url) => {
