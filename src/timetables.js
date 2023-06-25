@@ -48,7 +48,9 @@ $(document).ready(() => {
     initzializeMenu();
 
     parser.makeAjaxRequest(timetablesAPI, 'timetablesAsJson').then();
-    parser.makeAjaxRequest(operatorsAPI, 'operatorsAsJson').then();
+    parser.makeAjaxRequest(operatorsAPI, 'operatorsAsJson').then(() => {
+        window.operatorsAsJson = operatorsAsJson[0];
+    });
     parser.makeAjaxRequest(namesCorrectionsAPI, 'namesCorrectionsAsJson').then();
 
     window.getTimetablesInterval = setInterval(() => {
