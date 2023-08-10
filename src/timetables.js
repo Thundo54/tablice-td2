@@ -31,6 +31,9 @@ window.trainCategory = JSON.parse(localStorage.getItem('trainCategory')) ||
 
 $(document).ready(() => {
     let urlParams = new URLSearchParams(window.location.search);
+    let stationsRequest;
+    let timetablesRequest;
+    let operatorsRequest;
 
     if (urlParams.get('timetables') !== null) {
         if (urlParams.get('timetables') === 'departure') {
@@ -47,8 +50,8 @@ $(document).ready(() => {
     initzializeOverlay();
     initzializeMenu();
 
-    parser.makeAjaxRequest(timetablesAPI, 'timetablesAsJson').then();
-    parser.makeAjaxRequest(operatorsAPI, 'operatorsAsJson').then(() => {
+    timetablesRequest = parser.makeAjaxRequest(timetablesAPI, 'timetablesAsJson').then();
+    operatorsRequest = parser.makeAjaxRequest(operatorsAPI, 'operatorsAsJson').then(() => {
         window.operatorsAsJson = operatorsAsJson[0];
     });
     parser.makeAjaxRequest(namesCorrectionsAPI, 'namesCorrectionsAsJson').then();
@@ -61,9 +64,14 @@ $(document).ready(() => {
         parser.makeAjaxRequest(activeStationsAPI, 'activeStationsAsJson').then();
     }, 50000);
 
-    parser.makeAjaxRequest(stationAPI, 'stationDataAsJson').then(() => {
+    stationsRequest = parser.makeAjaxRequest(stationAPI, 'stationDataAsJson').then(() => {
         parser.makeAjaxRequest(activeStationsAPI, 'activeStationsAsJson')
-            .then(() => parser.generateStationsList());
+            .then(() => {
+                parser.generateStationsList()
+            });
+    });
+
+    $.when(timetablesRequest, stationsRequest, operatorsRequest).done(() => {
         if (urlParams.get('station') !== null) {
             window.station = urlParams.get('station').replace('_', ' ')
             stationDataAsJson.forEach((stationData) => {

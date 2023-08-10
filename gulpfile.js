@@ -13,7 +13,13 @@ gulp.task('build:css', () => {
 
 gulp.task('build:js', function () {
   return gulp.src('src/*.js')
-    .pipe(terser())
+    .pipe(terser({
+      ecma: 6,
+      keep_fnames: false,
+      mangle: {
+        toplevel: true,
+      },
+    }))
     .pipe(replace('.js', '.min.js'))
     .pipe(replace('.css', '.min.css'))
     .pipe(replace('src/', 'assets/'))
