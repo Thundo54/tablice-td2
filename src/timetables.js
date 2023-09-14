@@ -21,9 +21,9 @@ window.timetableInterval = null;
 window.currentOverlay = null;
 window.timetableRows = null;
 window.resizedFinished = null;
-window.timetablesAPI = 'https://spythere.pl/api/getActiveTrainList';
+window.timetablesAPI = 'https://stacjownik.spythere.pl/api/getActiveTrainList';
 window.activeStationsAPI = 'https://api.td2.info.pl/?method=getStationsOnline';
-window.stationAPI = 'https://spythere.pl/api/getSceneries';
+window.stationAPI = 'https://stacjownik.spythere.pl/api/getSceneries';
 window.operatorsAPI = 'https://raw.githubusercontent.com/Thundo54/tablice-td2-api/master/operatorConvert.json';
 window.namesCorrectionsAPI = 'https://raw.githubusercontent.com/Thundo54/tablice-td2-api/master/namesCorrections.json';
 window.trainCategory = JSON.parse(localStorage.getItem('trainCategory')) ||
