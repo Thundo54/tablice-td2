@@ -1,6 +1,6 @@
 {
   "name": "tablice-td2",
-  "version": "1.0.2",
+  "version": "1.3.4",
   "scripts": {
     "build": "gulp build:tablice-td2"
   },
