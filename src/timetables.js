@@ -359,6 +359,7 @@ function createTimetableInterval() {
         loadTimetables();
         parser.refreshSceneriesList();
     }, 30000);
+    window.history.replaceState(null, null, '?station=' + utils.capitalizeFirstLetter(station));
 }
 
 export function loadTimetables() {
