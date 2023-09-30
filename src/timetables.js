@@ -27,7 +27,7 @@ window.stationAPI = 'https://stacjownik.spythere.pl/api/getSceneries';
 window.operatorsAPI = 'https://raw.githubusercontent.com/Thundo54/tablice-td2-api/master/operatorConvert.json';
 window.namesCorrectionsAPI = 'https://raw.githubusercontent.com/Thundo54/tablice-td2-api/master/namesCorrections.json';
 window.trainCategory = JSON.parse(localStorage.getItem('trainCategory')) ||
-    ['EI', 'MP', 'RP', 'RO', 'TM', 'LT', 'TK', 'ZG', 'ZX'];
+    ['EI', 'MP', 'RP', 'RO', 'TM', 'LT', 'TK', 'ZG', 'ZX', 'AP'];
 
 $(document).ready(() => {
     let urlParams = new URLSearchParams(window.location.search);
@@ -181,9 +181,15 @@ $(document).ready(() => {
         let switchId = $(this).attr('id');
         if (trainCategory.includes(switchId)) {
             $(this).removeClass('active');
+            if (switchId === 'RO') {
+                trainCategory.splice(trainCategory.indexOf('AP'), 1);
+            }
             trainCategory.splice(trainCategory.indexOf(switchId), 1);
         } else {
             $(this).addClass('active');
+             if (switchId === 'RO') {
+                trainCategory.push('AP');
+            }
             trainCategory.push(switchId);
         }
         loadTimetables();
@@ -208,7 +214,7 @@ $(document).ready(() => {
         localStorage.removeItem('isStopped');
         window.stopTypes = ['ph'];
         window.trainTypes = ['EMRPA'];
-        window.trainCategory = ['EI', 'MP', 'RP', 'RO', 'TM', 'LT', 'TK', 'ZG', 'ZX'];
+        window.trainCategory = ['EI', 'MP', 'RP', 'RO', 'TM', 'LT', 'TK', 'ZG', 'ZX', 'AP'];
         window.isStopped = false;
         window.showOperators = false;
         initzializeMenu();
