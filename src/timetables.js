@@ -21,16 +21,17 @@ window.timetableInterval = null;
 window.currentOverlay = null;
 window.timetableRows = null;
 window.resizedFinished = null;
+window.urlParams = null;
 window.timetablesAPI = 'https://stacjownik.spythere.pl/api/getActiveTrainList';
 window.activeStationsAPI = 'https://api.td2.info.pl/?method=getStationsOnline';
 window.stationAPI = 'https://stacjownik.spythere.pl/api/getSceneries';
 window.operatorsAPI = 'https://raw.githubusercontent.com/Thundo54/tablice-td2-api/master/operatorConvert.json';
 window.namesCorrectionsAPI = 'https://raw.githubusercontent.com/Thundo54/tablice-td2-api/master/namesCorrections.json';
 window.trainCategory = JSON.parse(localStorage.getItem('trainCategory')) ||
-    ['EI', 'MP', 'RP', 'RO', 'TM', 'LT', 'TK', 'ZG', 'ZX'];
+    ['EI', 'MP', 'RP', 'RO', 'TM', 'LT', 'TK', 'ZG', 'ZX', 'AP'];
 
 $(document).ready(() => {
-    let urlParams = new URLSearchParams(window.location.search);
+    window.urlParams = new URLSearchParams(window.location.search);
     let stationsRequest;
     let timetablesRequest;
     let operatorsRequest;
@@ -67,19 +68,18 @@ $(document).ready(() => {
     stationsRequest = parser.makeAjaxRequest(stationAPI, 'stationDataAsJson').then(() => {
         parser.makeAjaxRequest(activeStationsAPI, 'activeStationsAsJson')
             .then(() => {
-                parser.generateStationsList()
+                parser.generateStationsList();
+                parser.selectCheckpoint();
             });
     });
 
     $.when(timetablesRequest, stationsRequest, operatorsRequest).done(() => {
         if (urlParams.get('station') !== null) {
             window.station = urlParams.get('station').replace('_', ' ')
-            stationDataAsJson.forEach((stationData) => {
-                if (stationData['name'] === station) {
-                    if (stationData['checkpoints'] === null || stationData['checkpoints'] === '') { return; }
-                    window.station = stationData['checkpoints'].split(';')[0];
-                }
-            });
+            if (urlParams.get('checkpoint') !== null) {
+                window.station = urlParams.get('checkpoint').replace('_', ' ')
+                console.log(window.station);
+            }
             createTimetableInterval();
         }
     });
@@ -181,9 +181,15 @@ $(document).ready(() => {
         let switchId = $(this).attr('id');
         if (trainCategory.includes(switchId)) {
             $(this).removeClass('active');
+            if (switchId === 'RO') {
+                trainCategory.splice(trainCategory.indexOf('AP'), 1);
+            }
             trainCategory.splice(trainCategory.indexOf(switchId), 1);
         } else {
             $(this).addClass('active');
+             if (switchId === 'RO') {
+                trainCategory.push('AP');
+            }
             trainCategory.push(switchId);
         }
         loadTimetables();
@@ -208,7 +214,7 @@ $(document).ready(() => {
         localStorage.removeItem('isStopped');
         window.stopTypes = ['ph'];
         window.trainTypes = ['EMRPA'];
-        window.trainCategory = ['EI', 'MP', 'RP', 'RO', 'TM', 'LT', 'TK', 'ZG', 'ZX'];
+        window.trainCategory = ['EI', 'MP', 'RP', 'RO', 'TM', 'LT', 'TK', 'ZG', 'ZX', 'AP'];
         window.isStopped = false;
         window.showOperators = false;
         initzializeMenu();
@@ -359,7 +365,16 @@ function createTimetableInterval() {
         loadTimetables();
         parser.refreshSceneriesList();
     }, 30000);
-    window.history.replaceState(null, null, '?station=' + utils.capitalizeFirstLetter(station));
+
+    let sceneries = $('#sceneries');
+    let url = window.location.href;
+    if (sceneries.val() !== null) {
+        url = `?station=${sceneries.val()}`;
+        if ($('#checkpoints').prop('selectedIndex') !== 0) {
+            url += `&checkpoint=${station}`
+        }
+    }
+    window.history.replaceState(null, null, url);
 }
 
 export function loadTimetables() {

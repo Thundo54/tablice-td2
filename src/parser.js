@@ -101,11 +101,13 @@ export function refreshSceneriesList() {
 
         if (station.isActive) {
             activeSceneries.append($('<option>', {
-                text: station.name
+                text: station.name,
+                value: station.name
             }));
         } else {
             otherSceneries.append($('<option>', {
-                text: station.name
+                text: station.name,
+                value: station.name
             }));
         }
     });
@@ -127,6 +129,16 @@ export function refreshCheckpointsList() {
             });
         }
     });
+}
+
+export function selectCheckpoint() {
+    if (urlParams.get('station') !== null) {
+        $('#sceneries').val(urlParams.get('station').replace('_', ' '));
+        refreshCheckpointsList();
+        if (urlParams.get('checkpoint') !== null) {
+            $('#checkpoints').val(urlParams.get('checkpoint').replace('_', ' '));
+        }
+    }
 }
 
 export function makeAjaxRequest(url, variableName) {
