@@ -21,6 +21,7 @@ window.timetableInterval = null;
 window.currentOverlay = null;
 window.timetableRows = null;
 window.resizedFinished = null;
+window.urlParams = null;
 window.timetablesAPI = 'https://stacjownik.spythere.pl/api/getActiveTrainList';
 window.activeStationsAPI = 'https://api.td2.info.pl/?method=getStationsOnline';
 window.stationAPI = 'https://stacjownik.spythere.pl/api/getSceneries';
@@ -30,7 +31,7 @@ window.trainCategory = JSON.parse(localStorage.getItem('trainCategory')) ||
     ['EI', 'MP', 'RP', 'RO', 'TM', 'LT', 'TK', 'ZG', 'ZX', 'AP'];
 
 $(document).ready(() => {
-    let urlParams = new URLSearchParams(window.location.search);
+    window.urlParams = new URLSearchParams(window.location.search);
     let stationsRequest;
     let timetablesRequest;
     let operatorsRequest;
@@ -67,19 +68,18 @@ $(document).ready(() => {
     stationsRequest = parser.makeAjaxRequest(stationAPI, 'stationDataAsJson').then(() => {
         parser.makeAjaxRequest(activeStationsAPI, 'activeStationsAsJson')
             .then(() => {
-                parser.generateStationsList()
+                parser.generateStationsList();
+                parser.selectCheckpoint();
             });
     });
 
     $.when(timetablesRequest, stationsRequest, operatorsRequest).done(() => {
         if (urlParams.get('station') !== null) {
             window.station = urlParams.get('station').replace('_', ' ')
-            stationDataAsJson.forEach((stationData) => {
-                if (stationData['name'] === station) {
-                    if (stationData['checkpoints'] === null || stationData['checkpoints'] === '') { return; }
-                    window.station = stationData['checkpoints'].split(';')[0];
-                }
-            });
+            if (urlParams.get('checkpoint') !== null) {
+                window.station = urlParams.get('checkpoint').replace('_', ' ')
+                console.log(window.station);
+            }
             createTimetableInterval();
         }
     });
@@ -365,7 +365,16 @@ function createTimetableInterval() {
         loadTimetables();
         parser.refreshSceneriesList();
     }, 30000);
-    window.history.replaceState(null, null, '?station=' + utils.capitalizeFirstLetter(station));
+
+    let sceneries = $('#sceneries');
+    let url = window.location.href;
+    if (sceneries.val() !== null) {
+        url = `?station=${sceneries.val()}`;
+        if ($('#checkpoints').prop('selectedIndex') !== 0) {
+            url += `&checkpoint=${station}`
+        }
+    }
+    window.history.replaceState(null, null, url);
 }
 
 export function loadTimetables() {
