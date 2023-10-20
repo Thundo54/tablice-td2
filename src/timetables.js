@@ -4,7 +4,6 @@ window.trainsSetBefore = [];
 window.stationsSet = [];
 window.station = '';
 window.isDeparture = localStorage.getItem('isDeparture') === 'true';
-window.isMargin = localStorage.getItem('isMargin') === 'true';
 window.isStopped = localStorage.getItem('isStopped') === 'true';
 window.timetableSize = localStorage.getItem('timetableSize') || 'normal';
 window.stopTypes = JSON.parse(localStorage.getItem('stopTypes')) || ['ph'];
@@ -24,7 +23,7 @@ window.resizedFinished = null;
 window.urlParams = null;
 window.timetablesAPI = 'https://stacjownik.spythere.pl/api/getActiveTrainList';
 window.activeStationsAPI = 'https://api.td2.info.pl/?method=getStationsOnline';
-window.stationAPI = 'https://stacjownik.spythere.pl/api/getSceneries';
+window.stationAPI = 'https://raw.githubusercontent.com/Thundo54/tablice-td2-api/master/stationsData.json';
 window.operatorsAPI = 'https://raw.githubusercontent.com/Thundo54/tablice-td2-api/master/operatorConvert.json';
 window.namesCorrectionsAPI = 'https://raw.githubusercontent.com/Thundo54/tablice-td2-api/master/namesCorrections.json';
 window.trainCategory = JSON.parse(localStorage.getItem('trainCategory')) ||
@@ -32,6 +31,7 @@ window.trainCategory = JSON.parse(localStorage.getItem('trainCategory')) ||
 
 $(document).ready(() => {
     window.urlParams = new URLSearchParams(window.location.search);
+
     let stationsRequest;
     let timetablesRequest;
     let operatorsRequest;
@@ -42,10 +42,6 @@ $(document).ready(() => {
         } else {
             window.isDeparture = urlParams.get('timetables') !== 'arrival';
         }
-    }
-
-    if (urlParams.get('margin') !== null) {
-        window.isMargin = urlParams.get('margin') === 'true';
     }
 
     initzializeOverlay();
@@ -77,8 +73,11 @@ $(document).ready(() => {
         if (urlParams.get('station') !== null) {
             window.station = urlParams.get('station').replace('_', ' ')
             if (urlParams.get('checkpoint') !== null) {
-                window.station = urlParams.get('checkpoint').replace('_', ' ')
-                console.log(window.station);
+                let checkpoint = urlParams.get('checkpoint').replace('_', ' ');
+                if (checkpoint.includes(',') && !checkpoint.includes('.')) {
+                    checkpoint += '.';
+                }
+                window.station = checkpoint
             }
             createTimetableInterval();
         }
@@ -103,12 +102,6 @@ $(document).ready(() => {
         } else {
             typeButton.removeClass('turn');
         }
-    });
-
-    $('#margin-button').mousedown(function () {
-        window.isMargin = !isMargin;
-        localStorage.isMargin = isMargin;
-        toggleMargin();
     });
 
     $('#sceneries').change(function() {
@@ -306,16 +299,6 @@ function toggleOperators() {
     loadTimetables();
 }
 
-function toggleMargin() {
-    let container = $('#container');
-    if (!isMargin) {
-        container.addClass('no-margin');
-    } else {
-        container.removeClass('no-margin');
-    }
-    utils.resizeTimetableRow();
-}
-
 function toggleSize() {
     let timetables = $('#timetables');
     let labels = $('#labels');
@@ -371,7 +354,7 @@ function createTimetableInterval() {
     if (sceneries.val() !== null) {
         url = `?station=${sceneries.val()}`;
         if ($('#checkpoints').prop('selectedIndex') !== 0) {
-            url += `&checkpoint=${station}`
+            url += `&checkpoint=${station.replace('.', '')}`;
         }
     }
     window.history.replaceState(null, null, url);
@@ -567,6 +550,5 @@ function initzializeOverlay() {
         utils.resizeTimetableRow();
         changeBoardType();
         toggleSize();
-        toggleMargin();
     });
 }
