@@ -57,20 +57,11 @@ export function parseTimetable() {
 export function generateStationsList() {
     let stationsSet = [], station = {};
     stationDataAsJson.forEach((stationData) => {
-
-        if (stationData['availability'] === 'abandoned') { return; }
-        if (stationData['availability'] === 'unavailable') { return; }
-
-        station.name = stationData.name;
+        station.name = stationData['sceneryName'];
+        station.mainCheckpoint = stationData['mainCheckpoint'];
+        station.mainCheckpointSuffix = stationData['mainCheckpointSuffix'];
         station.isActive = false;
-
-        if (stationData['checkpoints'] === null || stationData['checkpoints'] === '') {
-            station.nameApi = station.name;
-            station.checkpoints = station.name;
-        } else {
-            station.nameApi = stationData.checkpoints.split(';')[0];
-            station.checkpoints = stationData.checkpoints;
-        }
+        station.points = stationData['checkpoints'];
 
         stationsSet.push(station);
         station = {};
@@ -90,7 +81,7 @@ export function refreshSceneriesList() {
 
     stationsSet.forEach((station) => {
         station.isActive = false;
-        
+
         activeStationsAsJson['message'].forEach((activeStation) => {
             if (activeStation['region'] !== region) { return; }
             if (!activeStation['isOnline']) { return; }
@@ -121,14 +112,24 @@ export function refreshCheckpointsList() {
 
     stationsSet.forEach((station) => {
         if (station.name === $('#sceneries').val()) {
-            station.checkpoints.split(';').forEach((checkpoint) => {
+            if (!station.mainCheckpointSuffix) {
+                station.mainCheckpointSuffix = '';
+            }
+            checkpoints.append($('<option>', {
+                text: utils.capitalizeFirstLetter(station.mainCheckpoint)+station.mainCheckpointSuffix,
+                value: station.mainCheckpoint+station.mainCheckpointSuffix
+            }));
+            station.points.forEach((checkpoint, index) => {
+                if (!checkpoint.suffix) {
+                    checkpoint.suffix = '';
+                }
                 checkpoints.append($('<option>', {
-                    value: checkpoint,
-                    text: utils.capitalizeFirstLetter(checkpoint)
+                    text: utils.capitalizeFirstLetter(checkpoint.name)+checkpoint.suffix,
+                    value: checkpoint.name+checkpoint.suffix
                 }));
             });
         }
-    });
+    })
 }
 
 export function selectCheckpoint() {
