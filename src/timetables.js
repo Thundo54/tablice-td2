@@ -73,8 +73,11 @@ $(document).ready(() => {
         if (urlParams.get('station') !== null) {
             window.station = urlParams.get('station').replace('_', ' ')
             if (urlParams.get('checkpoint') !== null) {
-                window.station = urlParams.get('checkpoint').replace('_', ' ')
-                console.log(window.station);
+                let checkpoint = urlParams.get('checkpoint').replace('_', ' ');
+                if (checkpoint.includes(',') && !checkpoint.includes('.')) {
+                    checkpoint += '.';
+                }
+                window.station = checkpoint
             }
             createTimetableInterval();
         }
@@ -351,7 +354,7 @@ function createTimetableInterval() {
     if (sceneries.val() !== null) {
         url = `?station=${sceneries.val()}`;
         if ($('#checkpoints').prop('selectedIndex') !== 0) {
-            url += `&checkpoint=${station}`
+            url += `&checkpoint=${station.replace('.', '')}`;
         }
     }
     window.history.replaceState(null, null, url);

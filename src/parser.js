@@ -137,7 +137,11 @@ export function selectCheckpoint() {
         $('#sceneries').val(urlParams.get('station').replace('_', ' '));
         refreshCheckpointsList();
         if (urlParams.get('checkpoint') !== null) {
-            $('#checkpoints').val(urlParams.get('checkpoint').replace('_', ' '));
+            let checkpoint = urlParams.get('checkpoint').replace('_', ' ');
+            if (checkpoint.includes(',')) {
+                checkpoint += '.';
+            }
+            $('#checkpoints').val(checkpoint);
         }
     }
 }
