@@ -119,7 +119,7 @@ export function refreshCheckpointsList() {
                 text: utils.capitalizeFirstLetter(station.mainCheckpoint)+station.mainCheckpointSuffix,
                 value: station.mainCheckpoint+station.mainCheckpointSuffix
             }));
-            station.points.forEach((checkpoint, index) => {
+            station.points.forEach((checkpoint) => {
                 if (!checkpoint.suffix) {
                     checkpoint.suffix = '';
                 }
