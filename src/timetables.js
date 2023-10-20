@@ -74,7 +74,7 @@ $(document).ready(() => {
             window.station = urlParams.get('station').replace('_', ' ')
             if (urlParams.get('checkpoint') !== null) {
                 let checkpoint = urlParams.get('checkpoint').replace('_', ' ');
-                if (checkpoint.includes(',') && !checkpoint.includes('.')) {
+                if (checkpoint.includes(',') && !checkpoint.split(',')[1].includes('.')) {
                     checkpoint += '.';
                 }
                 window.station = checkpoint
@@ -354,7 +354,7 @@ function createTimetableInterval() {
     if (sceneries.val() !== null) {
         url = `?station=${sceneries.val()}`;
         if ($('#checkpoints').prop('selectedIndex') !== 0) {
-            url += `&checkpoint=${station.replace('.', '')}`;
+            url += `&checkpoint=${station.replace(new RegExp('.$', ), '')}`;
         }
     }
     window.history.replaceState(null, null, url);
