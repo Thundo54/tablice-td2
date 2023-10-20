@@ -175,16 +175,28 @@ body {
 					border: 0.1vmin solid $color_2;
 					background: none;
 					color: $color_2;
-					padding-left: 0.4vmin;
+					padding: 0 0.4vmin;
 
 					optgroup, option {
-						color: black;
+						color: white;
 						text-align: left;
+						background-color: #111;
 					}
 
 					optgroup {
 						text-align: center;
 					}
+
+					&::-webkit-scrollbar {
+						width: 0.8vmin;
+						background-color: #111;
+					}
+
+					&::-webkit-scrollbar-thumb {
+						background-color: white;
+						border-radius: 1vmin;
+					}
+
 
 					&:hover, &:focus {
 						border-color: $color_1;
