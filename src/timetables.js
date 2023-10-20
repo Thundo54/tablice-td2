@@ -4,7 +4,6 @@ window.trainsSetBefore = [];
 window.stationsSet = [];
 window.station = '';
 window.isDeparture = localStorage.getItem('isDeparture') === 'true';
-window.isMargin = localStorage.getItem('isMargin') === 'true';
 window.isStopped = localStorage.getItem('isStopped') === 'true';
 window.timetableSize = localStorage.getItem('timetableSize') || 'normal';
 window.stopTypes = JSON.parse(localStorage.getItem('stopTypes')) || ['ph'];
@@ -32,6 +31,7 @@ window.trainCategory = JSON.parse(localStorage.getItem('trainCategory')) ||
 
 $(document).ready(() => {
     window.urlParams = new URLSearchParams(window.location.search);
+
     let stationsRequest;
     let timetablesRequest;
     let operatorsRequest;
@@ -42,10 +42,6 @@ $(document).ready(() => {
         } else {
             window.isDeparture = urlParams.get('timetables') !== 'arrival';
         }
-    }
-
-    if (urlParams.get('margin') !== null) {
-        window.isMargin = urlParams.get('margin') === 'true';
     }
 
     initzializeOverlay();
@@ -103,12 +99,6 @@ $(document).ready(() => {
         } else {
             typeButton.removeClass('turn');
         }
-    });
-
-    $('#margin-button').mousedown(function () {
-        window.isMargin = !isMargin;
-        localStorage.isMargin = isMargin;
-        toggleMargin();
     });
 
     $('#sceneries').change(function() {
@@ -304,16 +294,6 @@ function toggleOperators() {
         toggleOperators.removeClass('active');
     }
     loadTimetables();
-}
-
-function toggleMargin() {
-    let container = $('#container');
-    if (!isMargin) {
-        container.addClass('no-margin');
-    } else {
-        container.removeClass('no-margin');
-    }
-    utils.resizeTimetableRow();
 }
 
 function toggleSize() {
@@ -567,6 +547,5 @@ function initzializeOverlay() {
         utils.resizeTimetableRow();
         changeBoardType();
         toggleSize();
-        toggleMargin();
     });
 }
