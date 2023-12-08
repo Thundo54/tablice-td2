@@ -21,7 +21,7 @@ window.currentOverlay = null;
 window.timetableRows = null;
 window.resizedFinished = null;
 window.urlParams = null;
-window.timetablesAPI = 'https://stacjownik.spythere.pl/api/getActiveTrainList';
+window.timetablesAPI = 'https://stacjownik.spythere.eu/api/getActiveTrainList';
 window.activeStationsAPI = 'https://api.td2.info.pl/?method=getStationsOnline';
 window.stationAPI = 'https://raw.githubusercontent.com/Thundo54/tablice-td2-api/master/stationsData.json';
 window.operatorsAPI = 'https://raw.githubusercontent.com/Thundo54/tablice-td2-api/master/operatorConvert.json';
