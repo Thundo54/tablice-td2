@@ -65,17 +65,20 @@ export function createTrainData(stopPoint, timetable) {
 }
 
 export function createRemark(delay = 0, beginsTerminatesHere, isStopped) {
-    // Można dodać przełącznik, który będzie pokazywał opóźnienie, jeśli pociąg kończy bieg
     if (delay > 0) {
         if (isStopped) {
+            if (overlayName === 'warszawa') { return `󠀠󠀠• Pociąg został zatrzymany na trasie • The train has been stopped on route • Pociąg rozpoczyna bieg • The train begins here •`; }
             return `Pociąg został zatrzymany na trasie/train has been stopped on route/Der Zug wurde auf der Strecke angehalten`;
         } else {
+            if (overlayName === 'warszawa') { return `󠀠󠀠• Opóźniony ${delay}min • Delayed ${delay}min •󠀠󠀠󠀠󠀠`; }
             return `Opóźniony ${delay}min/delayed ${delay}min/Verspätung ${delay}min`;
         }
     } else if (beginsTerminatesHere) {
         if (isDeparture) {
+            if (overlayName === 'warszawa') { return `󠀠󠀠• Pociąg rozpoczyna bieg • The train begins here • Pociąg rozpoczyna bieg • The train begins here •󠀠󠀠󠀠󠀠`; }
             return 'Pociąg rozpoczyna bieg/train begins here/Zug beginnt hier';
         } else {
+            if (overlayName === 'warszawa') { return `󠀠󠀠• Pociąg kończy bieg • The train terminates here • Pociąg rozpoczyna bieg • The train begins here •󠀠󠀠󠀠󠀠`; }
             return 'Pociąg kończy bieg/train terminates here/Zug endet hier';
         }
     } else {
@@ -104,7 +107,7 @@ export function addRow(time, trainNo, stationFromTo, via, operator, category, pl
         row.append($('<td>').text(operator));
         row.append($('<td>').text(platform));
         row.append($('<td>').append($('<span>').text(remarks)));
-    } else {
+    } else if (overlayName === 'krakow') {
         row.append($('<td>')
             .append($('<p>').text(convertTime(time)))
             .append($('<div>').addClass('indented')
@@ -112,6 +115,24 @@ export function addRow(time, trainNo, stationFromTo, via, operator, category, pl
             )
         );
         row.append($('<td>').text(operator));
+        row.append($('<td>')
+            .append($('<div>')
+                .append($('<span>').text(stationFromTo))
+            )
+            .append($('<div>').addClass('indented')
+                .append($('<span>'))
+            )
+        );
+        row.append($('<td>').append($('<span>')));
+        row.append($('<td>').text(platform));
+    } else {
+        row.append($('<td>').text(convertTime(time)));
+        row.append($('<td>')
+            .append($('<p>').text(convertTime(operator)))
+            .append($('<div>')
+                .append($('<span>').text(createTrainString(category, trainNo)))
+            )
+        );
         row.append($('<td>')
             .append($('<div>')
                 .append($('<span>').text(stationFromTo))
@@ -151,6 +172,7 @@ export function resizeTimetableRow() {
 export function convertOperator(train) {
     let operatorProb = [];
     train.category = '';
+
     train.trainCars.split(';').forEach((car) => {
         if (operatorsAsJson['operators'][car]) {
             operatorProb.push.apply(operatorProb, operatorsAsJson['operators'][car]);

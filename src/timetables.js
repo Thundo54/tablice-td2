@@ -419,27 +419,44 @@ export function loadTimetables() {
         );
 
         if (train.trainName !== '') {
-            train.trainName = `*** ${train.trainName.toUpperCase()} *** ${remark}`;
+            if (overlayName === 'warszawa') {
+                train.trainName = `󠀠󠀠••• <b><i>${train.trainName}</i></b> •••󠀠󠀠󠀠󠀠${remark.replace('•', '')}`;
+            }
+            else { train.trainName = `*** ${train.trainName.toUpperCase()} *** ${remark}`; }
         } else {
             train.trainName = remark;
         }
 
         if (overlayName === 'tomaszow') {
             $(`#${index} td:nth-child(2) span`)
-                .text(`${train.category} ${train.trainNo}`);
+                .html(`${train.category} ${train.trainNo}`);
             $(`#${index} td:nth-child(5)`)
-                .text(train.operator);
+                .html(train.operator);
             $(`#${index} td:nth-child(7) span`)
-                .text(train.trainName);
-        } else {
+                .html(train.trainName);
+        } else if (overlayName === 'krakow') {
             $(`#${index} td:nth-child(1) span:last-child`)
-                .text(`${train.category} ${train.trainNo}`);
+                .html(`${train.category} ${train.trainNo}`);
 
             $(`#${index} td:nth-child(2)`)
-                .text(train.operator);
+                .html(train.operator);
 
             $(`#${index} td:nth-child(3) .indented span`)
-                .text(train.trainName);
+                .html(train.trainName);
+        } else {
+            $(`#${index} td:nth-child(2) p`)
+                .html(train.operator);
+
+            $(`#${index} td:nth-child(2) span`)
+                .html(`${train.category} ${train.trainNo}`);
+
+            if (train.trainName === '') {
+                $(`#${index} td:nth-child(3)`).css('vertical-align', `middle`);
+                $(`#${index} td:nth-child(3) .indented`).css('display', `none`);
+            }
+
+            $(`#${index} td:nth-child(3) .indented span`)
+                .html(train.trainName);
         }
 
         $(`#${index} td:nth-child(4) span`)
@@ -456,21 +473,31 @@ export function loadTimetables() {
 
 export function refreshTimetablesAnim() {
     let tr = $('#timetables table tr');
-    let td, span, animDuration, fieldWidth;
+    let td, span, animDuration, fieldWidth, widthRatio, tdWidth;
+    if (overlayName === 'warszawa') { widthRatio = 1; }
+    else { widthRatio = 0.9; }
 
+    // complete rewrite of this function is needed
     for (let i = 0; i < tr.length; i++) {
         td = $(tr[i]).find('td');
-        if (i >= 12) { return; }
+        tdWidth = $(td[2]).width() + $(td[3]).width();
+        if (i >= timetableRows) { return; }
         for (let j = 0; j < td.length; j++) {
             span = $(td[j]).find('span');
+            if (span.text().length <= 0) { continue; }
             for (let k = 0; k < span.length; k++) {
                 fieldWidth = $(td[j]).width();
-                if ($(span[k]).parents('.indented').length > 0) {
-                    fieldWidth = $(td[j]).find('div.indented').width();
+                if ($(td[j]).find('.indented span').text().length > 0 && overlayName === 'warszawa') {
+                    $(td[j]).find('.indented').css('position', 'fixed');
+                    $(td[j+1]).css('vertical-align', 'top');
+                    $(td[j+1]).css('padding', '1vmin 0');
+                    fieldWidth = $(td[j]).width() + $(td[j+1]).width();
                 }
+
                 animDuration = (($(span[k]).width() + fieldWidth) * 10) / 400;
+
                 if ($(span[k]).css('animation-duration') !== animDuration) {
-                    if ($(span[k]).width() > $(td[j]).width()*0.9) {
+                    if ($(span[k]).width() > fieldWidth*widthRatio) {
                         $(span[k]).css('animation', `ticker linear ${animDuration}s infinite`);
                         $(span[k]).css('--elementWidth', fieldWidth);
                     } else {
@@ -483,21 +510,40 @@ export function refreshTimetablesAnim() {
 }
 
 function changeBoardType() {
-    let titlePL, titleEN, description
+    let titlePL, titleEN, description, description2;
     let container = $('#container');
     $('#timetables table tr').remove();
     if (isDeparture) {
         titlePL = 'Odjazdy';
         titleEN = 'Departures';
         description = 'Do<br><i>Destination</i>';
+        // description2 = '<i><b>Godzina odjazdu, przewoźnik, nr pociągu</b><br>\n' +
+        //     'Time of departure, operator, train no.</i>';
+        description2 = '<i><b>Godzina odjazdu</b><br>Time of departure</i>';
+        if (overlayName === 'warszawa') {
+            description = '<i><b>Stacja docelowa, dodatkowe informacje</b><br>\n' +
+                'Destination, additional information</i>';
+        }
     } else {
         titlePL = 'Przyjazdy';
         titleEN = 'Arrivals';
         description = 'Z<br><i>From</i>';
+        // description2 = '<i><b>Godzina przyjazdu, przewoźnik, nr pociągu</b><br>' +
+        //     'Time of arrival,<br> operator, train no.</i>';
+        description2 = '<i><b>Godzina<br>przyjazdu,</b><br>Time of<br>arrival</i>';
+        if (overlayName === 'warszawa') {
+            description = '<i><b>Stacja początkowa, dodatkowe informacje</b><br>\n' +
+                'Origin, additional information</i>';
+        }
     }
-    $('.title-pl').text(titlePL);
-    $('.title-en').text(titleEN);
-    $('#labels table th:nth-child(3)').html(description);
+    $('.title-pl').html(titlePL);
+    $('.title-en').html(titleEN);
+    if (overlayName === 'warszawa') {
+        //$('#labels table th:nth-child(3)').html(description);
+        //$('#labels table th:nth-child(1)').html(description2);
+    } else {
+        $('#labels table th:nth-child(3)').html(description);
+    }
     if (!isDeparture) {
         container.addClass('white-text');
         container.removeClass('yellow-text');
