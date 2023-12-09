@@ -645,6 +645,12 @@ function changeBoardType() {
         //     description = '<i><b>Stacja docelowa, dodatkowe informacje</b><br>\n' +
         //         'Destination, additional information</i>';
         // }
+    // if (overlayName === 'warszawa') {
+    //     //$('#labels table th:nth-child(3)').html(description);
+    //     //$('#labels table th:nth-child(1)').html(description2);
+    // } else {
+    //     $('#labels table th:nth-child(3)').html(description);
+    // }
 }
 
 function initzializeMenu () {
