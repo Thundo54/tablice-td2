@@ -30,6 +30,9 @@ window.trainCategory = JSON.parse(localStorage.getItem('trainCategory')) ||
     ['EI', 'MP', 'RP', 'RO', 'TM', 'LT', 'TK', 'ZG', 'ZX', 'AP'];
 
 $(document).ready(() => {
+
+
+
     window.urlParams = new URLSearchParams(window.location.search);
 
     let stationsRequest;
@@ -97,6 +100,8 @@ $(document).ready(() => {
         localStorage.isDeparture = isDeparture;
         changeBoardType();
         loadTimetables();
+        refreshTimetablesAnim();
+        utils.resizeTimetableRow();
         if (isDeparture) {
             typeButton.addClass('turn');
         } else {
@@ -264,11 +269,7 @@ $(document).on('webkitfullscreenchange mozfullscreenchange fullscreenchange', ()
 function changeOverlay() {
     $('#board').load(`src/overlays/${overlayName}.html`, () => {
         $(`link[href="src/${currentOverlay}.css"]`).attr('href',`src/${overlayName}.css`);
-        if (overlayName === 'tomaszow') {
-            window.timetableRows = 0;
-        } else {
-            window.timetableRows = 12;
-        }
+        setRowsCount();
 
         setTimeout(() => {
             changeBoardType();
@@ -305,15 +306,11 @@ function toggleSize() {
     if (timetableSize === 'normal') {
         timetables.removeClass('enlarged');
         labels.removeClass('enlarged');
-        if (timetableRows !== 0) {
-            window.timetableRows = 10;
-        }
+        setRowsCount();
     } else {
         timetables.addClass('enlarged');
         labels.addClass('enlarged');
-        if (timetableRows !== 0) {
-            window.timetableRows = 6;
-        }
+        setRowsCount();
     }
     refreshTimetablesAnim();
     utils.resizeTimetableRow();
@@ -588,13 +585,30 @@ function initzializeMenu () {
 function initzializeOverlay() {
     $('#board').load(`src/overlays/${overlayName}.html`, () => {
         $(`link[href="src/tomaszow.css"]`).attr('href',`src/${overlayName}.css`);
-        if (overlayName === 'krakow') {
-            window.timetableRows = 10;
-        } else {
-            window.timetableRows = 0;
-        }
         utils.resizeTimetableRow();
         changeBoardType();
         toggleSize();
+        setRowsCount();
     });
 }
+
+function setRowsCount() {
+    if (timetableSize === 'normal') {
+        if (overlayName === 'krakow') {
+            window.timetableRows = 10;
+        } else if (overlayName === 'warszawa') {
+            window.timetableRows = 7;
+        } else {
+            window.timetableRows = 0;
+        }
+    } else {
+        if (overlayName === 'krakow') {
+            window.timetableRows = 6;
+        } else if (overlayName === 'warszawa') {
+            window.timetableRows = 7;
+        } else {
+            window.timetableRows = 12;
+        }
+    }
+}
+
