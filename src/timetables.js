@@ -554,6 +554,18 @@ function resizeTextToFit() {
     });
 }
 
+function resizeTextToFit() {
+    $('.train-name').each(function() {
+        let trainNameFontSize = parseInt($(this).css('font-size'));
+        let parentWidth = $(this).parent().width();
+
+        while ($(this).width() > parentWidth) {
+            trainNameFontSize = trainNameFontSize - 0.1;
+            $(this).css('font-size', `${trainNameFontSize}vmin`);
+        }
+    });
+}
+
 export function refreshTimetablesAnim() {
     let tr = $('#timetables table tr');
     let td, span, animDuration, fieldWidth, widthRatio, tdWidth;
