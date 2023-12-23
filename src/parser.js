@@ -27,7 +27,7 @@ export function parseTimetable() {
                     stopListElement.arrivalAt = utils.convertTime(stopPoint['arrivalTimestamp']);
                     stopListElement.departureAt = utils.convertTime(stopPoint['departureTimestamp']);
                     if (stopPoint['stopType'].includes('pm')) {
-                        stopListElement.stopPoint = `<b>${stopListElement.stopPoint}</b>`;
+                        stopListElement.stopPoint = `${stopListElement.stopPoint}`;
                         stopListElement.isShunting = true;
                     }
                     stopList.push(stopListElement);
