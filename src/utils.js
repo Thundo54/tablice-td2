@@ -64,6 +64,8 @@ export function createTrainData(stopPoint, timetable) {
     train.category = train.gameCategory;
     train.operator = train.gameCategory;
     train.trainName = '';
+    train.platform = 1;
+    train.track = 2;
 
     return train;
 }
@@ -88,66 +90,102 @@ export function createRemark(delay = 0, beginsTerminatesHere, isStopped) {
     } else {
         return '';
     }
-
-    // if (beginsTerminatesHere && !isDeparture) {
-    //     return 'Pociąg kończy bieg/train terminates here/zug endet hier';
-    // }
-    // if (delay > 0) {
-    //     return `Opóźniony ${delay}min/delayed ${delay}min/verspätung ${delay}min`;
-    // } else if (beginsTerminatesHere && isDeparture) {
-    //     return 'Pociąg rozpoczyna bieg/train begins here/zug beginnt hier';
-    // } else {
-    //     return '';
-    // }
 }
 
-export function addRow(time, trainNo, stationFromTo, via, operator, category, platform, remarks, rowNo) {
-    let row = $('<tr>').attr('id', `${rowNo}`);
-    if (overlayName === 'tomaszow') {
-        row.append($('<td>').text(convertTime(time)));
-        row.append($('<td>').append($('<div>').append($('<span>').text(createTrainString(category, trainNo)))));
-        row.append($('<td>').append($('<span>').text(stationFromTo)));
-        row.append($('<td>').append($('<span>').text(via)));
-        row.append($('<td>').text(operator));
-        row.append($('<td>').text(platform));
-        row.append($('<td>').append($('<span>').text(remarks)));
-    } else if (overlayName === 'krakow') {
-        row.append($('<td>')
-            .append($('<p>').text(convertTime(time)))
-            .append($('<div>').addClass('indented')
-                .append($('<span>').text(createTrainString(category, trainNo)))
-            )
-        );
-        row.append($('<td>').text(operator));
-        row.append($('<td>')
-            .append($('<div>')
-                .append($('<span>').text(stationFromTo))
-            )
-            .append($('<div>').addClass('indented')
+export function addRow(train, index) {
+    let row = $('<tr>').attr('id', `${index}`);
+    switch (overlayName) {
+        case 'tomaszow':
+            row.append($('<td>').text(convertTime(train.timestamp)));
+            row.append($('<td>').append($('<div>').append($('<span>').text(createTrainString(train.category, train.trainNo)))));
+            row.append($('<td>').append($('<span>').text(train.stationFromTo)));
+            row.append($('<td>').append($('<span>')));
+            row.append($('<td>').text(train.operator));
+            row.append($('<td>').text(train.platform));
+            row.append($('<td>').append($('<span>')));
+            break;
+        case 'krakow':
+            row.append($('<td>')
+                .append($('<p>').text(convertTime(train.timestamp)))
+                .append($('<div>').addClass('indented')
+                    .append($('<span>').text(createTrainString(train.category, train.trainNo)))
+                )
+            );
+            row.append($('<td>').text(train.operator));
+            row.append($('<td>')
+                .append($('<div>')
+                    .append($('<span>').text(train.stationFromTo))
+                )
+                .append($('<div>').addClass('indented')
+                    .append($('<span>'))
+                )
+            );
+            row.append($('<td>').append($('<span>')));
+            row.append($('<td>').text(train.platform));
+            break;
+        case 'plakat':
+            if (train.operator === 'IC') {
+                row.addClass('red');
+                if (train.trainName) {
+                    train.symbols = train.symbols.replace('j', 'j R');
+                }
+                train.symbols += ' p';
+            }
+
+            let symbolsDiv = $('<div>').addClass('symbols');
+            if (isDeparture) {
+                train.symbols.split(' ').forEach((symbol) => {
+                    if (symbol === 'R') {
+                        symbolsDiv.append($('<span>').addClass('symbol-text').text(symbol));
+                        return;
+                    }
+                    symbol = carsDataAsJson['shortcuts'][symbol];
+                    symbolsDiv.append($('<span>').addClass('material-symbols-outlined').text(symbol));
+                });
+            }
+
+            if (train.category) {
+                train.category = ` - ${train.category}`;
+            }
+
+            row.append($('<td>').addClass('time').text(convertTime(train.timestamp)));
+            row.append($('<td>').addClass('platform')
+                .append($('<b>').text(train.platform).append($('<br>')))
+                .append(train.track)
+            );
+            row.append($('<td>').addClass('operator')
+                .append($('<div>')
+                    .append($('<span>').text(train.operator).append($('<b>').text(train.category)))
+                    .append($('<span>').append(train.trainNo))
+                    .append($('<span>').addClass('train-name').append(train.trainName.toUpperCase()))
+                    //.append($('<span>').addClass('material-symbols-outlined').append(symbols.join(' ')))
+                    .append(symbolsDiv)
+                )
+            );
+            row.append($('<td>').addClass('fromTo')
                 .append($('<span>'))
-            )
-        );
-        row.append($('<td>').append($('<span>')));
-        row.append($('<td>').text(platform));
-    } else {
-        row.append($('<td>').text(convertTime(time)));
-        row.append($('<td>')
-            .append($('<p>').text(convertTime(operator)))
-            .append($('<div>')
-                .append($('<span>').text(createTrainString(category, trainNo)))
-            )
-        );
-        row.append($('<td>')
-            .append($('<div>')
-                .append($('<span>').text(stationFromTo))
-            )
-            .append($('<div>').addClass('indented')
-                .append($('<span>'))
-            )
-        );
-        row.append($('<td>').append($('<span>')));
-        row.append($('<td>').text(platform));
+                .append($('<span>').addClass('departure text-bold'))
+            );
+            break;
     }
+
+    // row.append($('<td>').text(convertTime(time)));
+    //     row.append($('<td>')
+    //         .append($('<p>').text(convertTime(operator)))
+    //         .append($('<div>')
+    //             .append($('<span>').text(createTrainString(category, trainNo)))
+    //         )
+    //     );
+    //     row.append($('<td>')
+    //         .append($('<div>')
+    //             .append($('<span>').text(stationFromTo))
+    //         )
+    //         .append($('<div>').addClass('indented')
+    //             .append($('<span>'))
+    //         )
+    //     );
+    //     row.append($('<td>').append($('<span>')));
+    //     row.append($('<td>').text(platform));
     return row;
 }
 
@@ -211,6 +249,16 @@ export function convertOperator(train) {
     return train;
 }
 
+export function createDate() {
+    let date = new Date();
+    let day = date.getDate();
+    let month = date.getMonth() + 1;
+    let year = date.getFullYear();
+    let romanNumerals = ['I', 'II', 'III', 'IV', 'V', 'VI', 'VII', 'VIII',
+        'IX', 'X', 'XI', 'XII'];
+    return `${day} ${romanNumerals[month - 1]} ${year}`;
+}
+
 
 export function createSymbolsList(trainCars) {
     let symbols = '';
@@ -242,4 +290,4 @@ window.loadTimetablesFromUrl = (url) => {
     clearInterval(getActiveStationsInterval);
     window.timetablesAPI = url;
     parser.makeAjaxRequest(timetablesAPI, 'timetablesAsJson').then(() => loadTimetables());
-}
+};
