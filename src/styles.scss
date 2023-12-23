@@ -8,6 +8,18 @@ $background-color_1: #000000;
 $background-color_2: #140075;
 $background-color_3: #F0F8FF;
 
+body {
+	&::-webkit-scrollbar {
+		width: 0.8vmin;
+		background-color: #111;
+	}
+
+	&::-webkit-scrollbar-thumb {
+		background-color: white;
+		border-radius: 1vmin;
+	}
+}
+
 :root {
 	--elementwidth: 100%;
 }
