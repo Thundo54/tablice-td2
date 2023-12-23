@@ -171,10 +171,6 @@ export function addRow(train, index) {
                 });
             }
 
-            if (train.category) {
-                train.category = ` - ${train.category}`;
-            }
-
             row.append($('<td>').addClass('time').text(convertTime(train.timestamp)));
             row.append($('<td>').addClass('platform')
                 .append($('<b>').text(train.platform).append($('<br>')))
@@ -182,8 +178,8 @@ export function addRow(train, index) {
             );
             row.append($('<td>').addClass('operator')
                 .append($('<div>')
-                    .append($('<span>').text(train.operator).append($('<b>').text(train.category)))
-                    .append($('<span>').append(train.trainNo))
+                    .append($('<span>').addClass('train-category').text(train.operator).append($('<b>').text(train.category)))
+                    .append($('<span>').addClass('train-no').append(train.trainNo))
                     .append($('<span>').addClass('train-name').append(train.trainName.toUpperCase()))
                     //.append($('<span>').addClass('material-symbols-outlined').append(symbols.join(' ')))
                     .append(symbolsDiv)

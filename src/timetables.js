@@ -430,13 +430,15 @@ export function loadTimetables() {
                 train.stoppedHere
         );
 
-        if (train.trainName !== '') {
-            if (overlayName === 'starysacz') {
-                train.trainName = `󠀠󠀠••• <b><i>${train.trainName}</i></b> •••󠀠󠀠󠀠󠀠${remark.replace('•', '')}`;
+        if (overlayName !== 'plakat') {
+            if (train.trainName !== '') {
+                if (overlayName === 'starysacz') {
+                    train.trainName = `󠀠󠀠••• <b><i>${train.trainName}</i></b> •••󠀠󠀠󠀠󠀠${remark.replace('•', '')}`;
+                }
+                else { train.trainName = `*** ${train.trainName.toUpperCase()} *** ${remark}`; }
+            } else {
+                train.trainName = remark;
             }
-            else { train.trainName = `*** ${train.trainName.toUpperCase()} *** ${remark}`; }
-        } else {
-            train.trainName = remark;
         }
 
         train.timetable.forEach((stopPoint) => {
@@ -516,6 +518,13 @@ export function loadTimetables() {
 
                 $(`#update-time`)
                     .text(`Aktualizacja wg stanu na ${utils.createDate()}`);
+
+                if (train.category) {
+                    train.category = ` - ${train.category}`;
+                }
+
+                $(`#${index} td:nth-child(3) .train-category`).text(train.operator).append($('<b>').text(train.category));
+                $(`#${index} td:nth-child(3) .train-name`).text(train.trainName.toUpperCase());
 
                 if (isDeparture) {
                     if (stopsList !== '') { stopsList += ','; }
