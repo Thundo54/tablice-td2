@@ -456,23 +456,12 @@ export function loadTimetables() {
                 .text(stopsList);
         }
 
-        // $(`#${index} td:nth-child(2) p`)
-        //         .html(train.operator);
-
-        //     $(`#${index} td:nth-child(2) span`)
-        //         .html(`${train.category} ${train.trainNo}`);
-
-        //     if (train.trainName === '') {
-        //         $(`#${index} td:nth-child(3)`).css('vertical-align', `middle`);
-        //         $(`#${index} td:nth-child(3) .indented`).css('display', `none`);
-        //     }
-
-        //     $(`#${index} td:nth-child(3) .indented span`)
-        //         .html(train.trainName);
+        let trainCatNo = $(`#${index} td:nth-child(2) span`);
+        let trainName = $(`#${index} td:nth-child(3) .indented span`);
 
         switch (overlayName) {
             case 'tomaszow':
-                $(`#${index} td:nth-child(2) span`)
+                trainCatNo
                     .text(`${train.category} ${train.trainNo}`);
 
                 $(`#${index} td:nth-child(5)`)
@@ -488,8 +477,23 @@ export function loadTimetables() {
                 $(`#${index} td:nth-child(2)`)
                     .text(train.operator);
 
-                $(`#${index} td:nth-child(3) .indented span`)
+                trainName
                     .text(train.trainName);
+                break;
+            case 'warszawa':
+                $(`#${index} td:nth-child(2) p`)
+                    .html(train.operator);
+
+                trainCatNo
+                    .html(`${train.category} ${train.trainNo}`);
+
+                if (train.trainName === '') {
+                    $(`#${index} td:nth-child(3)`).css('vertical-align', `middle`);
+                    $(`#${index} td:nth-child(3) .indented`).css('display', `none`);
+                }
+
+                trainName
+                    .html(train.trainName);
                 break;
             case 'plakat':
                 $(`#title-scenery`)
@@ -579,11 +583,13 @@ function changeBoardType() {
     let body = $('body');
     let container = $('#container');
     let timetables = $('#timetables table');
+    let headers = $('#headers table');
     timetables.find('tr').remove();
 
     switch (overlayName) {
         case 'krakow':
         case 'tomaszow':
+        case 'warszawa':
             if (isDeparture) {
                 texts.titlePL = 'Odjazdy';
                 texts.titleEN = 'Departures';
@@ -598,10 +604,11 @@ function changeBoardType() {
 
             $('.title-pl').text(texts.titlePL);
             $('.title-en').text(texts.titleEN);
-            $('#headers table th:nth-child(3)').html(texts.desc);
+            if (overlayName !== 'warszawa') {
+                $('#headers table th:nth-child(3)').html(texts.desc);
+            }
             break;
         case 'plakat':
-            let headers = $('#headers table');
             if (isDeparture) {
                 texts.type = '<b>Odjazdy</b> <i>/ Departures / Відправлення</i>';
                 texts.desc1PL = 'godzina odjazdu';
@@ -630,27 +637,28 @@ function changeBoardType() {
             break;
     }
 
-    // description2 = '<i><b>Godzina odjazdu, przewoźnik, nr pociągu</b><br>\n' +
-        //     'Time of departure, operator, train no.</i>';
+    if (overlayName === 'warszawa') {
+        texts.desc1 = '<i><b>Stacja początkowa, dodatkowe informacje</b><br>Origin, additional information</i>';
 
-        // description2 = '<i><b>Godzina przyjazdu, przewoźnik, nr pociągu</b><br>' +
-        //     'Time of arrival,<br> operator, train no.</i>';
+        if (isDeparture) {
+            texts.type = '<b>Odjazdy</b> <i>/ Departures / Відправлення</i>';
+            texts.desc1PL = 'Godzina odjazdu';
+            texts.desc1EN = 'Time of departure';
+            texts.desc2PL = 'Stacja docelowa, dodatkowe informacje';
+            texts.desc2EN = 'Destination, additional information';
+        } else {
+            texts.type = '<b>Przyjazdy</b> <i>/ Arrivals / Прибуття</i>';
+            texts.desc1PL = 'Godzina przyjazdu';
+            texts.desc1EN = 'Time of arrival';
+            texts.desc2PL = 'Stacja początkowa, dodatkowe informacje';
+            texts.desc2EN = 'Origin, additional information';
+        }
 
-        // if (overlayName === 'warszawa') {
-        //     description = '<i><b>Stacja początkowa, dodatkowe informacje</b><br>\n' +
-        //         'Origin, additional information</i>';
-        // }
-
-        // if (overlayName === 'warszawa') {
-        //     description = '<i><b>Stacja docelowa, dodatkowe informacje</b><br>\n' +
-        //         'Destination, additional information</i>';
-        // }
-    // if (overlayName === 'warszawa') {
-    //     //$('#labels table th:nth-child(3)').html(description);
-    //     //$('#labels table th:nth-child(1)').html(description2);
-    // } else {
-    //     $('#labels table th:nth-child(3)').html(description);
-    // }
+        headers.find('th:nth-child(1) .header-pl').html(texts.desc1PL);
+        headers.find('th:nth-child(1) .header-en').html(texts.desc1EN);
+        headers.find('th:nth-child(3) .header-pl').html(texts.desc2PL);
+        headers.find('th:nth-child(3) .header-en').html(texts.desc2EN);
+    }
 }
 
 function initzializeMenu () {
