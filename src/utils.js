@@ -81,18 +81,18 @@ export function createTrainData(stopPoint, timetable) {
 export function createRemark(delay = 0, beginsTerminatesHere, isStopped) {
     if (delay > 0) {
         if (isStopped) {
-            if (overlayName === 'warszawa') { return `󠀠󠀠• Pociąg został zatrzymany na trasie • The train has been stopped on route •`; }
+            if (overlayName === 'starysacz') { return `󠀠󠀠• Pociąg został zatrzymany na trasie • The train has been stopped on route •`; }
             return `Pociąg został zatrzymany na trasie/train has been stopped on route/Der Zug wurde auf der Strecke angehalten`;
         } else {
-            if (overlayName === 'warszawa') { return `󠀠󠀠• Opóźniony ${delay}min • Delayed ${delay}min •󠀠󠀠󠀠󠀠`; }
+            if (overlayName === 'starysacz') { return `󠀠󠀠• Opóźniony ${delay}min • Delayed ${delay}min •󠀠󠀠󠀠󠀠`; }
             return `Opóźniony ${delay}min/delayed ${delay}min/Verspätung ${delay}min`;
         }
     } else if (beginsTerminatesHere) {
         if (isDeparture) {
-            if (overlayName === 'warszawa') { return `󠀠󠀠• Pociąg rozpoczyna bieg • The train begins here • 󠀠󠀠󠀠󠀠`; }
+            if (overlayName === 'starysacz') { return `󠀠󠀠• Pociąg rozpoczyna bieg • The train begins here • 󠀠󠀠󠀠󠀠`; }
             return 'Pociąg rozpoczyna bieg/train begins here/Zug beginnt hier';
         } else {
-            if (overlayName === 'warszawa') { return `󠀠󠀠• Pociąg kończy bieg • The train terminates here • 󠀠󠀠󠀠󠀠`; }
+            if (overlayName === 'starysacz') { return `󠀠󠀠• Pociąg kończy bieg • The train terminates here • 󠀠󠀠󠀠󠀠`; }
             return 'Pociąg kończy bieg/train terminates here/Zug endet hier';
         }
     } else {
@@ -131,7 +131,7 @@ export function addRow(train, index) {
             row.append($('<td>').append($('<span>')));
             row.append($('<td>').text(train.platform));
             break;
-        case 'warszawa':
+        case 'starysacz':
             row.append($('<td>').text(convertTime(train.timestamp)));
             row.append($('<td>')
                 .append($('<p>').text(convertTime(train.operator)))

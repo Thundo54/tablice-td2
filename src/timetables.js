@@ -431,7 +431,7 @@ export function loadTimetables() {
         );
 
         if (train.trainName !== '') {
-            if (overlayName === 'warszawa') {
+            if (overlayName === 'starysacz') {
                 train.trainName = `󠀠󠀠••• <b><i>${train.trainName}</i></b> •••󠀠󠀠󠀠󠀠${remark.replace('•', '')}`;
             }
             else { train.trainName = `*** ${train.trainName.toUpperCase()} *** ${remark}`; }
@@ -492,7 +492,7 @@ export function loadTimetables() {
                 trainName
                     .text(train.trainName);
                 break;
-            case 'warszawa':
+            case 'starysacz':
                 $(`#${index} td:nth-child(2) p`)
                     .html(train.operator);
 
@@ -554,23 +554,11 @@ function resizeTextToFit() {
     });
 }
 
-function resizeTextToFit() {
-    $('.train-name').each(function() {
-        let trainNameFontSize = parseInt($(this).css('font-size'));
-        let parentWidth = $(this).parent().width();
-
-        while ($(this).width() > parentWidth) {
-            trainNameFontSize = trainNameFontSize - 0.1;
-            $(this).css('font-size', `${trainNameFontSize}vmin`);
-        }
-    });
-}
-
 export function refreshTimetablesAnim() {
     let tr = $('#timetables table tr');
     let td, span, animDuration, fieldWidth, widthRatio, tdWidth;
     if (overlayName === 'plakat') { return; }
-    if (overlayName === 'warszawa') { widthRatio = 1; }
+    if (overlayName === 'starysacz') { widthRatio = 1; }
     else { widthRatio = 0.9; }
 
     for (let i = 0; i < tr.length; i++) {
@@ -582,7 +570,7 @@ export function refreshTimetablesAnim() {
             if (span.text().length <= 0) { continue; }
             for (let k = 0; k < span.length; k++) {
                 fieldWidth = $(td[j]).width();
-                if ($(td[j]).find('.indented span').text().length > 0 && overlayName === 'warszawa') {
+                if ($(td[j]).find('.indented span').text().length > 0 && overlayName === 'starysacz') {
                     $(td[j]).find('.indented').css('position', 'fixed');
                     $(td[j+1]).css('vertical-align', 'top');
                     $(td[j+1]).css('padding', '1vmin 0');
@@ -615,7 +603,7 @@ function changeBoardType() {
     switch (overlayName) {
         case 'krakow':
         case 'tomaszow':
-        case 'warszawa':
+        case 'starysacz':
             if (isDeparture) {
                 texts.titlePL = 'Odjazdy';
                 texts.titleEN = 'Departures';
@@ -630,7 +618,7 @@ function changeBoardType() {
 
             $('.title-pl').text(texts.titlePL);
             $('.title-en').text(texts.titleEN);
-            if (overlayName !== 'warszawa') {
+            if (overlayName !== 'starysacz') {
                 $('#headers table th:nth-child(3)').html(texts.desc);
             }
             break;
@@ -663,7 +651,7 @@ function changeBoardType() {
             break;
     }
 
-    if (overlayName === 'warszawa') {
+    if (overlayName === 'starysacz') {
         texts.desc1 = '<i><b>Stacja początkowa, dodatkowe informacje</b><br>Origin, additional information</i>';
 
         if (isDeparture) {
@@ -745,7 +733,7 @@ function setRowsCount() {
         window.timetableRows = 6;
     }
 
-    if (overlayName === 'warszawa') {
+    if (overlayName === 'starysacz') {
         window.timetableRows = 7
     }
     if (overlayName === 'tomaszow') {
