@@ -1,0 +1,277 @@
+$color_1: #000000;
+$color_2: #F0F8FF;
+$color_3: #d8da29;
+$color_4: #d9d9d9;
+$background-color_1: #fdff32;
+$background-color_2: #F0F8FF;
+$font-family_1: "Arial Black", sans-serif;
+$font-family_2: "Arial Bold", sans-serif;
+$font-family_3: "Arial", sans-serif;
+$font-family_4: "PLKPDPfont";
+
+body {
+	/*height: calc(100vw * 1.4142);*/
+	background-color: $background-color_2;
+	width: 100vw;
+
+	&.yellow-bg {
+		background-color: $background-color_1;
+	}
+}
+
+.PKPPDPfont {
+	font-family: $font-family_4;
+}
+
+#container {
+	display: flex;
+	flex-flow: column;
+	flex-grow: 1;
+	color: $color_1;
+	margin: 2.5vmin 3.5vmin;
+}
+
+#titles {
+	display: flex;
+	align-items: center;
+	font-family: $font-family_2;
+	font-size: 6vmin;
+
+	div {
+		display: flex;
+		flex-direction: column;
+	}
+
+	#left-box {
+		.big {
+			font-size: 6vmin;
+		}
+
+		flex-grow: 1;
+		flex-direction: row;
+		align-items: center;
+
+		.PKPPDPfont {
+			font-size: 5.3vmin;
+		}
+
+		span {
+			line-height: 3.3vmin;
+			height: 3.3vmin;
+
+			&:nth-child(2) {
+				padding-left: 0.2vmin;
+			}
+		}
+
+		#title-type {
+			font-size: 2vmin;
+
+			b {
+				font-size: 2.8vmin;
+				font-weight: bold;
+				font-family: $font-family_1;
+			}
+		}
+
+		#title-scenery {
+			font-size: 2.5vmin;
+			font-weight: bold;
+		}
+	}
+
+	#right-box {
+		flex-grow: 1;
+		flex-direction: row;
+		justify-content: flex-end;
+		column-gap: 1vmin;
+
+		img {
+			height: 6vmin;
+			width: auto;
+		}
+
+		div > img {
+			height: auto;
+			width: 15vmin;
+		}
+
+		span {
+			font-size: 3vmin;
+			color: red;
+			font-family: $font-family_1;
+			line-height: 2.5vmin;
+			display: inline-block;
+		}
+
+		div {
+			align-items: flex-end;
+			justify-content: space-between;
+		}
+	}
+}
+
+#headers {
+	#update-time {
+		font-size: 1.1vmin;
+		line-height: 1.4vmin;
+		float: right;
+		font-weight: bold;
+	}
+
+	table {
+		width: 100%;
+		border: 0.2vmin solid $color_1;
+
+		&.yellow-bg {
+			th {
+				background: $color_3;
+
+				&:nth-child(5) {
+					display: table-cell;
+				}
+			}
+		}
+
+		tr:last-child > th:first-child {
+			padding: 0 0.5vmin;
+		}
+
+		th {
+			background: $color_4;
+			border-left: 0.2vmin solid $color_1;
+			vertical-align: middle;
+
+			.header-pl {
+				font-size: 1.5vmin;
+				font-family: $font-family_2;
+			}
+
+			.header-en {
+				font-size: 1vmin;
+				font-family: $font-family_3;
+				font-style: italic;
+			}
+
+			&:nth-child(1) {
+				width: 7.5vmin;
+			}
+
+			&:nth-child(2) {
+				width: 5vmin;
+			}
+
+			&:nth-child(3) {
+				width: 10vmin;
+			}
+
+			&:nth-child(4) {
+				width: auto;
+			}
+
+			&:nth-child(5) {
+				width: 16vmin;
+				display: none;
+			}
+		}
+	}
+}
+
+#timetables {
+	.red {
+		color: red;
+	}
+
+	table {
+		table-layout: fixed;
+		width: 100%;
+		border-left: 0.2vmin solid $color_1;
+		border-right: 0.2vmin solid $color_1;
+		font-family: "Arial", sans-serif;
+
+		&.yellow-bg {
+			td:nth-child(1), td:nth-child(2) {
+				background: $color_3;
+			}
+		}
+
+		tr {
+			vertical-align: top;
+		}
+
+		td {
+			text-align: center;
+			border-bottom: 0.2vmin solid $color_1;
+
+			&:nth-child(1) {
+				background: $color_4;
+				font-weight: bold;
+				font-size: 2.5vmin;
+				text-align: right;
+				vertical-align: top;
+				padding-top: 0.5vmin;
+				width: 7.5vmin;
+			}
+
+			&:nth-child(2) {
+				background: $color_4;
+				font-size: 2vmin;
+				vertical-align: top;
+				padding: 0.3vmin;
+				width: 5vmin;
+			}
+
+			&:nth-child(3) {
+				width: 10vmin;
+				font-size: 1.4vmin;
+				padding: 0.3vmin 0.3vmin;
+				vertical-align: top;
+				line-height: 1.6vmin;
+
+				div {
+					display: flex;
+					flex-direction: column;
+					align-items: center;
+				}
+
+				.train-name {
+					font-style: italic;
+				}
+
+				.PKPPDPfont {
+					padding: 0 0.5vmin;
+				}
+
+				.symbols {
+					flex-direction: row;
+					flex-wrap: wrap;
+					justify-content: center;
+				}
+
+				.symbol-text {
+					margin: 0 0.4vmin 0 0.2vmin;
+				}
+			}
+
+			&:nth-child(4) {
+				width: auto;
+				font-size: 1.5vmin;
+				vertical-align: top;
+				padding: 0.3vmin 0 1vmin 0.7vmin;
+				text-align: left;
+
+				.text-bold {
+					display: inline-block;
+					font-size: 2.2vmin;
+					font-weight: bold;
+				}
+
+				.departure {
+					float: right;
+					padding-right: 0.8vmin;
+					padding-top: 0.2vmin;
+				}
+			}
+		}
+	}
+}
