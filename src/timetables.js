@@ -51,9 +51,7 @@ $(document).ready(() => {
     initzializeMenu();
 
     timetablesRequest = parser.makeAjaxRequest(timetablesAPI, 'timetablesAsJson').then();
-    operatorsRequest = parser.makeAjaxRequest(operatorsAPI, 'operatorsAsJson').then(() => {
-        window.operatorsAsJson = operatorsAsJson[0];
-    });
+    operatorsRequest = parser.makeAjaxRequest(operatorsAPI, 'operatorsAsJson').then();
 
     carsDataRequest = parser.makeAjaxRequest(carsDataAPI, 'carsDataAsJson').then(
         () => {
