@@ -21,25 +21,7 @@ body {
 	flex-flow: column;
 	flex-grow: 1;
 	color: $background-color_1;
-	margin: 0 3vmin 3vmin 3vmin;
 	overflow: hidden;
-	transition: margin 1s cubic-bezier(0, 0, 0, 1);
-
-	#inner-description, #titles {
-		transition: padding 1s cubic-bezier(0, 0, 0, 1);
-	}
-
-	&.no-margin {
-		margin: 0;
-
-		#inner-description {
-			padding-right: 1.5vmin;
-		}
-
-		#titles {
-			padding-left: 1.5vmin;
-		}
-	}
 
 	&.yellow-text {
 		color: $color_1;
@@ -52,99 +34,69 @@ body {
 
 #titles {
 	display: flex;
-	align-items: baseline;
 	font-family: $font-family_1;
-	column-gap: 6vmin;
-	line-height: 12vmin;
+	column-gap: 5vmin;
+	line-height: 7.5vmin;
 	font-stretch: condensed;
 	background: $background-color_4;
+	padding-left: 1.5vmin;
+	font-size: 6vmin;
 
 	.title-pl {
-		font-size: 9.5vmin;
 		font-weight: bold;
 		font-style: italic;
 		text-transform: uppercase;
 	}
 
 	.title-en {
-		font-size: 9.5vmin;
 		font-style: italic;
 	}
 }
 
-#labels {
+#headers {
 	font-family: $font-family_1;
 	background: $background-color_4;
 	font-stretch: condensed;
 
 	table {
 		font-size: 3vmin;
-		border-collapse: separate;
-		width: 100%;
-		font-weight: bold;
-
-		tr:first-child th {
-			vertical-align: bottom;
-		}
-
-		tr:last-child th {
-			vertical-align: top;
-		}
+		margin-bottom: 1vmin;
 
 		th {
-			line-height: 1em;
-			padding: 0 0 1.5vmin 0;
-			text-align: left;
 			font-weight: normal;
-			vertical-align: middle;
+			text-align: left;
+			font-style: italic;
+			line-height: 3vmin;
 
 			&:nth-child(1) {
 				width: 10%;
-				padding-left: 1vmin;
+				padding: 0.5vmin 4vmin 0.5vmin 2vmin;
 			}
 
 			&:nth-child(2) {
-				width: 5%;
+				width: 10%;
+				padding: 0.5vmin 2vmin;
 			}
 
 			&:nth-child(3) {
-				width: 42%;
-				padding-left: 3vmin;
+				width: 38%;
 			}
 
 			&:nth-child(4) {
-				width: 41%;
+				width: 36%;
+			}
+
+			&:nth-child(5) {
+				width: 36%;
 			}
 		}
-	}
 
-	&.enlarged {
-		table {
-			font-size: 3vmin;
+		tr:first-child > th {
+			vertical-align: bottom;
+		}
 
-			th {
-
-				&:nth-child(1) {
-					width: 10%;
-				}
-
-				&:nth-child(2) {
-					width: 10%;
-				}
-
-				&:nth-child(3) {
-					width: 38%;
-					padding-left: 0;
-				}
-
-				&:nth-child(4) {
-					width: 36%;
-				}
-
-				&:nth-child(5) {
-					width: 36%;
-				}
-			}
+		.header-pl {
+			font-weight: bold;
 		}
 	}
 }
@@ -162,21 +114,22 @@ body {
 
 		col {
 			&.time {
-				width: 6%;
+				width: 10%;
 			}
 
 			&.operator {
-				width: 5%;
+				width: 10%;
 			}
 
 			&.fromTo {
-				width: 42%;
+				width: 38%;
 			}
 
 			&.via {
-				width: 43%;
+				width: 36%;
 			}
 		}
+
 
 		.special-row {
 			background-color: $background-color_4;
@@ -197,35 +150,45 @@ body {
 				white-space: nowrap;
 				text-align: center;
 				vertical-align: middle;
+				font-size: 3vmin;
 
 				span {
 					display: inline-block;
 				}
 
 				&:nth-child(1) {
+					color: $color_2;
+					background: $color_3;
+					font-size: 7vmin;
+					vertical-align: middle;
+					text-align: center;
 					font-weight: normal;
-					text-align: left;
-					font-size: 3.5vmin;
-					vertical-align: top;
-					overflow: hidden;
 
 					p {
 						line-height: 2.5vmin;
 						margin: 1vmin 0 0.1vmin 0;
 					}
 
-					 .indented {
-						 font-size: 2vmin;
-					 }
+					.indented {
+						font-size: 2vmin;
+					}
 				}
 
 				&:nth-child(2) {
-					font-size: 1.5vmin;
+					background: $color_3;
+					color: $color_2;
+					font-size: 4.5vmin;
+					line-height: 4vmin;
+					text-align: center;
 					font-weight: normal;
+
+					span {
+						font-size: 3.5vmin;
+					}
 				}
 
 				&:nth-child(3) {
-					font-size: 3.5vmin;
+					font-size: 4.5vmin;
 					text-align: left;
 					vertical-align: top;
 					font-weight: bold;
@@ -235,9 +198,15 @@ body {
 						margin-left: 1vmin;
 					}
 
+					div:first-child {
+						line-height: 5vmin;
+						margin: 1vmin 0 1vmin 1vmin;
+						overflow: hidden;
+					}
+
 					.indented {
-						font-size: 2vmin;
-						margin-left: 1vmin;
+						font-size: 2.5vmin;
+						margin-left: 0.5vmin;
 						padding-bottom: 0.5vmin;
 						overflow: hidden;
 						color: $color_2;
@@ -245,6 +214,7 @@ body {
 						span {
 							background: $background-color_4;
 							font-weight: normal;
+							padding: 0 0.7vmin;
 						}
 					}
 				}
@@ -252,155 +222,26 @@ body {
 				&:nth-child(4) {
 					text-align: left;
 					font-weight: normal;
-					font-size: 2vmin;
+					font-size: 4.5vmin;
 				}
 
 				&:nth-child(5) {
-					font-weight: normal;
-					font-size: 3.5vmin;
+					font-size: 5.5vmin;
 				}
 			}
 
-			&:nth-child(n+12) {
+			&:nth-child(n+8) {
 				display: none;
 			}
 
-			&:nth-child(odd) {
-				background-color: $background-color_3;
-			}
-		}
-	}
-
-	&.enlarged {
-		table {
-			col {
-				&.time {
-					width: 10%;
-				}
-
-				&.operator {
-					width: 10%;
-				}
-
-				&.fromTo {
-					width: 38%;
-				}
-
-				&.via {
-					width: 36%;
-				}
-			}
-
-			tr {
-				td {
-					font-size: 3vmin;
-
-					&:nth-child(1) {
-						color: $color_2;
-						background: $color_3;
-						font-size: 7vmin;
-						vertical-align: middle;
-						text-align: center;
-					}
-
-					&:nth-child(2) {
-						background: $color_3;
-						color: $color_2;
-						font-size: 4.5vmin;
-						line-height: 4vmin;
-						text-align: center;
-
-						span {
-							font-size: 3.5vmin;
-						}
-					}
-
-					&:nth-child(3) {
-						font-size: 4.5vmin;
-
-						div:first-child {
-							line-height: 5vmin;
-							margin: 1vmin 0 1vmin 1vmin;
-							overflow: hidden;
-						}
-
-						.indented {
-							font-size: 2.5vmin;
-							margin-left: 0.5vmin;
-
-							span {
-								padding: 0 0.7vmin;
-							}
-						}
-					}
-
-					&:nth-child(4) {
-						font-size: 4.5vmin;
-					}
-
-					&:nth-child(5) {
-						font-size: 5.5vmin;
-					}
-				}
-
-				&:nth-child(n+8) {
-					display: none;
-				}
-
-				&:nth-child(even) {
-					background-color: $background-color_5;
-				}
+			&:nth-child(even) {
+				background-color: $background-color_5;
 			}
 		}
 	}
 }
 
 @media (max-aspect-ratio: 4.5/3) {
-	#labels {
-		table {
-			th {
-				&:nth-child(1) {
-					width: 10%;
-				}
-
-				&:nth-child(2) {
-					width: 10%;
-				}
-
-				&:nth-child(3) {
-					width: 38%;
-				}
-
-				&:nth-child(4) {
-					width: 31%;
-				}
-			}
-		}
-
-		&.enlarged {
-			table {
-				th {
-					&:nth-child(1) {
-						width: 18%;
-					}
-
-					&:nth-child(3) {
-						width: 38%;
-					}
-
-					&:nth-child(4) {
-						width: 36%;
-					}
-
-					&:nth-child(2), &:nth-child(5){
-						display: none;
-					}
-				}
-			}
-		}
-	}
-
-
 	#timetables {
 		table {
 			col {
