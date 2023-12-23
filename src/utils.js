@@ -219,6 +219,9 @@ export function resizeTimetableRow() {
     }
 }
 
+export function isNumber(n) {
+    return !isNaN(parseFloat(n)) && isFinite(n);
+}
 export function convertOperator(train) {
     let operatorProb = [];
     train.category = '';
