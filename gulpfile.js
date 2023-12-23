@@ -31,16 +31,21 @@ gulp.task('build:js', function () {
 });
 
 gulp.task('build:html', function () {
-    return gulp.src('index.html')
+    gulp.src('index.html')
         .pipe(replace('timetables.js', 'timetables.min.js'))
-        .pipe(replace('src/', 'assets/'))
         .pipe(replace('public/', ''))
         .pipe(replace('.css', '.min.css'))
+        .pipe(replace('src/', 'assets/'))
         .pipe(gulp.dest('public'));
+    gulp.src('src/*.svg')
+        .pipe(gulp.dest('public/assets'));
+    return gulp.src('src/*.png')
+        .pipe(gulp.dest('public/assets'));
 });
 
 gulp.task('build:overlays', function () {
     return gulp.src('src/overlays/*.html')
+        .pipe(replace('public/assets/', 'assets/'))
         .pipe(gulp.dest('public/overlays'));
 });
 

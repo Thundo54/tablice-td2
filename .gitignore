@@ -35,7 +35,6 @@ atlassian-ide-plugin.xml
 public/**/*.js
 public/**/*.css
 public/**/*.html
-public/assets
 src/**/*.css
 src/**/*.map
 

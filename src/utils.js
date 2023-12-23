@@ -52,76 +52,144 @@ export function createTrainData(stopPoint, timetable) {
         train.stationFromTo = splitRoute(timetable['timetable']['route'])[0];
     }
 
+    train.departureAt = convertTime(timetable['timetable']['stopList'][0]['departureTimestamp']);
+    train.arrivalAt = convertTime(timetable['timetable']['stopList'][timetable['timetable']['stopList'].length - 1]['arrivalTimestamp']);
+
     train.stoppedHere = stopPoint['stopped'];
     train.stopTime = stopPoint['stopTime'];
     train.trainNo = timetable['trainNo'];
     train.trainCars = timetable['stockString'];
+    train.symbols = createSymbolsList(train.trainCars);
     train.gameCategory = timetable['timetable']['category'];
     train.category = train.gameCategory;
     train.operator = train.gameCategory;
     train.trainName = '';
+    train.platform = 1;
+    train.track = 2;
+
+    if (stopPoint['comments'] && stopPoint['comments'].split(',').length > 1) {
+        if (isNumber(stopPoint['comments'].split(',')[0])
+            && isNumber(stopPoint['comments'].split(',')[1])) {
+            train.platform = stopPoint['comments'].split(',')[0];
+            train.track = stopPoint['comments'].split(',')[1];
+        }
+    }
 
     return train;
 }
 
 export function createRemark(delay = 0, beginsTerminatesHere, isStopped) {
-    // Można dodać przełącznik, który będzie pokazywał opóźnienie, jeśli pociąg kończy bieg
     if (delay > 0) {
         if (isStopped) {
+            if (overlayName === 'starysacz') { return `󠀠󠀠• Pociąg został zatrzymany na trasie • The train has been stopped on route •`; }
             return `Pociąg został zatrzymany na trasie/train has been stopped on route/Der Zug wurde auf der Strecke angehalten`;
         } else {
+            if (overlayName === 'starysacz') { return `󠀠󠀠• Opóźniony ${delay}min • Delayed ${delay}min •󠀠󠀠󠀠󠀠`; }
             return `Opóźniony ${delay}min/delayed ${delay}min/Verspätung ${delay}min`;
         }
     } else if (beginsTerminatesHere) {
         if (isDeparture) {
+            if (overlayName === 'starysacz') { return `󠀠󠀠• Pociąg rozpoczyna bieg • The train begins here • 󠀠󠀠󠀠󠀠`; }
             return 'Pociąg rozpoczyna bieg/train begins here/Zug beginnt hier';
         } else {
+            if (overlayName === 'starysacz') { return `󠀠󠀠• Pociąg kończy bieg • The train terminates here • 󠀠󠀠󠀠󠀠`; }
             return 'Pociąg kończy bieg/train terminates here/Zug endet hier';
         }
     } else {
         return '';
     }
-
-    // if (beginsTerminatesHere && !isDeparture) {
-    //     return 'Pociąg kończy bieg/train terminates here/zug endet hier';
-    // }
-    // if (delay > 0) {
-    //     return `Opóźniony ${delay}min/delayed ${delay}min/verspätung ${delay}min`;
-    // } else if (beginsTerminatesHere && isDeparture) {
-    //     return 'Pociąg rozpoczyna bieg/train begins here/zug beginnt hier';
-    // } else {
-    //     return '';
-    // }
 }
 
-export function addRow(time, trainNo, stationFromTo, via, operator, category, platform, remarks, rowNo) {
-    let row = $('<tr>').attr('id', `${rowNo}`);
-    if (overlayName === 'tomaszow') {
-        row.append($('<td>').text(convertTime(time)));
-        row.append($('<td>').append($('<div>').append($('<span>').text(createTrainString(category, trainNo)))));
-        row.append($('<td>').append($('<span>').text(stationFromTo)));
-        row.append($('<td>').append($('<span>').text(via)));
-        row.append($('<td>').text(operator));
-        row.append($('<td>').text(platform));
-        row.append($('<td>').append($('<span>').text(remarks)));
-    } else {
-        row.append($('<td>')
-            .append($('<p>').text(convertTime(time)))
-            .append($('<div>').addClass('indented')
-                .append($('<span>').text(createTrainString(category, trainNo)))
-            )
-        );
-        row.append($('<td>').text(operator));
-        row.append($('<td>')
-            .append($('<div>')
-                .append($('<span>').text(stationFromTo))
-            )
-            .append($('<div>').addClass('indented')
+export function addRow(train, index) {
+    let row = $('<tr>').attr('id', `${index}`);
+    switch (overlayName) {
+        case 'tomaszow':
+            row.append($('<td>').text(convertTime(train.timestamp)));
+            row.append($('<td>').append($('<div>').append($('<span>').text(createTrainString(train.category, train.trainNo)))));
+            row.append($('<td>').append($('<span>').text(train.stationFromTo)));
+            row.append($('<td>').append($('<span>')));
+            row.append($('<td>').text(train.operator));
+            row.append($('<td>').text(train.platform));
+            row.append($('<td>').append($('<span>')));
+            break;
+        case 'krakow':
+            row.append($('<td>')
+                .append($('<p>').text(convertTime(train.timestamp)))
+                .append($('<div>').addClass('indented')
+                    .append($('<span>').text(createTrainString(train.category, train.trainNo)))
+                )
+            );
+            row.append($('<td>').text(train.operator));
+            row.append($('<td>')
+                .append($('<div>')
+                    .append($('<span>').text(train.stationFromTo))
+                )
+                .append($('<div>').addClass('indented')
+                    .append($('<span>'))
+                )
+            );
+            row.append($('<td>').append($('<span>')));
+            row.append($('<td>').text(train.platform));
+            break;
+        case 'starysacz':
+            row.append($('<td>').text(convertTime(train.timestamp)));
+            row.append($('<td>')
+                .append($('<p>').text(convertTime(train.operator)))
+                .append($('<div>')
+                    .append($('<span>').text(createTrainString(train.category, train.trainNo)))
+                )
+            );
+            row.append($('<td>')
+                .append($('<div>')
+                    .append($('<span>').text(train.stationFromTo))
+                )
+                .append($('<div>').addClass('indented')
+                    .append($('<span>'))
+                )
+            );
+            row.append($('<td>').append($('<span>')));
+            row.append($('<td>').text(train.platform));
+            break;
+        case 'plakat':
+            if (train.operator === 'IC') {
+                row.addClass('red');
+                if (train.trainName) {
+                    train.symbols = train.symbols.replace('j', 'j R');
+                }
+                train.symbols += ' p';
+            }
+
+            let symbolsDiv = $('<div>').addClass('symbols');
+            if (isDeparture) {
+                train.symbols.split(' ').forEach((symbol) => {
+                    if (symbol === 'R') {
+                        symbolsDiv.append($('<span>').addClass('symbol-text').text(symbol));
+                        return;
+                    }
+                    symbol = carsDataAsJson['shortcuts'][symbol];
+                    symbolsDiv.append($('<span>').addClass('material-symbols-outlined').text(symbol));
+                });
+            }
+
+            row.append($('<td>').addClass('time').text(convertTime(train.timestamp)));
+            row.append($('<td>').addClass('platform')
+                .append($('<b>').text(train.platform).append($('<br>')))
+                .append(train.track)
+            );
+            row.append($('<td>').addClass('operator')
+                .append($('<div>')
+                    .append($('<span>').addClass('train-category').text(train.operator).append($('<b>').text(train.category)))
+                    .append($('<span>').addClass('train-no').append(train.trainNo))
+                    .append($('<span>').addClass('train-name').append(train.trainName.toUpperCase()))
+                    //.append($('<span>').addClass('material-symbols-outlined').append(symbols.join(' ')))
+                    .append(symbolsDiv)
+                )
+            );
+            row.append($('<td>').addClass('fromTo')
                 .append($('<span>'))
-            )
-        );
-        row.append($('<td>').append($('<span>')));
-        row.append($('<td>').text(platform));
+                .append($('<span>').addClass('departure text-bold'))
+            );
+            break;
     }
     return row;
 }
@@ -148,9 +216,14 @@ export function resizeTimetableRow() {
     }
 }
 
+export function isNumber(n) {
+    return !isNaN(parseFloat(n)) && isFinite(n);
+}
+
 export function convertOperator(train) {
     let operatorProb = [];
     train.category = '';
+
     train.trainCars.split(';').forEach((car) => {
         if (operatorsAsJson['operators'][car]) {
             operatorProb.push.apply(operatorProb, operatorsAsJson['operators'][car]);
@@ -185,10 +258,45 @@ export function convertOperator(train) {
     return train;
 }
 
+export function createDate() {
+    let date = new Date();
+    let day = date.getDate();
+    let month = date.getMonth() + 1;
+    let year = date.getFullYear();
+    let romanNumerals = ['I', 'II', 'III', 'IV', 'V', 'VI', 'VII', 'VIII',
+        'IX', 'X', 'XI', 'XII'];
+    return `${day} ${romanNumerals[month - 1]} ${year}`;
+}
+
+
+export function createSymbolsList(trainCars) {
+    let symbols = '';
+    trainCars.split(';').forEach((car) => {
+        if (carsDataAsJson['symbols'][car]) {
+            symbols += carsDataAsJson['symbols'][car];
+        }
+    });
+
+    symbols = symbols.split('').filter(function(item, pos, self) {
+        return self.indexOf(item) === pos;
+    }).join('');
+
+    let order = ['h', 'j', 'a', 'b', 'c', 'd', 'e', 'w', 'y'];
+    let sortedSymbols = '';
+    order.forEach((letter) => {
+        if (symbols.includes(letter)) {
+            sortedSymbols += letter;
+        }
+    });
+
+    sortedSymbols = sortedSymbols.replace(/(.)(?=.)/g, '$1 ');
+    return sortedSymbols;
+}
+
 window.loadTimetablesFromUrl = (url) => {
     clearInterval(timetableInterval);
     clearInterval(getTimetablesInterval);
     clearInterval(getActiveStationsInterval);
     window.timetablesAPI = url;
     parser.makeAjaxRequest(timetablesAPI, 'timetablesAsJson').then(() => loadTimetables());
-}
+};
