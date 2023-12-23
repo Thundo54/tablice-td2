@@ -1,7 +1,7 @@
 import * as utils from './utils.js';
 
 export function parseTimetable() {
-    let trainSet = [], train = {}, stopList = [];
+    let trainSet = [], train = {}, stopList = [], stopListElement = {};
     if (timetablesAsJson === null) { return; }
     if (station === '') { return; }
     let stationSwitch = !isDeparture;
@@ -23,13 +23,22 @@ export function parseTimetable() {
             }
             if (stopTypes.some(stop => stopPoint['stopType'].includes(stop.replace('all', ''))) && stationSwitch) {
                 if (!stopPoint['stopNameRAW'].toUpperCase().includes('SBL')) {
-                    stopList.push(utils.capitalizeFirstLetter(stopPoint['stopNameRAW'].split(',')[0]));
+                    stopListElement.stopPoint = utils.capitalizeFirstLetter(stopPoint['stopNameRAW'].split(',')[0]);
+                    stopListElement.arrivalAt = utils.convertTime(stopPoint['arrivalTimestamp']);
+                    stopListElement.departureAt = utils.convertTime(stopPoint['departureTimestamp']);
+                    if (stopPoint['stopType'].includes('pm')) {
+                        stopListElement.stopPoint = `<b>${stopListElement.stopPoint}</b>`;
+                        stopListElement.isShunting = true;
+                    }
+                    stopList.push(stopListElement);
                 }
             }
+
+            stopListElement = {};
         });
 
-        stopList = stopList.filter(stop => stop !== train.stationFromTo);
-        stopList = stopList.filter(stop => stop !== utils.capitalizeFirstLetter(station).split(',')[0]);
+        stopList = stopList.filter(stop => stop.stopPoint !== train.stationFromTo);
+        stopList = stopList.filter(stop => stop.stopPoint !== utils.capitalizeFirstLetter(station).split(',')[0]);
         stopList = stopList.filter((stop, index) => stopList.indexOf(stop) >= index);
         train.timetable = stopList;
 

@@ -52,6 +52,9 @@ export function createTrainData(stopPoint, timetable) {
         train.stationFromTo = splitRoute(timetable['timetable']['route'])[0];
     }
 
+    train.departureAt = convertTime(timetable['timetable']['stopList'][0]['departureTimestamp']);
+    train.arrivalAt = convertTime(timetable['timetable']['stopList'][timetable['timetable']['stopList'].length - 1]['arrivalTimestamp']);
+
     train.stoppedHere = stopPoint['stopped'];
     train.stopTime = stopPoint['stopTime'];
     train.trainNo = timetable['trainNo'];
