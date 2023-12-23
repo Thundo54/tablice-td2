@@ -281,7 +281,7 @@ export function createSymbolsList(trainCars) {
         return self.indexOf(item) === pos;
     }).join('');
 
-    let order = ['h', 'j', 'a', 'b', 'c', 'd', 'e', 'w', 'y'];
+    let order = carsDataAsJson['symbols-order'];
     let sortedSymbols = '';
     order.forEach((letter) => {
         if (symbols.includes(letter)) {
