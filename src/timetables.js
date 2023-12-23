@@ -117,6 +117,7 @@ $(document).ready(() => {
         let typeButton = $('#type-button');
         window.isDeparture = !isDeparture;
         localStorage.isDeparture = isDeparture;
+
         changeBoardType();
         loadTimetables();
         refreshTimetablesAnim();
@@ -321,7 +322,7 @@ function toggleOperators() {
 
 function toggleSize() {
     let timetables = $('#timetables');
-    let labels = $('#labels');
+    let labels = $('#headers');
     if (timetableSize === 'normal') {
         timetables.removeClass('enlarged');
         labels.removeClass('enlarged');
