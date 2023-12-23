@@ -96,6 +96,9 @@ $(document).ready(() => {
                 if (checkpoint.includes(',') && !checkpoint.split(',')[1].includes('.')) {
                     checkpoint += '.';
                 }
+                if (checkpoint.includes('MAZ')) { //temporary for TOMASZÓW & GRODZISK
+                    checkpoint += '.';
+                }
                 window.station = checkpoint
             }
             createTimetableInterval();
@@ -366,8 +369,8 @@ function createTimetableInterval() {
     let url = window.location.href;
     if (sceneries.val() !== null) {
         url = `?station=${sceneries.val()}`;
-        if ($('#checkpoints').prop('selectedIndex') !== 0) {
-            url += `&checkpoint=${station.replace(new RegExp('.$', ), '')}`;
+        if ($('#checkpoints').val() !== sceneries.val()) {
+            url += `&checkpoint=${station.replace(/\.$/, '')}`;
         }
     }
     window.history.replaceState(null, null, url);
