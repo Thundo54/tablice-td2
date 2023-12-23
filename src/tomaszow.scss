@@ -55,18 +55,18 @@ $background-color_3: #F0F8FF;
 			text-align: left;
 
 			&:nth-child(1) {
-				width: 7%;
+				width: 9%;
 				text-align: center;
 			}
 
 			&:nth-child(2) {
-				width: 9%;
+				width: 12%;
 				text-align: center;
 			}
 
 			&:nth-child(3) {
 				border-left: 1vmin solid black;
-				width: 36%;
+				width: 32%;
 			}
 
 			&:nth-child(5) {
@@ -83,35 +83,7 @@ $background-color_3: #F0F8FF;
 						float: right;
 
 						&:nth-child(-n+2) {
-							margin-left: 1vmin;
-						}
-					}
-				}
-			}
-		}
-	}
-
-	&.enlarged {
-		table {
-			th {
-				&:nth-child(1) {
-					width: 9%;
-				}
-
-				&:nth-child(2) {
-					width: 12%;
-				}
-
-				&:nth-child(3) {
-					width: 32%;
-				}
-
-				&:nth-child(5) {
-					#inner-description {
-						td {
-							&:nth-child(-n+2) {
-								margin-left: 1.5vmin;
-							}
+							margin-left: 1.5vmin;
 						}
 					}
 				}
@@ -130,27 +102,27 @@ $background-color_3: #F0F8FF;
 		width: 100%;
 		border-collapse: separate;
 		background-color: $background-color_2;
-		border-spacing: 0 0.7vmin;
+		border-spacing: 0 1.1vmin;
 
 		col {
 			&.time {
-				width: 7%;
-			}
-
-			&.trainNo {
 				width: 9%;
 			}
 
-			&.fromTo {
-				width: 36%;
+			&.trainNo {
+				width: 12%;
 			}
 
-			&.via {
+			&.fromTo {
 				width: 32%;
 			}
 
+			&.via {
+				width: 29%;
+			}
+
 			&.operator {
-				width: 5%;
+				width: 6%;
 			}
 
 			&.platform {
@@ -158,7 +130,7 @@ $background-color_3: #F0F8FF;
 			}
 
 			&.remarks {
-				width: 7%;
+				width: 8%;
 			}
 		}
 
@@ -178,7 +150,7 @@ $background-color_3: #F0F8FF;
 
 			td {
 				color: $color_2;
-				font-size: 3vmin;
+				font-size: 4vmin;
 				overflow: hidden;
 				white-space: nowrap;
 				text-align: center;
@@ -200,7 +172,7 @@ $background-color_3: #F0F8FF;
 				&:nth-child(3) {
 					text-align: left;
 					border-left: 1vmin solid $color_3;
-					font-size: 2.6vmin;
+					font-size: 3.6vmin;
 				}
 
 				&:nth-child(4) {
@@ -220,65 +192,19 @@ $background-color_3: #F0F8FF;
 			}
 		}
 	}
-
-	&.enlarged {
-		table {
-			border-spacing: 0 1.1vmin;
-
-			col {
-				&.time {
-					width: 9%;
-				}
-
-				&.trainNo {
-					width: 12%;
-				}
-
-				&.fromTo {
-					width: 32%;
-				}
-
-				&.via {
-					width: 29%;
-				}
-
-				&.operator {
-					width: 6%;
-				}
-
-				&.remarks {
-					width: 8%;
-				}
-			}
-
-			tr {
-				td {
-					font-size: 4vmin;
-
-					&:nth-child(3) {
-						font-size: 3.6vmin;
-					}
-
-					//&:nth-child(5) {
-					//	border-left: 1vmin solid $color_3;
-					//}
-				}
-			}
-		}
-	}
 }
 
 @media (max-aspect-ratio: 4/3)  {
 	body {
-		#labels {
+		#headers {
 			table {
 				th {
 					&:nth-child(1) {
-						width: 10%;
+						width: 12%;
 					}
 
 					&:nth-child(2), &:nth-child(5) {
-						width: 14%;
+						width: 15%;
 					}
 
 					&:nth-child(3),  &:nth-child(4) {
@@ -294,35 +220,17 @@ $background-color_3: #F0F8FF;
 					}
 				}
 			}
-
-			&.enlarged {
-				table {
-					th {
-						&:nth-child(1) {
-							width: 12%;
-						}
-
-						&:nth-child(2), &:nth-child(5) {
-							width: 15%;
-						}
-
-						&:nth-child(3),  &:nth-child(4) {
-							width: 26%;
-						}
-					}
-				}
-			}
 		}
 
 		#timetables {
 			table {
 				col {
 					&.time {
-						width: 10%;
+						width: 12%;
 					}
 
 					&.trainNo, &.remarks {
-						width: 14%;
+						width: 15%;
 					}
 
 					&.fromTo, &.via  {
@@ -331,28 +239,6 @@ $background-color_3: #F0F8FF;
 
 					&.operator, &.platform {
 						width: 0;
-					}
-				}
-			}
-
-			&.enlarged {
-				table {
-					col {
-						&.time {
-							width: 12%;
-						}
-
-						&.trainNo, &.remarks {
-							width: 15%;
-						}
-
-						&.fromTo, &.via  {
-							width: 26%;
-						}
-
-						&.operator, &.platform {
-							width: 0;
-						}
 					}
 				}
 			}
