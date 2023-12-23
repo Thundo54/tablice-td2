@@ -3,12 +3,12 @@ $color_2: #F0F8FF;
 $color_3: #140075;
 $color_4: #6C6C6C;
 $color_5: #2911b7;
-$font-family_1: "Arial", sans-serif;
-$font-family_2: "Calibri", sans-serif;
-$font-family_3: "Sofia Sans Condensed", sans-serif;
 $background-color_1: #000000;
 $background-color_2: #1f00b0;
 $background-color_3: #F0F8FF;
+$font-family_1: "Arial", sans-serif;
+$font-family_2: "Calibri", sans-serif;
+$font-family_3: "Sofia Sans Condensed", sans-serif;
 
 body {
 	background-color: $background-color_2;
@@ -20,23 +20,6 @@ body {
 	flex-grow: 1;
 	color: $background-color_1;
 	overflow: hidden;
-	transition: margin 1s cubic-bezier(0, 0, 0, 1);
-
-	#inner-description, #titles {
-		transition: padding 1s cubic-bezier(0, 0, 0, 1);
-	}
-
-	&.no-margin {
-		margin: 0;
-
-		#inner-description {
-			padding-right: 1.5vmin;
-		}
-
-		#titles {
-			padding-left: 1.5vmin;
-		}
-	}
 
 	&.yellow-text {
 		color: $color_1;
@@ -53,6 +36,7 @@ body {
 	font-family: $font-family_2;
 	column-gap: 12vmin;
 	line-height: 12vmin;
+	padding-left: 1.5vmin;
 
 	.title-pl {
 		font-size: 10.5vmin;
@@ -65,7 +49,7 @@ body {
 	}
 }
 
-#labels {
+#headers {
 	font-family: $font-family_3;
 
 	table {

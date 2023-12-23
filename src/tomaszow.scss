@@ -13,25 +13,7 @@ $background-color_3: #F0F8FF;
 	flex-flow: column;
 	flex-grow: 1;
 	color: $background-color_1;
-	margin: 0 3vmin 3vmin 3vmin;
 	overflow: hidden;
-	transition: margin 1s cubic-bezier(0, 0, 0, 1);
-
-	#inner-description, #titles {
-		transition: padding 1s cubic-bezier(0, 0, 0, 1);
-	}
-
-	&.no-margin {
-		margin: 0;
-
-		#inner-description {
-			padding-right: 1.5vmin;
-		}
-
-		#titles {
-			padding-left: 1.5vmin;
-		}
-	}
 
 	&.yellow-text {
 		color: $color_1;
@@ -47,6 +29,7 @@ $background-color_3: #F0F8FF;
 	align-items: baseline;
 	font-family: $font-family_2;
 	column-gap: 6.5vmin;
+	padding-left: 1.5vmin;
 
 	.title-pl {
 		font-size: 10.5vmin;
@@ -59,8 +42,7 @@ $background-color_3: #F0F8FF;
 	}
 }
 
-#labels {
-
+#headers {
 	table {
 		font-size: 2vmin;
 		font-weight: bold;
