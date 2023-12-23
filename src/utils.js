@@ -227,6 +227,16 @@ export function convertOperator(train) {
     return train;
 }
 
+export function createDate() {
+    let date = new Date();
+    let day = date.getDate();
+    let month = date.getMonth() + 1;
+    let year = date.getFullYear();
+    let romanNumerals = ['I', 'II', 'III', 'IV', 'V', 'VI', 'VII', 'VIII',
+        'IX', 'X', 'XI', 'XII'];
+    return `${day} ${romanNumerals[month - 1]} ${year}`;
+}
+
 
 export function createSymbolsList(trainCars) {
     let symbols = '';
@@ -258,4 +268,4 @@ window.loadTimetablesFromUrl = (url) => {
     clearInterval(getActiveStationsInterval);
     window.timetablesAPI = url;
     parser.makeAjaxRequest(timetablesAPI, 'timetablesAsJson').then(() => loadTimetables());
-}
+};
