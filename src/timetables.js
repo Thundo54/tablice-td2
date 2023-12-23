@@ -16,6 +16,7 @@ window.stationDataAsJson = null;
 window.activeStationsAsJson = null;
 window.operatorsAsJson = null;
 window.namesCorrectionsAsJson = null;
+window.carsDataAsJson = null;
 window.timetableInterval = null;
 window.currentOverlay = null;
 window.timetableRows = null;
@@ -23,6 +24,7 @@ window.resizedFinished = null;
 window.urlParams = null;
 window.timetablesAPI = 'https://stacjownik.spythere.eu/api/getActiveTrainList';
 window.activeStationsAPI = 'https://api.td2.info.pl/?method=getStationsOnline';
+window.carsDataAPI = "https://raw.githubusercontent.com/Thundo54/tablice-td2-api/master/carsData.json"
 window.stationAPI = 'https://raw.githubusercontent.com/Thundo54/tablice-td2-api/master/stationsData.json';
 window.operatorsAPI = 'https://raw.githubusercontent.com/Thundo54/tablice-td2-api/master/operatorConvert.json';
 window.namesCorrectionsAPI = 'https://raw.githubusercontent.com/Thundo54/tablice-td2-api/master/namesCorrections.json';
@@ -35,6 +37,7 @@ $(document).ready(() => {
     let stationsRequest;
     let timetablesRequest;
     let operatorsRequest;
+    let carsDataRequest;
 
     if (urlParams.get('timetables') !== null) {
         if (urlParams.get('timetables') === 'departure') {
@@ -51,6 +54,19 @@ $(document).ready(() => {
     operatorsRequest = parser.makeAjaxRequest(operatorsAPI, 'operatorsAsJson').then(() => {
         window.operatorsAsJson = operatorsAsJson[0];
     });
+
+    carsDataRequest = parser.makeAjaxRequest(carsDataAPI, 'carsDataAsJson').then(
+        () => {
+            if (overlayName === 'plakat') {
+                $(`#timetables-cycle`)
+                    .text(carsDataAsJson['timetables-cycle']);
+
+                $(`#update-time`)
+                    .text(`Aktualizacja wg stanu na ${utils.createDate()}`);
+            }
+        }
+    );
+
     parser.makeAjaxRequest(namesCorrectionsAPI, 'namesCorrectionsAsJson').then();
 
     window.getTimetablesInterval = setInterval(() => {
@@ -69,7 +85,7 @@ $(document).ready(() => {
             });
     });
 
-    $.when(timetablesRequest, stationsRequest, operatorsRequest).done(() => {
+    $.when(timetablesRequest, stationsRequest, operatorsRequest, carsDataRequest).done(() => {
         if (urlParams.get('station') !== null) {
             window.station = urlParams.get('station').replace('_', ' ')
             if (urlParams.get('checkpoint') !== null) {

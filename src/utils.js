@@ -56,6 +56,7 @@ export function createTrainData(stopPoint, timetable) {
     train.stopTime = stopPoint['stopTime'];
     train.trainNo = timetable['trainNo'];
     train.trainCars = timetable['stockString'];
+    train.symbols = createSymbolsList(train.trainCars);
     train.gameCategory = timetable['timetable']['category'];
     train.category = train.gameCategory;
     train.operator = train.gameCategory;
@@ -183,6 +184,31 @@ export function convertOperator(train) {
         });
     }
     return train;
+}
+
+
+export function createSymbolsList(trainCars) {
+    let symbols = '';
+    trainCars.split(';').forEach((car) => {
+        if (carsDataAsJson['symbols'][car]) {
+            symbols += carsDataAsJson['symbols'][car];
+        }
+    });
+
+    symbols = symbols.split('').filter(function(item, pos, self) {
+        return self.indexOf(item) === pos;
+    }).join('');
+
+    let order = ['h', 'j', 'a', 'b', 'c', 'd', 'e', 'w', 'y'];
+    let sortedSymbols = '';
+    order.forEach((letter) => {
+        if (symbols.includes(letter)) {
+            sortedSymbols += letter;
+        }
+    });
+
+    sortedSymbols = sortedSymbols.replace(/(.)(?=.)/g, '$1 ');
+    return sortedSymbols;
 }
 
 window.loadTimetablesFromUrl = (url) => {
