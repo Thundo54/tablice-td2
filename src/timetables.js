@@ -387,17 +387,7 @@ export function loadTimetables() {
     let trainsToRemove = trainsSetBefore.filter(m => !trainSet.map(n => n.trainNo).includes(m.trainNo));
     if (trainsSetBefore.length === 0 && trainSet.length > 0 || $('#timetables table tr').length === 0) {
         trainSet.forEach((train, index) => {
-            $('#timetables table').append(utils.addRow(
-                train.timestamp,
-                train.trainNo,
-                train.stationFromTo,
-                '',
-                train.operator,
-                train.category,
-                '1',
-                '',
-                index
-            ));
+            $('#timetables table').append(utils.addRow(train, index));
         });
         utils.refreshIds();
     } else {
@@ -410,17 +400,7 @@ export function loadTimetables() {
         if (trainsNew.length > 0) {
             trainsNew.forEach((train) => {
                 let index = trainSet.indexOf(train);
-                let row = utils.addRow(
-                    train.timestamp,
-                    train.trainNo,
-                    train.stationFromTo,
-                    '',
-                    train.operator,
-                    train.category,
-                    '1',
-                    '',
-                    index
-                );
+                let row = utils.addRow(train, index);
                 if (index === 0) {
                      $('#timetables table').prepend(row);
                 } else {
@@ -431,6 +411,9 @@ export function loadTimetables() {
         }
     }
     trainSet.forEach((train, index) => {
+        let stopsList = [];
+        let stopPointTime = '';
+        let lastStopPoint = '';
         let remark = utils.createRemark(
                 train.delay,
                 train.beginsTerminatesHere,
@@ -443,28 +426,78 @@ export function loadTimetables() {
             train.trainName = remark;
         }
 
-        if (overlayName === 'tomaszow') {
-            $(`#${index} td:nth-child(2) span`)
-                .text(`${train.category} ${train.trainNo}`);
-            $(`#${index} td:nth-child(5)`)
-                .text(train.operator);
-            $(`#${index} td:nth-child(7) span`)
-                .text(train.trainName);
-        } else {
-            $(`#${index} td:nth-child(1) span:last-child`)
-                .text(`${train.category} ${train.trainNo}`);
+        train.timetable.forEach((stopPoint) => {
+            if (lastStopPoint === stopPoint.stopPoint) { return; }
+            lastStopPoint = stopPoint.stopPoint;
+            stopPoint.stopPoint = stopPoint.stopPoint.replace(/ /g, '\u202F\u202F').replace('-', '\u2011');
 
-            $(`#${index} td:nth-child(2)`)
-                .text(train.operator);
+            if (overlayName === 'plakat') {
+                if (isDeparture) {
+                    stopPointTime = stopPoint.arrivalAt;
+                } else {
+                    stopPointTime = stopPoint.departureAt;
+                }
 
-            $(`#${index} td:nth-child(3) .indented span`)
-                .text(train.trainName);
+                if (stopPoint.isShunting) {
+                    stopsList.push(`${stopPoint.stopPoint}&nbsp;<b>${stopPointTime}</b>`);
+                } else {
+                    stopsList.push(`${stopPoint.stopPoint}&nbsp;${stopPointTime}`);
+                }
+            } else {
+                    stopsList.push(`${stopPoint.stopPoint}`);
+            }
+        });
+
+        stopsList = stopsList.join(', ');
+
+        if (overlayName !== 'plakat') {
+            $(`#${index} td:nth-child(4) span`)
+                .text(stopsList);
         }
 
-        $(`#${index} td:nth-child(4) span`)
-            .text(train.timetable.join(', '));
+        switch (overlayName) {
+            case 'tomaszow':
+                $(`#${index} td:nth-child(2) span`)
+                    .text(`${train.category} ${train.trainNo}`);
+
+                $(`#${index} td:nth-child(5)`)
+                    .text(train.operator);
+
+                $(`#${index} td:nth-child(7) span`)
+                    .text(train.trainName);
+                break;
+            case 'krakow':
+                $(`#${index} td:nth-child(1) span:last-child`)
+                    .text(`${train.category} ${train.trainNo}`);
+
+                $(`#${index} td:nth-child(2)`)
+                    .text(train.operator);
+
+                $(`#${index} td:nth-child(3) .indented span`)
+                    .text(train.trainName);
+                break;
+            case 'plakat':
+                $(`#title-scenery`)
+                    .html(utils.capitalizeFirstLetter(station.split(',')[0]));
+
+                $(`#update-time`)
+                    .text(`Aktualizacja wg stanu na ${utils.createDate()}`);
+
+                if (isDeparture) {
+                    if (stopsList !== '') { stopsList += ','; }
+                    $(`#${index} .fromTo span:last-child`)
+                        .text(train.stationFromTo + ' ' + train.arrivalAt);
+                } else {
+                    stopsList = `<span class="text-bold">${train.stationFromTo} ${train.departureAt}</span>, ${stopsList}`
+                }
+
+                $(`#${index} .fromTo span:first-child`)
+                    .html(stopsList);
+                break;
+        }
     });
-    if (timetableRows > 0) {
+
+    if (timetableRows > 0 && overlayName !== 'plakat') {
         for (let i = timetableRows; i < trainSet.length; i++) {
             $(`#${i}`).remove();
         }
@@ -476,6 +509,7 @@ export function loadTimetables() {
 export function refreshTimetablesAnim() {
     let tr = $('#timetables table tr');
     let td, span, animDuration, fieldWidth;
+    if (overlayName === 'plakat') { return; }
 
     for (let i = 0; i < tr.length; i++) {
         td = $(tr[i]).find('td');
@@ -491,7 +525,7 @@ export function refreshTimetablesAnim() {
                 if ($(span[k]).css('animation-duration') !== animDuration) {
                     if ($(span[k]).width() > $(td[j]).width()*0.9) {
                         $(span[k]).css('animation', `ticker linear ${animDuration}s infinite`);
-                        $(span[k]).css('--elementWidth', fieldWidth);
+                        $(span[k]).css('--elementWidth', fieldWidth+"px");
                     } else {
                         $(span[k]).css('animation', '');
                     }
@@ -502,27 +536,59 @@ export function refreshTimetablesAnim() {
 }
 
 function changeBoardType() {
-    let titlePL, titleEN, description
+    let texts = {};
+    let body = $('body');
     let container = $('#container');
-    $('#timetables table tr').remove();
-    if (isDeparture) {
-        titlePL = 'Odjazdy';
-        titleEN = 'Departures';
-        description = 'Do<br><i>Destination</i>';
-    } else {
-        titlePL = 'Przyjazdy';
-        titleEN = 'Arrivals';
-        description = 'Z<br><i>From</i>';
-    }
-    $('.title-pl').text(titlePL);
-    $('.title-en').text(titleEN);
-    $('#labels table th:nth-child(3)').html(description);
-    if (!isDeparture) {
-        container.addClass('white-text');
-        container.removeClass('yellow-text');
-    } else {
-        container.addClass('yellow-text');
-        container.removeClass('white-text');
+    let timetables = $('#timetables table');
+    timetables.find('tr').remove();
+
+    switch (overlayName) {
+        case 'krakow':
+        case 'tomaszow':
+            if (isDeparture) {
+                texts.titlePL = 'Odjazdy';
+                texts.titleEN = 'Departures';
+                texts.desc = 'Do<br><i>Destination</i>';
+                container.attr('class', 'yellow-text');
+            } else {
+                texts.titlePL = 'Przyjazdy';
+                texts.titleEN = 'Arrivals';
+                texts.desc = 'Z<br><i>From</i>';
+                container.attr('class', 'white-text');
+            }
+
+            $('.title-pl').text(texts.titlePL);
+            $('.title-en').text(texts.titleEN);
+            $('#headers table th:nth-child(3)').html(texts.desc);
+            break;
+        case 'plakat':
+            let headers = $('#headers table');
+            if (isDeparture) {
+                texts.type = '<b>Odjazdy</b> <i>/ Departures / Відправлення</i>';
+                texts.desc1PL = 'godzina odjazdu';
+                texts.desc1EN = 'departure time';
+                texts.desc2PL = 'godziny przyjazdów do stacji pośrednich';
+                texts.desc2EN = 'arrivals at intermediate stops';
+                body.addClass('yellow-bg');
+                timetables.addClass('yellow-bg');
+                headers.addClass('yellow-bg');
+            } else {
+                texts.type = '<b>Przyjazdy</b> <i>/ Arrivals / Прибуття</i>';
+                texts.desc1PL = 'godzina przyjazdu';
+                texts.desc1EN = 'arrival time';
+                texts.desc2PL = 'godziny odjazdów ze stacji pośrednich';
+                texts.desc2EN = 'departures from intermediate stops';
+                body.removeClass();
+                timetables.removeClass();
+                headers.removeClass();
+            }
+
+            $('#title-type').html(texts.type);
+            headers.find('th:nth-child(1) .header-pl').html(texts.desc1PL);
+            headers.find('th:nth-child(1) .header-en').html(texts.desc1EN);
+            headers.find('th:nth-child(4) .header-pl').html(texts.desc2PL);
+            headers.find('th:nth-child(4) .header-en').html(texts.desc2EN);
+            break;
     }
 }
 
