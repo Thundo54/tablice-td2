@@ -32,9 +32,6 @@ window.trainCategory = JSON.parse(localStorage.getItem('trainCategory')) ||
     ['EI', 'MP', 'RP', 'RO', 'TM', 'LT', 'TK', 'ZG', 'ZX', 'AP'];
 
 $(document).ready(() => {
-
-
-
     window.urlParams = new URLSearchParams(window.location.search);
 
     let stationsRequest;
@@ -141,6 +138,7 @@ $(document).ready(() => {
     });
 
     $('#timetable-size').change(function() {
+        if (overlayName !== 'krakow') { return; }
         window.timetableSize = $(this).val();
         localStorage.timetableSize = timetableSize;
         toggleSize();
@@ -298,6 +296,19 @@ function changeOverlay() {
         }, 10);
         refreshTimetablesAnim();
     });
+
+    let timetableSize = $('#timetable-size');
+    if (overlayName !== 'krakow') {
+        timetableSize.val('normal');
+        timetableSize.prop('disabled', true);
+        localStorage.timetableSize = 'normal';
+        window.timetableSize = 'normal';
+    } else {
+        timetableSize.prop('disabled', false);
+    }
+
+    setRowsCount();
+    utils.resizeTimetableRow();
 }
 
 function toggleStopped() {
@@ -321,6 +332,7 @@ function toggleOperators() {
 }
 
 function toggleSize() {
+    if (overlayName !== 'krakow') { return; }
     let timetables = $('#timetables');
     let labels = $('#headers');
     if (timetableSize === 'normal') {
@@ -440,7 +452,7 @@ export function loadTimetables() {
                 }
 
                 if (stopPoint.isShunting) {
-                    stopsList.push(`${stopPoint.stopPoint}&nbsp;<b>${stopPointTime}</b>`);
+                    stopsList.push(`<b>${stopPoint.stopPoint}&nbsp;${stopPointTime}</b>`);
                 } else {
                     stopsList.push(`${stopPoint.stopPoint}&nbsp;${stopPointTime}`);
                 }
@@ -499,6 +511,9 @@ export function loadTimetables() {
                 $(`#title-scenery`)
                     .html(utils.capitalizeFirstLetter(station.split(',')[0]));
 
+                $(`#timetables-cycle`)
+                    .text(carsDataAsJson['timetables-cycle']);
+
                 $(`#update-time`)
                     .text(`Aktualizacja wg stanu na ${utils.createDate()}`);
 
@@ -524,7 +539,7 @@ export function loadTimetables() {
 
     resizeTextToFit();
     refreshTimetablesAnim();
-    utils.resizeTimetableRow()
+    utils.resizeTimetableRow();
 }
 
 function resizeTextToFit() {
@@ -546,7 +561,6 @@ export function refreshTimetablesAnim() {
     if (overlayName === 'warszawa') { widthRatio = 1; }
     else { widthRatio = 0.9; }
 
-    // complete rewrite of this function is needed
     for (let i = 0; i < tr.length; i++) {
         td = $(tr[i]).find('td');
         tdWidth = $(td[2]).width() + $(td[3]).width();
@@ -701,25 +715,29 @@ function initzializeOverlay() {
         toggleSize();
         setRowsCount();
     });
+
+    if (overlayName !== 'krakow') {
+        $('#timetable-size').prop('disabled', true);
+    }
 }
 
 function setRowsCount() {
+    if (overlayName === 'plakat') {
+        window.timetableRows = 0;
+        return;
+    }
+
     if (timetableSize === 'normal') {
-        if (overlayName === 'krakow') {
-            window.timetableRows = 10;
-        } else if (overlayName === 'warszawa') {
-            window.timetableRows = 7;
-        } else {
-            window.timetableRows = 0;
-        }
+        window.timetableRows = 10;
     } else {
-        if (overlayName === 'krakow') {
-            window.timetableRows = 6;
-        } else if (overlayName === 'warszawa') {
-            window.timetableRows = 7;
-        } else {
-            window.timetableRows = 12;
-        }
+        window.timetableRows = 6;
+    }
+
+    if (overlayName === 'warszawa') {
+        window.timetableRows = 7
+    }
+    if (overlayName === 'tomaszow') {
+        window.timetableRows = 15
     }
 }
 
