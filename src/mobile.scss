@@ -1,4 +1,8 @@
 @media only screen and (hover: none) {
+	[mobile] {
+		display: block !important;
+	}
+
 	body {
 		#menu {
 			#button-box {
@@ -6,7 +10,7 @@
 				flex-direction: column;
 
 				a {
-					font-size: 5.5vmin;
+					font-size: 8vmin;
 				}
 
 				#type-button {
@@ -69,18 +73,6 @@
 					font-size: 2.2vmin;
 					padding: 1.2vmin;
 				}
-			}
-		}
-
-		#container {
-			margin: 0;
-
-			#titles {
-				padding-left: 1vmin;
-			}
-
-			#inner-description {
-				padding-right: 1vmin;
 			}
 		}
 	}

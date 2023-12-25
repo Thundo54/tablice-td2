@@ -81,6 +81,10 @@ body {
 		padding: 0.4vmin 0.3vmin;
 		text-align: center;
 
+		[mobile] {
+			display: none;
+		}
+
 		a {
 			font-size: 3.3vmin;
 			color: $color_2;

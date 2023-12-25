@@ -8,7 +8,6 @@ $background-color_2: #F0F8FF;
 $font-family_1: "Arial Black", sans-serif;
 $font-family_2: "Arial Bold", sans-serif;
 $font-family_3: "Arial", sans-serif;
-$font-family_4: "PLKPDPfont";
 
 body {
 	/*height: calc(100vw * 1.4142);*/
@@ -24,10 +23,6 @@ body {
 	a {
 		color: $color_5 !important;
 	}
-}
-
-.PKPPDPfont {
-	font-family: $font-family_4;
 }
 
 #container {
@@ -57,10 +52,6 @@ body {
 		flex-grow: 1;
 		flex-direction: row;
 		align-items: center;
-
-		.PKPPDPfont {
-			font-size: 5.3vmin;
-		}
 
 		span {
 			line-height: 3.3vmin;

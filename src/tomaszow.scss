@@ -194,54 +194,20 @@ $background-color_3: #F0F8FF;
 	}
 }
 
-@media (max-aspect-ratio: 4/3)  {
-	body {
-		#headers {
-			table {
-				th {
-					&:nth-child(1) {
-						width: 12%;
-					}
+@media (orientation: portrait) {
+	#board {
+		transform: rotate(-90deg);
+		transform-origin: left top;
+		width: 100vh;
+		height: 100vw;
+		overflow-x: hidden;
+		position: absolute;
+		top: 100%;
+		left: 0;
+	}
 
-					&:nth-child(2), &:nth-child(5) {
-						width: 15%;
-					}
-
-					&:nth-child(3),  &:nth-child(4) {
-						width: 26%;
-					}
-				}
-
-				#inner-description {
-					td {
-						&:last-child, &:nth-child(2) {
-							display: none;
-						}
-					}
-				}
-			}
-		}
-
-		#timetables {
-			table {
-				col {
-					&.time {
-						width: 12%;
-					}
-
-					&.trainNo, &.remarks {
-						width: 15%;
-					}
-
-					&.fromTo, &.via  {
-						width: 26%;
-					}
-
-					&.operator, &.platform {
-						width: 0;
-					}
-				}
-			}
-		}
+	#button-box {
+		left: 0;
+		align-items: start;
 	}
 }
