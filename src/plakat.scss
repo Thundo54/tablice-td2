@@ -283,7 +283,7 @@ body {
 	}
 }
 
-@media (width: 1366px) {
+@media screen and (max-width: 1366px) and (max-height: 768px) {
 	#board {
 		zoom: 1.75;
 	}
