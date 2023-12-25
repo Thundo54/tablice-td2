@@ -194,7 +194,7 @@ $background-color_3: #F0F8FF;
 	}
 }
 
-@media (orientation: portrait) {
+@media only screen and (hover: none) and (orientation: portrait) {
 	#board {
 		transform: rotate(-90deg);
 		transform-origin: left top;

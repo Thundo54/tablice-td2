@@ -322,7 +322,7 @@ body {
 	}
 }
 
-@media (orientation: portrait) {
+@media only screen and (hover: none) and (orientation: portrait) {
 	#board {
 		transform: rotate(-90deg);
 		transform-origin: left top;
