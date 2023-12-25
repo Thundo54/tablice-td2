@@ -65,7 +65,7 @@ export function createTrainData(stopPoint, timetable) {
     train.operator = train.gameCategory;
     train.trainName = '';
     train.platform = 1;
-    train.track = 2;
+    train.track = 1;
 
     if (stopPoint['comments'] && stopPoint['comments'].split(',').length > 1) {
         if (isNumber(stopPoint['comments'].split(',')[0])

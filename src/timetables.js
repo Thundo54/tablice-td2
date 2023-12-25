@@ -124,6 +124,14 @@ $(document).ready(() => {
         }
     });
 
+    $('#fullscreen-button').mousedown(function () {
+        if (document.fullscreenElement) {
+            document.exitFullscreen().then();
+        } else {
+            document.documentElement.requestFullscreen().then();
+        }
+    });
+
     $('#sceneries').change(function() {
         parser.refreshCheckpointsList();
         window.station = $('#checkpoints option').val();

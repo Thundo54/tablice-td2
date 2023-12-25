@@ -241,48 +241,21 @@ body {
 	}
 }
 
-@media (max-aspect-ratio: 4.5/3) {
-	#timetables {
-		table {
-			col {
-				&.time {
-					width: 10%;
-				}
 
-				&.operator {
-					width: 10%;
-				}
+@media (orientation: portrait) {
+	#board {
+		transform: rotate(-90deg);
+		transform-origin: left top;
+		width: 100vh;
+		height: 100vw;
+		overflow-x: hidden;
+		position: absolute;
+		top: 100%;
+		left: 0;
+	}
 
-				&.fromTo {
-					width: 38%;
-				}
-
-				&.via {
-					width: 33%;
-				}
-			}
-		}
-
-		&.enlarged {
-			table {
-				col {
-					&.time {
-						width: 18%;
-					}
-
-					&.fromTo {
-						width: 38%;
-					}
-
-					&.via {
-						width: 36%;
-					}
-
-					&.operator, &.platform {
-						width: 0;
-					}
-				}
-			}
-		}
+	#button-box {
+		left: 0;
+		align-items: start;
 	}
 }
