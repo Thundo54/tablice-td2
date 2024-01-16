@@ -150,7 +150,7 @@ export function selectCheckpoint() {
             if (checkpoint.includes(',') && !checkpoint.split(',')[1].includes('.')) {
                 checkpoint += '.';
             }
-            if (checkpoint.includes('MAZ')) { //temporary for TOMASZÓW & GRODZISK
+            if (!checkpoint.split('MAZ')[1].includes('.')) { //temporary for TOMASZÓW & GRODZISK
                 checkpoint += '.';
             }
             $('#checkpoints').val(checkpoint);
