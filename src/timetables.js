@@ -91,7 +91,7 @@ $(document).ready(() => {
                 if (checkpoint.includes(',') && !checkpoint.split(',')[1].includes('.')) {
                     checkpoint += '.';
                 }
-                if (!checkpoint.split('MAZ')[1].includes('.')) { //temporary for TOMASZÓW & GRODZISK
+                if (checkpoint.includes('MAZ') && !checkpoint.split('MAZ')[1].includes('.')) { //temporary for TOMASZÓW & GRODZISK
                     checkpoint += '.';
                 }
                 window.station = checkpoint
