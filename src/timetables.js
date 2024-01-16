@@ -3,6 +3,7 @@ import * as utils from "./utils.js";
 window.trainsSetBefore = [];
 window.stationsSet = [];
 window.station = '';
+window.region = 'eu';
 window.isDeparture = localStorage.getItem('isDeparture') === 'true';
 window.isStopped = localStorage.getItem('isStopped') === 'true';
 window.timetableSize = localStorage.getItem('timetableSize') || 'normal';
@@ -10,7 +11,6 @@ window.stopTypes = JSON.parse(localStorage.getItem('stopTypes')) || ['ph'];
 window.trainTypes = JSON.parse(localStorage.getItem('trainTypes')) || ['EMRPA'];
 window.overlayName = localStorage.getItem('overlayName') || 'krakow';
 window.showOperators = localStorage.getItem('showOperators') || 'false';
-window.region = localStorage.getItem('region') || 'eu';
 window.timetablesAsJson = null;
 window.stationDataAsJson = null;
 window.activeStationsAsJson = null;
@@ -96,6 +96,26 @@ $(document).ready(() => {
                 }
                 window.station = checkpoint
             }
+            if (urlParams.get('region') !== null) {
+                switch (urlParams.get('region').toUpperCase()) {
+                    case 'PL2':
+                    case 'CAE':
+                        window.region = 'cae';
+                        break;
+                    case 'DE':
+                    case 'USW':
+                        window.region = 'usw';
+                        break;
+                    case 'US':
+                    case 'CZ':
+                        window.region = 'us';
+                        break;
+                    default:
+                        window.region = 'eu';
+                        break;
+                }
+                $('#td2-region').val(region);
+            }
             createTimetableInterval();
         }
     });
@@ -152,7 +172,6 @@ $(document).ready(() => {
 
     $('#td2-region').change(function() {
         window.region = $(this).val();
-        localStorage.region = region;
         toggleRegion();
     });
 
@@ -385,14 +404,17 @@ function createTimetableInterval() {
     }, 30000);
 
     let sceneries = $('#sceneries');
-    let url = window.location.href;
+    //let url = window.location.href;
+    let url = new URL(window.location.href);
     if (sceneries.val() !== null) {
-        url = `?station=${sceneries.val()}`;
+        url.searchParams.set('station', sceneries.val());
         if ($('#checkpoints').val() !== sceneries.val()) {
-            url += `&checkpoint=${station.replace(/\.$/, '')}`;
+            url.searchParams.set('checkpoint', station.replace(/\.$/, ''));
+        } else {
+            url.searchParams.delete('checkpoint');
         }
     }
-    window.history.replaceState(null, null, url);
+    window.history.replaceState(null, null, url.href);
 }
 
 export function loadTimetables() {
