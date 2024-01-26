@@ -1,0 +1,55 @@
+<html lang="pl">
+    <head>
+        <meta charset="utf-8">
+        <title>Tablice Zbiorcze - API data</title>
+        <link rel="icon" href="/favicon.ico">
+        <link rel="stylesheet" href="./styles.css">
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+        <script type="module" src="./apidata.js"></script>
+    </head>
+    <body>
+        <h1>Wyświetl informacje z API tablice-td2</h1>
+
+        <div>
+            <label>
+                <span>Wyszukaj:</span>
+                <input type="text" id="search" name="search" placeholder="blah blah blah..."/>
+            </label>
+            <span id="searched-number"></span>
+        </div>
+
+        <div class="column-container">
+            <h3>Źródło danych:</h3>
+            <div class="inline-container">
+                <label>
+                    <span>carsData.json</span>
+                    <input type="radio" id="carsData" name="switch-data" value="0"/>
+                </label>
+                <label>
+                    <span>namesCorrections.json</span>
+                    <input type="radio" id="namesCorrections" name="switch-data" value="1"/>
+                </label>
+                <label>
+                    <span>operatorConvert.json</span>
+                    <input type="radio" id="operators" name="switch-data" value="2"/>
+                </label>
+                <label>
+                    <span>stationsData.json</span>
+                    <input type="radio" id="stationData" name="switch-data" value="3"/>
+                </label>
+            </div>
+        </div>
+
+        <div id="table-picker" class="column-container" hidden>
+            <h3>Tabela:</h3>
+            <div id="table-pick" class="inline-container"></div>
+        </div>
+
+        <div id="additional-info">
+        </div>
+
+        <div id="table-body" class="column-container">
+
+        </div>
+    </body>
+</html>

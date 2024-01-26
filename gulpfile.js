@@ -5,14 +5,14 @@ const replace = require('gulp-replace');
 const sass = require('gulp-sass')(require('sass'));
 
 gulp.task('build:css', () => {
-  return gulp.src('src/*.scss')
+  return gulp.src('src/*/*.scss')
     .pipe(sass({ outputStyle: 'compressed' }, { errLogToConsole: true }))
     .pipe(rename({ suffix: '.min' }))
     .pipe(gulp.dest('public/assets'));
 });
 
 gulp.task('build:js', function () {
-  return gulp.src('src/*.js')
+  return gulp.src('src/*/*.js')
     .pipe(terser({
       ecma: 6,
       keep_fnames: false,
@@ -30,7 +30,7 @@ gulp.task('build:js', function () {
     .pipe(gulp.dest('public/assets'));
 });
 
-gulp.task('build:html', function () {
+gulp.task('build:index', function () {
     gulp.src('index.html')
         .pipe(replace('timetables.js', 'timetables.min.js'))
         .pipe(replace('public/', ''))
@@ -43,10 +43,19 @@ gulp.task('build:html', function () {
         .pipe(gulp.dest('public/assets'));
 });
 
+gulp.task('build:subpage', function () {
+    return gulp.src('src/*/index.html')
+        .pipe(replace('apidata.js', 'apidata.min.js'))
+        .pipe(replace('.css', '.min.css'))
+        .pipe(replace('./', '../assets/apidata/'))
+        .pipe(replace('/public/', '../../public/'))
+        .pipe(gulp.dest('public'));
+});
+
 gulp.task('build:overlays', function () {
     return gulp.src('src/overlays/*.html')
         .pipe(replace('public/assets/', 'assets/'))
         .pipe(gulp.dest('public/overlays'));
 });
 
-gulp.task('build:tablice-td2', gulp.parallel('build:css', 'build:js', 'build:html', 'build:overlays'));
+gulp.task('build:tablice-td2', gulp.parallel('build:css', 'build:js', 'build:index', 'build:subpage', 'build:overlays'));
