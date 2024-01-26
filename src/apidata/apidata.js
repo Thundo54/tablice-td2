@@ -1,6 +1,6 @@
 window.carsDataAPI = "https://raw.githubusercontent.com/Thundo54/tablice-td2-api/master/carsData.json"
 window.stationAPI = 'https://raw.githubusercontent.com/Thundo54/tablice-td2-api/master/stationsData.json';
-window.operatorsAPI = 'https://gist.githubusercontent.com/Thundo54/6b090c648d0156d54fbd122b90c251be/raw/7bc0f7bd16aeadc7f05a47e2304f334a9aa617af/gistfile1.txt';
+window.operatorsAPI = 'https://raw.githubusercontent.com/Thundo54/tablice-td2-api/master/operatorConvert.json';
 window.namesCorrectionsAPI = 'https://raw.githubusercontent.com/Thundo54/tablice-td2-api/master/namesCorrections.json';
 window.carsDataAsJson = null;
 window.stationDataAsJson = null;
