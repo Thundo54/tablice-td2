@@ -5,14 +5,14 @@ const replace = require('gulp-replace');
 const sass = require('gulp-sass')(require('sass'));
 
 gulp.task('build:css', () => {
-  return gulp.src('src/*/*.scss')
+  return gulp.src(['src/*.scss', "src/*/*.scss"])
     .pipe(sass({ outputStyle: 'compressed' }, { errLogToConsole: true }))
     .pipe(rename({ suffix: '.min' }))
     .pipe(gulp.dest('public/assets'));
 });
 
 gulp.task('build:js', function () {
-  return gulp.src('src/*/*.js')
+  return gulp.src(['src/*.js', "src/*/*.js"])
     .pipe(terser({
       ecma: 6,
       keep_fnames: false,
