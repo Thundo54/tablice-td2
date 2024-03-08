@@ -597,6 +597,11 @@ export function loadTimetables() {
 
                 $(`#${index} .fromTo span:first-child`).html(stopsList);
                 break;
+            case 'wyciag':
+                titleScenery.html(utils.capitalizeFirstLetter(station.split(',')[0]));
+
+                $(`#title-scenery-bold`).html(station.split(',')[0].toUpperCase());
+                updateDate.text(`${utils.createDate(true)}`);
                 break;
         }
     });
@@ -627,7 +632,7 @@ function resizeTextToFit() {
 export function refreshTimetablesAnim() {
     let tr = $('#timetables > table > tbody > tr');
     let td, span, animDuration, fieldWidth, widthRatio, tdWidth;
-    if (overlayName === 'plakat') { return; }
+    if (overlayName === ('plakat' || 'wyciag')) { return; }
     if (overlayName === 'starysacz') { widthRatio = 1; }
     else { widthRatio = 0.9; }
 
