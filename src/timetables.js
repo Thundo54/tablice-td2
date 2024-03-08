@@ -410,11 +410,25 @@ function toggleRegion() {
 function toggleMenu() {
     let menuBox = $('#menu-box');
     let menuBox2 = $('#menu-box-2');
-    $('#close-box').toggleClass('active');
-    $('#menu').toggleClass('background-fade');
-    $('#menu-button').toggleClass('fill');
+    let closeBox = $('#close-box');
+    closeBox.toggleClass('active');
+    if (closeBox.hasClass('active')) {
+        $('html, body').animate({scrollTop: 0}, 500).promise().then(
+            () => {
+                $('body').css('overflow', 'hidden');
+                $('#menu').toggleClass('background-fade');
+                $('#menu-button').toggleClass('fill');
+            }
+        );
+    } else {
+        $('body').removeAttr('style');
+        $('#menu').toggleClass('background-fade');
+        $('#menu-button').toggleClass('fill');
+    }
+   // $('#menu').toggleClass('background-fade');
+   // $('#menu-button').toggleClass('fill');
     if (menuBox2.hasClass('popup')) { menuBox2.toggleClass('popup'); }
-    else { menuBox.toggleClass('popup');}
+    else { menuBox.toggleClass('popup'); }
 }
 
 function switchMenuPage() {
