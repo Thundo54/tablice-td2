@@ -171,7 +171,7 @@ export function addRow(train, index) {
     let row = $('<tr>').attr('id', `${index}`);
     switch (overlayName) {
         case 'tomaszow':
-            row.append($('<td>').text(convertTime(train.timestamp)));
+            row.append($('<td>').text(train.arrivalDepartureAt));
             row.append($('<td>').append($('<div>').append($('<span>').text(createTrainString(train.category, train.trainNo)))));
             row.append($('<td>').append($('<span>').text(train.stationFromTo)));
             row.append($('<td>').append($('<span>')));
@@ -181,7 +181,7 @@ export function addRow(train, index) {
             break;
         case 'krakow':
             row.append($('<td>')
-                .append($('<p>').text(convertTime(train.timestamp)))
+                .append($('<p>').text(train.arrivalDepartureAt))
                 .append($('<div>').addClass('indented')
                     .append($('<span>').text(createTrainString(train.category, train.trainNo)))
                 )
@@ -199,9 +199,9 @@ export function addRow(train, index) {
             row.append($('<td>').text(train.platform));
             break;
         case 'starysacz':
-            row.append($('<td>').text(convertTime(train.timestamp)));
+            row.append($('<td>').text(train.arrivalDepartureAt));
             row.append($('<td>')
-                .append($('<p>').text(convertTime(train.operator)))
+                .append($('<p>').text(train.operator))
                 .append($('<div>')
                     .append($('<span>').text(createTrainString(train.category, train.trainNo)))
                 )
@@ -227,6 +227,7 @@ export function addRow(train, index) {
             }
 
             let symbolsDiv = $('<div>').addClass('symbols');
+
             if (isDeparture) {
                 train.symbols.split(' ').forEach((symbol) => {
                     if (symbol === 'R') {
@@ -238,7 +239,7 @@ export function addRow(train, index) {
                 });
             }
 
-            row.append($('<td>').addClass('time').text(convertTime(train.timestamp)));
+            row.append($('<td>').addClass('time').text(train.arrivalDepartureAt));
             row.append($('<td>').addClass('platform')
                 .append($('<b>').text(train.platform).append($('<br>')))
                 .append(train.track)
