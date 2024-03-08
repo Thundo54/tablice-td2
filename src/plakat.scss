@@ -10,7 +10,6 @@ $font-family_2: "Arial Bold", sans-serif;
 $font-family_3: "Arial", sans-serif;
 
 body {
-	/*height: calc(100vw * 1.4142);*/
 	background-color: $background-color_2;
 	width: 100vw;
 
@@ -36,12 +35,11 @@ body {
 #titles {
 	display: flex;
 	align-items: center;
-	font-family: $font-family_2;
-	font-size: 6vmin;
 
 	div {
 		display: flex;
 		flex-direction: column;
+		text-align: left;
 	}
 
 	#left-box {
@@ -49,7 +47,6 @@ body {
 			font-size: 6vmin;
 		}
 
-		flex-grow: 1;
 		flex-direction: row;
 		align-items: center;
 
@@ -109,42 +106,100 @@ body {
 	}
 }
 
-#headers {
-	z-index: 1;
-
-	#update-time {
-		font-size: 1.1vmin;
-		line-height: 1.4vmin;
-		float: right;
-		font-weight: bold;
+#timetables {
+	.red {
+		color: red;
 	}
 
 	table {
-		width: 100%;
-		border: 0.2vmin solid $color_1;
+		table-layout: fixed;
 		border-collapse: collapse;
+		width: 100%;
+		margin-bottom: 4vmin;
 
-		&.yellow-bg {
-			th {
-				background: $color_3;
+		thead {
+			&.yellow-bg {
+				tr:nth-child(4), tr:nth-child(5) {
+					background: $color_3;
 
-				&:nth-child(5) {
-					display: table-cell;
+					td:last-child {
+						display: table-cell;
+					}
+				}
+
+				tr {
+					td:last-child {
+						width: 16vmin;
+					}
 				}
 			}
-		}
 
-		tr:last-child > th:first-child {
-			padding: 0 0.5vmin;
-		}
+			tr:nth-child(3) {
+				font-size: 1.1vmin;
+				line-height: 1.4vmin;
+				font-weight: bold;
 
-		th {
-			background: $color_4;
-			border-left: 0.2vmin solid $color_1;
-			vertical-align: middle;
+				span {
+					text-align: right;
+				}
+			}
 
-			span {
-				display: block;
+			tr:nth-child(4), tr:nth-child(5) {
+				font-weight: bold;
+				background: $color_4;
+				border-left: 0.2vmin solid $color_1;
+				border-right: 0.2vmin solid $color_1;
+
+				td {
+					border-left: 0.2vmin solid $color_1;
+				}
+
+				td:last-child {
+					display: none;
+				}
+			}
+
+			tr:nth-child(4) {
+				border-top: 0.2vmin solid $color_1;
+			}
+
+			tr:nth-child(5) {
+				border-bottom: 0.2vmin solid $color_1;
+
+				td:first-child {
+					padding: 0 0.5vmin;
+				}
+			}
+
+			tr {
+				td {
+					text-align: center;
+					vertical-align: middle;
+
+					span {
+						display: block;
+					}
+
+					&:nth-child(1) {
+						width: 7.5vmin;
+					}
+
+					&:nth-child(2) {
+						width: 5vmin;
+					}
+
+					&:nth-child(3) {
+						width: 10vmin;
+					}
+
+					&:nth-child(4) {
+						width: auto;
+					}
+
+					&:nth-child(5) {
+						width: 0;
+					}
+				}
 			}
 
 			.header-pl {
@@ -158,127 +213,101 @@ body {
 				font-style: italic;
 				padding: 0.2vmin 0;
 			}
-
-			&:nth-child(1) {
-				width: 7.5vmin;
-			}
-
-			&:nth-child(2) {
-				width: 5vmin;
-			}
-
-			&:nth-child(3) {
-				width: 10vmin;
-			}
-
-			&:nth-child(4) {
-				width: auto;
-			}
-
-			&:nth-child(5) {
-				width: 16vmin;
-				display: none;
-			}
-		}
-	}
-}
-
-#timetables {
-
-	.red {
-		color: red;
-	}
-
-	table {
-		table-layout: fixed;
-		width: 100%;
-		border-left: 0.2vmin solid $color_1;
-		border-right: 0.2vmin solid $color_1;
-		font-family: "Arial", sans-serif;
-		margin-bottom: 3.5vmin;
-
-		&.yellow-bg {
-			td:nth-child(1), td:nth-child(2) {
-				background: $color_3;
-			}
 		}
 
-		tr {
-			vertical-align: top;
-		}
-
-		td {
-			text-align: center;
-			border-bottom: 0.2vmin solid $color_1;
-
-			&:nth-child(1) {
-				background: $color_4;
-				font-weight: bold;
-				font-size: 2.5vmin;
-				text-align: right;
-				vertical-align: top;
-				padding-top: 0.5vmin;
-				width: 7.5vmin;
+		tbody {
+			&.yellow-bg {
+				td:nth-child(1), td:nth-child(2) {
+					background: $color_3;
+				}
 			}
 
-			&:nth-child(2) {
-				background: $color_4;
-				font-size: 2vmin;
+			border: 0.2vmin solid $color_1;
+
+			tr {
 				vertical-align: top;
-				padding: 0.3vmin;
-				width: 5vmin;
+				border-bottom: 0.2vmin solid $color_1;
 			}
 
-			&:nth-child(3) {
-				width: 10vmin;
-				font-size: 1.4vmin;
-				padding: 0.3vmin 0.3vmin;
-				vertical-align: top;
-				line-height: 1.6vmin;
+			td {
+				text-align: center;
 
-				div {
-					display: flex;
-					flex-direction: column;
-					align-items: center;
+				&:nth-child(1) {
+					background: $color_4;
+					font-weight: bold;
+					font-size: 2.5vmin;
+					text-align: right;
+					vertical-align: top;
+					padding-top: 0.5vmin;
+					width: 7.5vmin;
 				}
 
-				.train-name {
-					font-style: italic;
+				&:nth-child(2) {
+					background: $color_4;
+					font-size: 2vmin;
+					vertical-align: top;
+					padding: 0.3vmin;
+					width: 5vmin;
 				}
 
-				.symbol-text {
-					margin: 0 0.4vmin 0 0.2vmin;
-					font-size: 1.4vmin !important;
-				}
+				&:nth-child(3) {
+					width: 10vmin;
+					font-size: 1.4vmin;
+					padding: 0.3vmin 0.3vmin;
+					vertical-align: top;
+					line-height: 1.6vmin;
 
-				.symbols {
-					flex-direction: row;
-					flex-wrap: wrap;
-					justify-content: center;
+					div {
+						display: flex;
+						flex-direction: column;
+						align-items: center;
+					}
 
-					span {
-						font-size: 1.83vmin;
+					.train-name {
+						font-style: italic;
+					}
+
+					.train-route {
+						font-size: 1.1vmin;
+						font-weight: bold;
+						top: 0.5vmin;
+						color: $color_5;
+					}
+
+					.symbol-text {
+						margin: 0 0.4vmin 0 0.2vmin;
+						font-size: 1.4vmin !important;
+					}
+
+					.symbols {
+						flex-direction: row;
+						flex-wrap: wrap;
+						justify-content: center;
+
+						span {
+							font-size: 1.83vmin;
+						}
 					}
 				}
-			}
 
-			&:nth-child(4) {
-				width: auto;
-				font-size: 1.5vmin;
-				vertical-align: top;
-				padding: 0.3vmin 0 1vmin 0.7vmin;
-				text-align: left;
+				&:nth-child(4) {
+					width: auto;
+					font-size: 1.5vmin;
+					vertical-align: top;
+					padding: 0.3vmin 0 0.4vmin 0.7vmin;
+					text-align: left;
 
-				.text-bold {
-					display: inline-block;
-					font-size: 2.2vmin;
-					font-weight: bold;
-				}
+					.text-bold {
+						display: inline-block;
+						font-size: 2.2vmin;
+						font-weight: bold;
+					}
 
-				.departure {
-					float: right;
-					padding-right: 0.8vmin;
-					padding-top: 0.2vmin;
+					.departure {
+						float: right;
+						padding-right: 0.8vmin;
+						padding-top: 0.2vmin;
+					}
 				}
 			}
 		}
@@ -288,5 +317,38 @@ body {
 @media screen and (max-width: 1366px) and (max-height: 768px) {
 	#board {
 		zoom: 1.75;
+	}
+}
+
+@media print {
+	@page {
+		margin: 0;
+	}
+
+	#menu {
+		display: none;
+	}
+
+	#container {
+		margin: 0 4vmin;
+	}
+
+	table {
+		thead {
+			tr:first-child {
+				height: 3vmin;
+			}
+			display: table-header-group;
+		}
+
+		tfoot {
+			display: table-footer-group;
+			height: 4vmin;
+		}
+
+		tr, td {
+			page-break-inside: avoid;
+			page-break-after: auto;
+		}
 	}
 }

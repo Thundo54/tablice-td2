@@ -1,62 +1,78 @@
 <div id="container" class="yellow-bg">
-    <div id="titles">
-        <div id="left-box">
-            <span class="material-symbols-outlined big">train</span>
-            <div>
-                <span id="title-type">
-                    <b>Odjazdy</b> <i>/ Departures / Відправлення</i>
-                </span>
-                <span id="title-scenery"></span>
-            </div>
-        </div>
-        <div id="right-box">
-            <img src="public/assets/qr-code.svg" alt="qrcode">
-            <div>
-                <img src="public/assets/logo_traindriver2.png" alt="td2-logo">
-                <span id="timetables-cycle"></span>
-            </div>
-        </div>
-    </div>
-    <div id="headers">
-        <span id="update-time">Aktualizacja wg stanu na</span>
-        <table>
-            <tr>
-                <th>
-                    <span class="header-pl">godzina odjazdu</span>
-                </th>
-                <th>
-                    <span class="header-pl">peron tor</span>
-                </th>
-                <th>
-                    <span class="header-pl">pociąg</span>
-                </th>
-                <th>
-                    <span class="header-pl">godziny przyjazdów do stacji pośrednich</span>
-                </th>
-                <th>
-                    <span class="header-pl">godzina przyjazdu do stacji docelowej</span>
-                </th>
-            </tr>
-            <tr>
-                <th>
-                    <span class="header-en">departure time</span>
-                </th>
-                <th>
-                    <span class="header-en">platform track</span>
-                </th>
-                <th>
-                    <span class="header-en">train</span>
-                </th>
-                <th>
-                    <span class="header-en">arrivals at intermediate stops</span>
-                </th>
-                <th>
-                    <span class="header-en">arrival at destination (station)</span>
-                </th>
-            </tr>
-        </table>
-    </div>
     <div id="timetables">
-        <table></table>
+        <table>
+            <thead class="yellow-bg">
+                <tr>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td colspan="5">
+                        <div id="titles">
+                            <div id="left-box">
+                                <span class="material-symbols-outlined big">train</span>
+                                <div>
+                                    <span id="title-type">
+                                        <b>Odjazdy</b> <i>/ Departures / Відправлення</i>
+                                    </span>
+                                    <span id="title-scenery"></span>
+                                </div>
+                            </div>
+                            <div id="right-box">
+                                <img src="public/assets/qr-code.svg" alt="qrcode">
+                                <div>
+                                    <img src="public/assets/logo_traindriver2.png" alt="td2-logo">
+                                    <span id="timetables-cycle"></span>
+                                </div>
+                            </div>
+                        </div>
+                    </td>
+                </tr>
+                <tr>
+                    <td colspan="5">
+                        <span id="update-time">Aktualizacja wg stanu na</span>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <span class="header-pl">godzina odjazdu</span>
+                    </td>
+                    <td>
+                        <span class="header-pl">peron tor</span>
+                    </td>
+                    <td>
+                        <span class="header-pl">pociąg</span>
+                    </td>
+                    <td>
+                        <span class="header-pl">godziny przyjazdów do stacji pośrednich</span>
+                    </td>
+                    <td>
+                        <span class="header-pl">godzina przyjazdu do stacji docelowej</span>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <span class="header-en">departure time</span>
+                    </td>
+                    <td>
+                        <span class="header-en">platform track</span>
+                    </td>
+                    <td>
+                        <span class="header-en">train</span>
+                    </td>
+                    <td>
+                        <span class="header-en">arrivals at intermediate stops</span>
+                    </td>
+                    <td>
+                        <span class="header-en">arrival at destination (station)</span>
+                    </td>
+                </tr>
+            </thead>
+            <tbody></tbody>
+            <tfoot></tfoot>
+        </table>
     </div>
 </div>
