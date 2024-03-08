@@ -356,26 +356,6 @@ function changeOverlay() {
     utils.resizeTimetableRow();
 }
 
-function toggleStopped() {
-    let toggleStop = $('#toggle-stop');
-    if (isStopped) {
-        toggleStop.addClass('active');
-    } else {
-        toggleStop.removeClass('active');
-    }
-    loadTimetables();
-}
-
-function toggleOperators() {
-    let toggleOperators = $('#toggle-operators');
-    if (showOperators) {
-        toggleOperators.addClass('active');
-    } else {
-        toggleOperators.removeClass('active');
-    }
-    loadTimetables();
-}
-
 function toggleButton(button, condition) {
     if (condition) {
         button.addClass('active');
