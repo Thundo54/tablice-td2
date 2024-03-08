@@ -190,6 +190,42 @@ export function addRow(train, index) {
                 .append($('<span>').addClass('departure text-bold'))
             );
             break;
+        case 'wyciag':
+            let arrivalTime;
+            let departureTime;
+            let trainName;
+
+            if (train.beforeDepartureAt) {
+                arrivalTime = train.arrivalDepartureAt;
+            }
+
+            if (train.afterArrivalAt) {
+                departureTime = createDepartureTime(train.timestamp, train.stopTime);
+            }
+
+            if (train.trainName) {
+                trainName = train.category + ' ' + train.trainName;
+            }
+
+            row.append($('<td>').text(train.gameCategory));
+            if (train.trainNo % 2 === 0) {
+                row.append($('<td>'));
+                row.append($('<td>').text(train.trainNo));
+            } else {
+                row.append($('<td>').text(train.trainNo));
+                row.append($('<td>'));
+            }
+
+            row.append($('<td>').text(train.beforeDepartureAt));
+            row.append($('<td>').text(train.track));
+            row.append($('<td>').text(arrivalTime));
+            row.append($('<td>').text(train.stopTime));
+            row.append($('<td>').text(departureTime));
+            row.append($('<td>').text(train.afterArrivalAt));
+            row.append($('<td>').text(shortenName(train.stationFrom)));
+            row.append($('<td>').text(shortenName(train.stationTo)));
+            row.append($('<td>').text(trainName));
+            break;
     }
     return row;
 }

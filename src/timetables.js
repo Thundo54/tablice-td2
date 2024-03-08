@@ -686,6 +686,10 @@ function changeBoardType() {
             headers.find('th:nth-child(4) .header-pl').html(texts.desc2PL);
             headers.find('th:nth-child(4) .header-en').html(texts.desc2EN);
             break;
+        case 'wyciag':
+            if (isDeparture) {
+                $("#type-button").mousedown();
+            }
     }
 
     if (overlayName === 'starysacz') {
@@ -759,7 +763,7 @@ function initzializeOverlay() {
 }
 
 function setRowsCount() {
-    if (overlayName === 'plakat') {
+    if (overlayName === 'plakat' || overlayName === 'wyciag') {
         window.timetableRows = 0;
         return;
     }
