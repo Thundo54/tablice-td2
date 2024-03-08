@@ -1,10 +1,21 @@
 import * as parser from "./parser.js";
 import {loadTimetables} from "./timetables.js";
 
-function correctNames(name) {
+function correctName(name) {
     for (let key in namesCorrectionsAsJson) {
         if (name.includes(key)) {
             return name.replace(key, namesCorrectionsAsJson[key]);
+        }
+    }
+    return name;
+}
+
+function shortenName(name) {
+    // using namesCorrectionsAsJson backwards to shorten names
+    for (let key in namesCorrectionsAsJson) {
+        if (name.includes(namesCorrectionsAsJson[key])) {
+            let word = name.split(' ').filter((element) => element.includes(namesCorrectionsAsJson[key]))[0];
+            return name.replace(word, key);
         }
     }
     return name;
@@ -24,9 +35,11 @@ export function capitalizeFirstLetter(string) {
         string.split(' ').forEach((element) => {
             output += element.charAt(0).toUpperCase() + element.slice(1).toLowerCase() + ' '
         });
-        return correctNames(output.slice(0, -1));
+        //return correctNames(output.slice(0, -1));
+        return correctName(output.slice(0, -1));
     } else {
-        return correctNames(string);
+        //return correctNames(string);
+        return correctName(string);
     }
 }
 
@@ -242,6 +255,13 @@ export function convertTime(time) {
     return new Date(time).toLocaleTimeString('pl-PL', {hour: '2-digit', minute: '2-digit'});
 }
 
+export function createDepartureTime(time, timespan) {
+    let date = new Date(time);
+    date.setMinutes(date.getMinutes() + timespan);
+    return date.toLocaleTimeString('pl-PL', {hour: '2-digit', minute: '2-digit'});
+}
+
+
 export function createTrainString(category, trainNo) {
     return category + ' ' + trainNo;
 }
@@ -294,14 +314,16 @@ export function convertOperator(train) {
     return train;
 }
 
-export function createDate() {
+export function createDate(isDot = false) {
     let date = new Date();
     let day = date.getDate();
     let month = date.getMonth() + 1;
     let year = date.getFullYear();
     let romanNumerals = ['I', 'II', 'III', 'IV', 'V', 'VI', 'VII', 'VIII',
         'IX', 'X', 'XI', 'XII'];
-    return `${day} ${romanNumerals[month - 1]} ${year}`;
+
+    if (isDot) { return `${('0' + (day-1)).slice(-2)}.${romanNumerals[month - 1]}.${year}`; }
+    return `${day-1} ${romanNumerals[month - 1]} ${year}`;
 }
 
 
