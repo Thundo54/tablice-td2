@@ -424,7 +424,7 @@ function switchMenuPage() {
 
 function createTimetableInterval() {
     clearInterval(timetableInterval);
-    $('#timetables table tr').remove();
+    $('#timetables > tbody').remove();
     loadTimetables();
     document.title = `${utils.capitalizeFirstLetter(station)} - Tablice Zbiorcze`
     window.timetableInterval = setInterval(function() {
@@ -452,9 +452,9 @@ export function loadTimetables() {
     if (trainSet === undefined) { return; }
     let trainsNew = trainSet.filter(m => !trainsSetBefore.map(n => n.trainNo).includes(m.trainNo));
     let trainsToRemove = trainsSetBefore.filter(m => !trainSet.map(n => n.trainNo).includes(m.trainNo));
-    if (trainsSetBefore.length === 0 && trainSet.length > 0 || $('#timetables table tr').length === 0) {
+    if (trainsSetBefore.length === 0 && trainSet.length > 0 || $('#timetables > table > tbody > tr').length === 0) {
         trainSet.forEach((train, index) => {
-            $('#timetables table').append(utils.addRow(train, index));
+            $('#timetables > table').append(utils.addRow(train, index));
         });
         utils.refreshIds();
     } else {
@@ -469,7 +469,7 @@ export function loadTimetables() {
                 let index = trainSet.indexOf(train);
                 let row = utils.addRow(train, index);
                 if (index === 0) {
-                     $('#timetables table').prepend(row);
+                     $('#timetables > table').prepend(row);
                 } else {
                     $(`#${index-1}`).after(row);
                 }
@@ -621,7 +621,7 @@ function resizeTextToFit() {
 }
 
 export function refreshTimetablesAnim() {
-    let tr = $('#timetables table tr');
+    let tr = $('#timetables > table > tbody > tr');
     let td, span, animDuration, fieldWidth, widthRatio, tdWidth;
     if (overlayName === 'plakat') { return; }
     if (overlayName === 'starysacz') { widthRatio = 1; }
@@ -662,7 +662,7 @@ function changeBoardType() {
     let texts = {};
     let body = $('body');
     let container = $('#container');
-    let timetables = $('#timetables table');
+    let timetables = $('#timetables > table > tbody');
     let headers = $('#headers table');
     timetables.find('tr').remove();
 
@@ -689,6 +689,7 @@ function changeBoardType() {
             }
             break;
         case 'plakat':
+            headers = $('#timetables > table > thead');
             if (isDeparture) {
                 texts.type = '<b>Odjazdy</b> <i>/ Departures / Відправлення</i>';
                 texts.desc1PL = 'godzina odjazdu';
@@ -696,8 +697,9 @@ function changeBoardType() {
                 texts.desc2PL = 'godziny przyjazdów do stacji pośrednich';
                 texts.desc2EN = 'arrivals at intermediate stops';
                 body.addClass('yellow-bg');
-                timetables.addClass('yellow-bg');
                 headers.addClass('yellow-bg');
+                timetables.addClass('yellow-bg');
+
             } else {
                 texts.type = '<b>Przyjazdy</b> <i>/ Arrivals / Прибуття</i>';
                 texts.desc1PL = 'godzina przyjazdu';
@@ -710,10 +712,10 @@ function changeBoardType() {
             }
 
             $('#title-type').html(texts.type);
-            headers.find('th:nth-child(1) .header-pl').html(texts.desc1PL);
-            headers.find('th:nth-child(1) .header-en').html(texts.desc1EN);
-            headers.find('th:nth-child(4) .header-pl').html(texts.desc2PL);
-            headers.find('th:nth-child(4) .header-en').html(texts.desc2EN);
+            headers.find('td:nth-child(1) .header-pl').html(texts.desc1PL);
+            headers.find('td:nth-child(1) .header-en').html(texts.desc1EN);
+            headers.find('td:nth-child(4) .header-pl').html(texts.desc2PL);
+            headers.find('td:nth-child(4) .header-en').html(texts.desc2EN);
             break;
         case 'wyciag':
             if (isDeparture) {
