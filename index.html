@@ -97,6 +97,7 @@
                         <span class="category-header">Pozostałe opcje</span>
                         <div id="misc" class="container">
                             <a id="toggle-stop"><span>Tylko rozkłady z postojem</span></a>
+                            <a id="toggle-history"><span>Pokazuj rozkłady historyczne</span></a>
                             <a id="toggle-operators"><span>Pokazuj przewoźników</span></a>
                             <a id="test" hidden><span>Komunikaty specjalne<sup> beta</sup></span></a>
                             <a id="reset-filter"><span>Resetuj filtry</span></a>
@@ -127,7 +128,7 @@
             <div id="menu-box-2">
                 <a id="previous-page" class="material-symbols-outlined menu-page-switcher">keyboard_double_arrow_left</a>
                 <section>
-                    <h2>KATEGORIE</h2>
+                    <h2>KATEGORIE POCIĄGÓW</h2>
                     <div>
                         <span class="category-header">Pociągi pażerskie</span>
                         <div class="container">
@@ -163,14 +164,10 @@
                             </div>
                         </div>
                     </div>
-                </section>
-                <div class="vertical-line"></div>
-                <section>
-                    <h2>POCIAGÓW</h2>
                     <div>
                         <span class="category-header">Pociągi utrzymaniowo-naprawcze</span>
                         <div class="container">
-                            <div id="Z-group">
+                            <div class="inline" id="Z-group">
                                 <a class="train-category" id="ZG" title="ZGE, ZGS">
                                     <span>Ratunkowe</span>
                                 </a>
@@ -179,6 +176,27 @@
                                 </a>
                             </div>
                         </div>
+                    </div>
+                </section>
+                <div class="vertical-line"></div>
+                <section>
+                    <h2>HISTORIA ROZKŁADÓW</h2>
+                    <div>
+                        <label class="category-header" for="from-timestamp">Początek historii</label>
+                        <input type="datetime-local" id="from-timestamp">
+                    </div>
+                    <div>
+                        <label class="category-header" for="to-timestamp">Koniec historii</label>
+                        <div class="container">
+                            <input class="no-margin" type="datetime-local" id="to-timestamp">
+                            <a>
+                                <span>Czas aktualny</span>
+                            </a>
+                        </div>
+                    </div>
+                    <div>
+                        <label class="category-header" for="history-max">Limit pociągów</label>
+                        <input type="number" id="history-max" value="300" min="50" max="500" maxlength="3">
                     </div>
                 </section>
             </div>

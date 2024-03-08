@@ -51,34 +51,88 @@ export function splitRoute(string) {
     return stations;
 }
 
-export function createTrainData(stopPoint, timetable) {
+export function createTrainData(stopPoint, timetable, isHistorical = false) {
     let train = {};
+
+    train.trainNo = timetable['trainNo'];
+    train.trainCars = timetable['stockString'];
+
+    if (timetable['timetable']) {
+        timetable = timetable['timetable'];
+    }
+
     if (isDeparture && !stopPoint['terminatesHere']) {
         train.beginsTerminatesHere = stopPoint['beginsHere'];
         train.timestamp = stopPoint['departureTimestamp'];
         train.delay = stopPoint['departureDelay'];
-        train.stationFromTo = splitRoute(timetable['timetable']['route'])[1];
+        train.stationFromTo = splitRoute(timetable['route'])[1];
     } else if (!isDeparture && !stopPoint['beginsHere']) {
         train.beginsTerminatesHere = stopPoint['terminatesHere'];
         train.timestamp = stopPoint['arrivalTimestamp'];
         train.delay = stopPoint['arrivalDelay'];
-        train.stationFromTo = splitRoute(timetable['timetable']['route'])[0];
+        train.stationFromTo = splitRoute(timetable['route'])[0];
     }
 
-    train.departureAt = convertTime(timetable['timetable']['stopList'][0]['departureTimestamp']);
-    train.arrivalAt = convertTime(timetable['timetable']['stopList'][timetable['timetable']['stopList'].length - 1]['arrivalTimestamp']);
+    if (train.timestamp === undefined && overlayName === 'wyciag') {
+        train.timestamp = stopPoint['departureTimestamp'];
+    }
 
+    if (isHistorical) {
+        train.departureAt = convertTime(timetable['checkpointDeparturesScheduled'][0]);
+        train.arrivalAt = convertTime(timetable['checkpointArrivalsScheduled'][timetable['checkpointArrivalsScheduled'].length - 1]);
+        train.gameCategory = timetable['trainCategoryCode'];
+
+        let stopPointIndex =  timetable['sceneriesString'].toUpperCase().split("%").indexOf(stopPoint['stopName'].toUpperCase());
+
+        if (!stopPoint['beginsHere']) {
+            train.beforeDepartureAt = convertTime(timetable['checkpointDeparturesScheduled'][stopPointIndex - 1]);
+        }
+
+        if (!stopPoint['terminatesHere']) {
+            train.afterArrivalAt = convertTime(timetable['checkpointArrivalsScheduled'][stopPointIndex + 1]);
+        }
+    } else {
+        train.departureAt = convertTime(timetable['stopList'][0]['departureTimestamp']);
+        train.arrivalAt = convertTime(timetable['stopList'][timetable['stopList'].length - 1]['arrivalTimestamp']);
+        train.gameCategory = timetable['category'];
+
+        let postTypes = ['po.', 'podst.', 'gt', 'GT'];
+
+        if (!stopPoint['beginsHere']) {
+            //train.beforeDepartureAt = convertTime(timetable['stopList'][timetable['stopList'].indexOf(stopPoint) - 1]['departureTimestamp']);
+            for (let i = timetable['stopList'].indexOf(stopPoint) - 1; i >= 0; i--) {
+                if (!postTypes.some(type => timetable['stopList'][i]['stopName'].includes(type))) {
+                    train.beforeDepartureAt = convertTime(timetable['stopList'][i]['departureTimestamp']);
+                    break;
+                }
+            }
+            //if () {
+        }
+
+        //!timetable['stopList'][i]['stopName'].includes(['po.', 'podst.'])
+
+        if (!stopPoint['terminatesHere']) {
+            //train.afterArrivalAt = convertTime(timetable['stopList'][timetable['stopList'].indexOf(stopPoint) + 1]['arrivalTimestamp']);
+            for (let i = timetable['stopList'].indexOf(stopPoint) + 1; i < timetable['stopList'].length; i++) {
+                if (!postTypes.some(type => timetable['stopList'][i]['stopName'].includes(type))) {
+                    train.afterArrivalAt = convertTime(timetable['stopList'][i]['arrivalTimestamp']);
+                    break;
+                }
+            }
+        }
+    }
+
+    train.arrivalDepartureAt = convertTime(train.timestamp);
+    train.stationFrom = splitRoute(timetable['route'])[0];
+    train.stationTo = splitRoute(timetable['route'])[1];
     train.stoppedHere = stopPoint['stopped'];
     train.stopTime = stopPoint['stopTime'];
-    train.trainNo = timetable['trainNo'];
-    train.trainCars = timetable['stockString'];
     train.symbols = createSymbolsList(train.trainCars);
-    train.gameCategory = timetable['timetable']['category'];
     train.category = train.gameCategory;
     train.operator = train.gameCategory;
     train.trainName = '';
     train.platform = 1;
-    train.track = 1;
+    train.track = 1
 
     if (stopPoint['comments'] && stopPoint['comments'].split(',').length > 1) {
         if (isNumber(stopPoint['comments'].split(',')[0])

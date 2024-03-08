@@ -11,7 +11,9 @@ window.stopTypes = JSON.parse(localStorage.getItem('stopTypes')) || ['ph'];
 window.trainTypes = JSON.parse(localStorage.getItem('trainTypes')) || ['EMRPA'];
 window.overlayName = localStorage.getItem('overlayName') || 'krakow';
 window.showOperators = localStorage.getItem('showOperators') || 'false';
+window.showHistory = localStorage.getItem('showHistory') === 'true';
 window.timetablesAsJson = null;
+window.oldTimetablesAsJson = null;
 window.stationDataAsJson = null;
 window.activeStationsAsJson = null;
 window.operatorsAsJson = null;
@@ -23,6 +25,11 @@ window.timetableRows = null;
 window.resizedFinished = null;
 window.urlParams = null;
 window.timetablesAPI = 'https://stacjownik.spythere.eu/api/getActiveTrainList';
+let today = new Date();
+let offset = today.getTimezoneOffset();
+today = new Date(today.getTime() - (offset*60*1000));
+today.setHours(0,0,0,0);
+window.oldTimetablesAPI = `https://stacjownik.spythere.eu/api/getTimetables?countLimit=500&terminated=1`;
 window.activeStationsAPI = 'https://api.td2.info.pl/?method=getStationsOnline';
 window.carsDataAPI = "https://raw.githubusercontent.com/Thundo54/tablice-td2-api/master/carsData.json"
 window.stationAPI = 'https://raw.githubusercontent.com/Thundo54/tablice-td2-api/master/stationsData.json';
@@ -36,6 +43,7 @@ $(document).ready(() => {
 
     let stationsRequest;
     let timetablesRequest;
+    let oldTimetablesRequest;
     let operatorsRequest;
     let carsDataRequest;
 
@@ -51,6 +59,7 @@ $(document).ready(() => {
     initzializeMenu();
 
     timetablesRequest = parser.makeAjaxRequest(timetablesAPI, 'timetablesAsJson').then();
+    oldTimetablesRequest = parser.makeAjaxRequest(oldTimetablesAPI, 'oldTimetablesAsJson').then();
     operatorsRequest = parser.makeAjaxRequest(operatorsAPI, 'operatorsAsJson').then();
 
     carsDataRequest = parser.makeAjaxRequest(carsDataAPI, 'carsDataAsJson').then(
@@ -83,7 +92,7 @@ $(document).ready(() => {
             });
     });
 
-    $.when(timetablesRequest, stationsRequest, operatorsRequest, carsDataRequest).done(() => {
+    $.when(timetablesRequest, oldTimetablesRequest, stationsRequest, operatorsRequest, carsDataRequest).done(() => {
         if (urlParams.get('station') !== null) {
             window.station = urlParams.get('station').replace('_', ' ')
             if (urlParams.get('checkpoint') !== null) {
@@ -119,6 +128,9 @@ $(document).ready(() => {
             createTimetableInterval();
         }
     });
+
+    $('#from-timestamp').val(`${new Date().toISOString().slice(0, 10)}T00:00`);
+    $('#to-timestamp').val(`${new Date().toISOString().slice(0, 10)}T${new Date().toISOString().slice(11, 16)}`);
 
     $('#menu-button').mousedown(() => {
         toggleMenu();
@@ -246,6 +258,11 @@ $(document).ready(() => {
         window.showOperators = !showOperators;
         localStorage.showOperators = showOperators;
         toggleOperators();
+    $('#toggle-history').mousedown(function() {
+        window.showHistory = !showHistory;
+        localStorage.showHistory = showHistory;
+        $('#timetables > tbody').remove();
+        toggleButton($(this), showHistory);
     });
 
     $('#reset-filter').mousedown(function() {
