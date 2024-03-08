@@ -253,7 +253,7 @@ export function addRow(train, index) {
                     .append(symbolsDiv)
                 )
             );
-            row.append($('<td>').addClass('fromTo')
+            row.append($('<td colspan="2">').addClass('fromTo')
                 .append($('<span>'))
                 .append($('<span>').addClass('departure text-bold'))
             );

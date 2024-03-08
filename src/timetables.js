@@ -543,59 +543,49 @@ export function loadTimetables() {
 
         let trainCatNo = $(`#${index} td:nth-child(2) span`);
         let trainName = $(`#${index} td:nth-child(3) .indented span`);
+        let titleScenery = $(`#title-scenery`);
+        let updateDate = $(`#update-date`);
 
         switch (overlayName) {
             case 'tomaszow':
-                trainCatNo
-                    .text(`${train.category} ${train.trainNo}`);
+                trainCatNo.text(`${train.category} ${train.trainNo}`);
 
-                $(`#${index} td:nth-child(5)`)
-                    .text(train.operator);
-
-                $(`#${index} td:nth-child(7) span`)
-                    .text(train.trainName);
+                $(`#${index} td:nth-child(5)`).text(train.operator);
+                $(`#${index} td:nth-child(7) span`).text(train.trainName);
                 break;
             case 'krakow':
-                $(`#${index} td:nth-child(1) span:last-child`)
-                    .text(`${train.category} ${train.trainNo}`);
+                trainName.text(train.trainName);
 
-                $(`#${index} td:nth-child(2)`)
-                    .text(train.operator);
-
-                trainName
-                    .text(train.trainName);
+                $(`#${index} td:nth-child(1) span:last-child`).text(`${train.category} ${train.trainNo}`);
+                $(`#${index} td:nth-child(2)`).text(train.operator);
                 break;
             case 'starysacz':
+                trainCatNo.html(`${train.category} ${train.trainNo}`);
+
                 $(`#${index} td:nth-child(2) p`)
                     .html(train.operator);
-
-                trainCatNo
-                    .html(`${train.category} ${train.trainNo}`);
 
                 if (train.trainName === '') {
                     $(`#${index} td:nth-child(3)`).css('vertical-align', `middle`);
                     $(`#${index} td:nth-child(3) .indented`).css('display', `none`);
                 }
 
-                trainName
-                    .html(train.trainName);
+                trainName.html(train.trainName);
                 break;
             case 'plakat':
-                $(`#title-scenery`)
+                titleScenery
                     .html(utils.capitalizeFirstLetter(station.split(',')[0]));
 
-                $(`#timetables-cycle`)
-                    .text(carsDataAsJson['timetables-cycle']);
+                $(`#timetables-cycle`).text(carsDataAsJson['timetables-cycle']);
 
-                $(`#update-time`)
-                    .text(`Aktualizacja wg stanu na ${utils.createDate()}`);
+                updateDate.text(`Aktualizacja wg stanu na ${utils.createDate()}`);
 
                 if (train.category) {
                     train.category = ` - ${train.category}`;
                 }
 
                 $(`#${index} td:nth-child(3) .train-category`).text(train.operator).append($('<b>').text(train.category));
-                $(`#${index} td:nth-child(3) .train-name`).text(train.trainName.toUpperCase());
+                $(`#${index} td:nth-child(3) .train-name`).html(train.trainName.toUpperCase());
 
                 if (isDeparture) {
                     if (stopsList !== '') { stopsList += ','; }
@@ -605,8 +595,8 @@ export function loadTimetables() {
                     stopsList = `<span class="text-bold">${train.stationFromTo} ${train.departureAt}</span>, ${stopsList}`
                 }
 
-                $(`#${index} .fromTo span:first-child`)
-                    .html(stopsList);
+                $(`#${index} .fromTo span:first-child`).html(stopsList);
+                break;
                 break;
         }
     });
