@@ -10,7 +10,7 @@ window.timetableSize = localStorage.getItem('timetableSize') || 'normal';
 window.stopTypes = JSON.parse(localStorage.getItem('stopTypes')) || ['ph'];
 window.trainTypes = JSON.parse(localStorage.getItem('trainTypes')) || ['EMRPA'];
 window.overlayName = localStorage.getItem('overlayName') || 'krakow';
-window.showOperators = localStorage.getItem('showOperators') || 'false';
+window.showOperators = localStorage.getItem('showOperators') === 'true';
 window.showHistory = localStorage.getItem('showHistory') === 'true';
 window.timetablesAsJson = null;
 window.oldTimetablesAsJson = null;
@@ -251,13 +251,15 @@ $(document).ready(() => {
     $('#toggle-stop').mousedown(function() {
         window.isStopped = !isStopped;
         localStorage.isStopped = isStopped;
-        toggleStopped();
+        toggleButton($(this), isStopped);
     });
 
     $('#toggle-operators').mousedown(function() {
         window.showOperators = !showOperators;
         localStorage.showOperators = showOperators;
-        toggleOperators();
+        toggleButton($(this), showOperators);
+    });
+
     $('#toggle-history').mousedown(function() {
         window.showHistory = !showHistory;
         localStorage.showHistory = showHistory;
@@ -275,6 +277,7 @@ $(document).ready(() => {
         window.trainCategory = ['EI', 'MP', 'RP', 'RO', 'TM', 'LT', 'TK', 'ZG', 'ZX', 'AP'];
         window.isStopped = false;
         window.showOperators = false;
+        window.showHistory = false;
         initzializeMenu();
         loadTimetables();
     });
@@ -301,7 +304,7 @@ $(document).ready(() => {
             case 27:
                 e.preventDefault();
                 if ($('#menu-box').hasClass('popup') || $('#menu-box-2').hasClass('popup')) {
-                toggleMenu();
+                    toggleMenu();
                 }
             break;
         }
@@ -369,6 +372,15 @@ function toggleOperators() {
         toggleOperators.addClass('active');
     } else {
         toggleOperators.removeClass('active');
+    }
+    loadTimetables();
+}
+
+function toggleButton(button, condition) {
+    if (condition) {
+        button.addClass('active');
+    } else {
+        button.removeClass('active');
     }
     loadTimetables();
 }
@@ -759,8 +771,9 @@ function initzializeMenu () {
     $('#timetable-size').val(timetableSize);
     $('#region').val(region);
     $('#overlay').val(overlayName)
-    toggleStopped();
-    toggleOperators();
+    toggleButton($('#toggle-operators'), showOperators);
+    toggleButton($('#toggle-stop'), isStopped);
+    toggleButton($('#toggle-history'), showHistory);
     toggleRegion();
     toggleSize();
 }
