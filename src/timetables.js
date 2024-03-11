@@ -24,14 +24,14 @@ window.currentOverlay = null;
 window.timetableRows = null;
 window.resizedFinished = null;
 window.urlParams = null;
-window.toTimestamp = new Date(new Date().getTime() - (new Date().getTimezoneOffset()*60*1000)).toISOString().slice(0, 16);
-window.fromTimestamp = `${toTimestamp.slice(0, 10)}T00:00`;
+window.dateTo = new Date(new Date().getTime() - (new Date().getTimezoneOffset()*60*1000)).toISOString().slice(0, 16);
+window.dateFrom = `${dateTo.slice(0, 10)}T00:00`;
 window.timetablesAPI = 'https://stacjownik.spythere.eu/api/getActiveTrainList';
 window.activeStationsAPI = 'https://api.td2.info.pl/?method=getStationsOnline';
 window.carsDataAPI = "https://raw.githubusercontent.com/Thundo54/tablice-td2-api/master/carsData.json"
 window.stationAPI = 'https://raw.githubusercontent.com/Thundo54/tablice-td2-api/master/stationsData.json';
 window.operatorsAPI = 'https://raw.githubusercontent.com/Thundo54/tablice-td2-api/master/operatorConvert.json';
-window.namesCorrectionsAPI = 'https://raw.githubusercontent.com/Thundo54/tablice-td2-api/master/namesCorrections.json';
+window.namesCorrectionsAPI = 'https://gist.githubusercontent.com/Thundo54/da0a1f5143814f73a791c63ebf0f60a8/raw/91e33b0c2d71223cc4833d9a1435e7034a549c67/gistfile1.txt';
 window.trainCategory = JSON.parse(localStorage.getItem('trainCategory')) ||
     ['EI', 'MP', 'RP', 'RO', 'TM', 'LT', 'TK', 'ZG', 'ZX', 'AP'];
 
@@ -119,8 +119,8 @@ $(document).ready(() => {
         }
     });
 
-    $('#from-timestamp').val(fromTimestamp);
-    $('#to-timestamp').val(toTimestamp);
+    $('#from-timestamp').val(dateFrom);
+    $('#to-timestamp').val(dateTo);
 
     $('.history-timestamp').change(function() {
         window.fromTimestamp = $('#from-timestamp').val();
@@ -414,7 +414,7 @@ function switchMenuPage() {
 
 function refreshTimetables() {
     if (showHistory && region === 'eu') {
-        window.oldTimetablesAPI = `https://stacjownik.spythere.eu/api/getTimetables?countLimit=100&terminated=1&includesScenery=${window.station}&dateFrom=${fromTimestamp}&dateTo=${toTimestamp}`;
+        window.oldTimetablesAPI = `https://stacjownik.spythere.eu/api/getTimetables?countLimit=100&terminated=1&includesScenery=${station}&dateFrom=${dateFrom}&dateTo=${dateTo}`;
         parser.makeAjaxRequest(oldTimetablesAPI, 'oldTimetablesAsJson').then(() => {
                 createTimetablesInterval();
             }
