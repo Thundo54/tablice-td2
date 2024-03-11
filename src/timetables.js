@@ -24,12 +24,9 @@ window.currentOverlay = null;
 window.timetableRows = null;
 window.resizedFinished = null;
 window.urlParams = null;
+window.toTimestamp = new Date(new Date().getTime() - (new Date().getTimezoneOffset()*60*1000)).toISOString().slice(0, 16);
+window.fromTimestamp = `${toTimestamp.slice(0, 10)}T00:00`;
 window.timetablesAPI = 'https://stacjownik.spythere.eu/api/getActiveTrainList';
-let today = new Date();
-let offset = today.getTimezoneOffset();
-today = new Date(today.getTime() - (offset*60*1000));
-today.setHours(0,0,0,0);
-window.oldTimetablesAPI = `https://stacjownik.spythere.eu/api/getTimetables?countLimit=500&terminated=1`;
 window.activeStationsAPI = 'https://api.td2.info.pl/?method=getStationsOnline';
 window.carsDataAPI = "https://raw.githubusercontent.com/Thundo54/tablice-td2-api/master/carsData.json"
 window.stationAPI = 'https://raw.githubusercontent.com/Thundo54/tablice-td2-api/master/stationsData.json';
@@ -43,7 +40,6 @@ $(document).ready(() => {
 
     let stationsRequest;
     let timetablesRequest;
-    let oldTimetablesRequest;
     let operatorsRequest;
     let carsDataRequest;
 
@@ -59,7 +55,6 @@ $(document).ready(() => {
     initzializeMenu();
 
     timetablesRequest = parser.makeAjaxRequest(timetablesAPI, 'timetablesAsJson').then();
-    oldTimetablesRequest = parser.makeAjaxRequest(oldTimetablesAPI, 'oldTimetablesAsJson').then();
     operatorsRequest = parser.makeAjaxRequest(operatorsAPI, 'operatorsAsJson').then();
 
     carsDataRequest = parser.makeAjaxRequest(carsDataAPI, 'carsDataAsJson').then(() => {
@@ -87,7 +82,7 @@ $(document).ready(() => {
             });
     });
 
-    $.when(timetablesRequest, oldTimetablesRequest, stationsRequest, operatorsRequest, carsDataRequest).done(() => {
+    $.when(timetablesRequest, stationsRequest, operatorsRequest, carsDataRequest).done(() => {
         if (urlParams.get('station') !== null) {
             window.station = urlParams.get('station').replace('_', ' ')
             if (urlParams.get('checkpoint') !== null) {
@@ -120,12 +115,18 @@ $(document).ready(() => {
                 }
                 $('#td2-region').val(region);
             }
-            createTimetableInterval();
+            refreshTimetables();
         }
     });
 
-    $('#from-timestamp').val(`${new Date().toISOString().slice(0, 10)}T00:00`);
-    $('#to-timestamp').val(`${new Date().toISOString().slice(0, 10)}T${new Date().toISOString().slice(11, 16)}`);
+    $('#from-timestamp').val(fromTimestamp);
+    $('#to-timestamp').val(toTimestamp);
+
+    $('.history-timestamp').change(function() {
+        window.fromTimestamp = $('#from-timestamp').val();
+        window.toTimestamp = $('#to-timestamp').val();
+        refreshTimetables();
+    });
 
     $('#menu-button').mousedown(() => {
         toggleMenu();
@@ -162,12 +163,12 @@ $(document).ready(() => {
     $('#sceneries').change(function() {
         parser.refreshCheckpointsList();
         window.station = $('#checkpoints option').val();
-        createTimetableInterval();
+        refreshTimetables();
     });
 
     $('#checkpoints').change(function(){
         window.station = $(this).val();
-        createTimetableInterval();
+        refreshTimetables();
     });
 
     $('#timetable-size').change(function() {
@@ -411,7 +412,20 @@ function switchMenuPage() {
     $('#menu-box-2').toggleClass('popup');
 }
 
-function createTimetableInterval() {
+function refreshTimetables() {
+    if (showHistory && region === 'eu') {
+        window.oldTimetablesAPI = `https://stacjownik.spythere.eu/api/getTimetables?countLimit=100&terminated=1&includesScenery=${window.station}&dateFrom=${fromTimestamp}&dateTo=${toTimestamp}`;
+        parser.makeAjaxRequest(oldTimetablesAPI, 'oldTimetablesAsJson').then(() => {
+                createTimetablesInterval();
+            }
+        );
+    } else {
+        createTimetablesInterval();
+    }
+
+}
+
+function createTimetablesInterval() {
     clearInterval(timetableInterval);
     $('#timetables > tbody').remove();
     loadTimetables();
@@ -422,7 +436,6 @@ function createTimetableInterval() {
     }, 30000);
 
     let sceneries = $('#sceneries');
-    //let url = window.location.href;
     let url = new URL(window.location.href);
     if (sceneries.val() !== null) {
         url.searchParams.set('station', sceneries.val());
