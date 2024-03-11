@@ -62,14 +62,9 @@ $(document).ready(() => {
     oldTimetablesRequest = parser.makeAjaxRequest(oldTimetablesAPI, 'oldTimetablesAsJson').then();
     operatorsRequest = parser.makeAjaxRequest(operatorsAPI, 'operatorsAsJson').then();
 
-    carsDataRequest = parser.makeAjaxRequest(carsDataAPI, 'carsDataAsJson').then(
-        () => {
+    carsDataRequest = parser.makeAjaxRequest(carsDataAPI, 'carsDataAsJson').then(() => {
             if (overlayName === 'plakat') {
-                $(`#timetables-cycle`)
-                    .text(carsDataAsJson['timetables-cycle']);
-
-                $(`#update-time`)
-                    .text(`Aktualizacja wg stanu na ${utils.createDate()}`);
+                $(`#timetables-cycle`).text(carsDataAsJson['timetables-cycle']);
             }
         }
     );
@@ -523,8 +518,6 @@ export function loadTimetables() {
 
         let trainCatNo = $(`#${index} td:nth-child(2) span`);
         let trainName = $(`#${index} td:nth-child(3) .indented span`);
-        let titleScenery = $(`#title-scenery`);
-        let updateDate = $(`#update-date`);
 
         switch (overlayName) {
             case 'tomaszow':
@@ -553,13 +546,6 @@ export function loadTimetables() {
                 trainName.html(train.trainName);
                 break;
             case 'plakat':
-                titleScenery
-                    .html(utils.capitalizeFirstLetter(station.split(',')[0]));
-
-                $(`#timetables-cycle`).text(carsDataAsJson['timetables-cycle']);
-
-                updateDate.text(`Aktualizacja wg stanu na ${utils.createDate()}`);
-
                 if (train.category) {
                     train.category = ` - ${train.category}`;
                 }
@@ -577,16 +563,23 @@ export function loadTimetables() {
 
                 $(`#${index} .fromTo span:first-child`).html(stopsList);
                 break;
-            case 'wyciag':
-                titleScenery.html(utils.capitalizeFirstLetter(station.split(',')[0]));
-
-                $(`#title-scenery-bold`).html(station.split(',')[0].toUpperCase());
-                updateDate.text(`${utils.createDate(true)}`);
-                break;
         }
     });
 
-    if (timetableRows > 0 && overlayName !== 'plakat') {
+    let titleScenery = $(`#title-scenery`);
+
+    switch (overlayName) {
+        case 'plakat':
+            titleScenery.html(utils.capitalizeFirstLetter(station.split(',')[0]));
+            $(`#timetables-cycle`).text(carsDataAsJson['timetables-cycle']);
+            break;
+        case 'wyciag':
+            titleScenery.html(utils.capitalizeFirstLetter(station.split(',')[0]));
+            $(`#title-scenery-bold`).html(station.split(',')[0].toUpperCase());
+            break;
+    }
+
+    if (timetableRows > 0) {
         for (let i = timetableRows; i < trainSet.length; i++) {
             $(`#${i}`).remove();
         }
@@ -653,6 +646,7 @@ function changeBoardType() {
     let container = $('#container');
     let timetables = $('#timetables > table > tbody');
     let headers = $('#headers table');
+    let updateDate = $(`#update-date`);
     timetables.find('tr').remove();
 
     switch (overlayName) {
@@ -679,6 +673,7 @@ function changeBoardType() {
             break;
         case 'plakat':
             headers = $('#timetables > table > thead');
+            updateDate.text(`Aktualizacja wg stanu na ${utils.createDate()}`);
             if (isDeparture) {
                 texts.type = '<b>Odjazdy</b> <i>/ Departures / Відправлення</i>';
                 texts.desc1PL = 'godzina odjazdu';
@@ -707,6 +702,7 @@ function changeBoardType() {
             headers.find('td:nth-child(4) .header-en').html(texts.desc2EN);
             break;
         case 'wyciag':
+            updateDate.text(`${utils.createDate(true)}`);
             if (isDeparture) {
                 $("#type-button").mousedown();
             }
