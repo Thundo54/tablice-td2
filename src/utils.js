@@ -300,7 +300,7 @@ export function addRow(train, index) {
 
 export function refreshIds() {
     let i = 0;
-    $('#timetables table tr').each(function () {
+    $('#timetables > table > tbody > tr').each(function () {
         $(this).attr('id', i);
         i++;
     });
@@ -323,7 +323,7 @@ export function createTrainString(category, trainNo) {
 
 export function resizeTimetableRow() {
     if (timetableRows !== null) {
-        $('#timetables table tr').css('height', $('#timetables').height() / timetableRows);
+        $('#timetables > table > tbody > tr').css('height', $('#timetables').height() / timetableRows);
     }
 }
 
