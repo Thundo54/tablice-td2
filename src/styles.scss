@@ -42,6 +42,8 @@ body {
 
 #board {
 	display: flex;
+	pointer-events: none;
+	user-select: none;
 }
 
 #menu {
@@ -53,7 +55,7 @@ body {
 	align-items: center;
 	justify-content: center;
 	overflow: hidden;
-	transition: background-color 0.6s;
+
 
 	&.background-fade {
 		background-color: rgba(0, 0, 0, 0.4);
@@ -63,10 +65,12 @@ body {
 	#close-box {
 		position: fixed;
 		z-index: 3;
+		transition: background-color 0.6s;
 
 		&.active {
 			width: 100vw;
 			height: 100vh;
+			background-color: rgba(0, 0, 0, 0.4);
 		}
 	}
 
@@ -127,7 +131,7 @@ body {
 
 	#menu-box, #menu-box-2 {
 		z-index: 4;
-		position: relative;
+		position: fixed;
 		visibility: hidden;
 		opacity: 0;
 		display: flex;
@@ -183,7 +187,7 @@ body {
 				flex-direction: column;
 				align-items: center;
 
-				select {
+				select, input {
 					margin: 1.5vmin;
 					font-size: 1.5vmin;
 					width: 25vmin;
@@ -192,6 +196,10 @@ body {
 					background: none;
 					color: $color_2;
 					padding: 0 0.4vmin;
+
+					&.no-margin {
+						margin: 0;
+					}
 
 					optgroup, option {
 						color: white;
@@ -219,6 +227,10 @@ body {
 						cursor: pointer;
 						color: $color_1;
 					}
+				}
+
+				input {
+					padding-top: 0.2vmin;
 				}
 
 				a {
@@ -321,10 +333,6 @@ body {
 			}
 
 		}
-	}
-
-	#menu-box-2 {
-		position: absolute;
 	}
 }
 

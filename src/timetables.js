@@ -10,8 +10,10 @@ window.timetableSize = localStorage.getItem('timetableSize') || 'normal';
 window.stopTypes = JSON.parse(localStorage.getItem('stopTypes')) || ['ph'];
 window.trainTypes = JSON.parse(localStorage.getItem('trainTypes')) || ['EMRPA'];
 window.overlayName = localStorage.getItem('overlayName') || 'krakow';
-window.showOperators = localStorage.getItem('showOperators') || 'false';
+window.showOperators = localStorage.getItem('showOperators') === 'true';
+window.showHistory = localStorage.getItem('showHistory') === 'true';
 window.timetablesAsJson = null;
+window.oldTimetablesAsJson = null;
 window.stationDataAsJson = null;
 window.activeStationsAsJson = null;
 window.operatorsAsJson = null;
@@ -22,6 +24,10 @@ window.currentOverlay = null;
 window.timetableRows = null;
 window.resizedFinished = null;
 window.urlParams = null;
+window.isFulfilled = false;
+window.isTerminated = true;
+window.dateFrom = new Date(new Date().getTime() - (new Date().getTimezoneOffset()*60*1000)).toISOString().slice(0, 10);
+window.dateTo = utils.addDays(dateFrom, 1);
 window.timetablesAPI = 'https://stacjownik.spythere.eu/api/getActiveTrainList';
 window.activeStationsAPI = 'https://api.td2.info.pl/?method=getStationsOnline';
 window.carsDataAPI = "https://raw.githubusercontent.com/Thundo54/tablice-td2-api/master/carsData.json"
@@ -53,14 +59,9 @@ $(document).ready(() => {
     timetablesRequest = parser.makeAjaxRequest(timetablesAPI, 'timetablesAsJson').then();
     operatorsRequest = parser.makeAjaxRequest(operatorsAPI, 'operatorsAsJson').then();
 
-    carsDataRequest = parser.makeAjaxRequest(carsDataAPI, 'carsDataAsJson').then(
-        () => {
+    carsDataRequest = parser.makeAjaxRequest(carsDataAPI, 'carsDataAsJson').then(() => {
             if (overlayName === 'plakat') {
-                $(`#timetables-cycle`)
-                    .text(carsDataAsJson['timetables-cycle']);
-
-                $(`#update-time`)
-                    .text(`Aktualizacja wg stanu na ${utils.createDate()}`);
+                $(`#timetables-cycle`).text(carsDataAsJson['timetables-cycle']);
             }
         }
     );
@@ -80,6 +81,7 @@ $(document).ready(() => {
             .then(() => {
                 parser.generateStationsList();
                 parser.selectCheckpoint();
+                refreshTimetables();
             });
     });
 
@@ -116,8 +118,16 @@ $(document).ready(() => {
                 }
                 $('#td2-region').val(region);
             }
-            createTimetableInterval();
         }
+    });
+
+    let timetableDate = $('#timetable-date');
+    timetableDate.val(dateFrom);
+
+    timetableDate.change(function() {
+        window.dateFrom = timetableDate.val();
+        window.dateTo = utils.addDays(dateFrom, 1);
+        refreshTimetables();
     });
 
     $('#menu-button').mousedown(() => {
@@ -155,12 +165,12 @@ $(document).ready(() => {
     $('#sceneries').change(function() {
         parser.refreshCheckpointsList();
         window.station = $('#checkpoints option').val();
-        createTimetableInterval();
+        refreshTimetables();
     });
 
     $('#checkpoints').change(function(){
         window.station = $(this).val();
-        createTimetableInterval();
+        refreshTimetables();
     });
 
     $('#timetable-size').change(function() {
@@ -206,6 +216,7 @@ $(document).ready(() => {
     });
 
     $('.train-type').mousedown(function() {
+        utils.purgeTimetablesTable(['plakat', 'wyciag'])
         let switchId = $(this).attr('id');
         if (trainTypes.includes(switchId)) {
             $(this).removeClass('active');
@@ -219,6 +230,7 @@ $(document).ready(() => {
     });
 
     $('.train-category').mousedown(function() {
+        utils.purgeTimetablesTable(['plakat', 'wyciag'])
         let switchId = $(this).attr('id');
         if (trainCategory.includes(switchId)) {
             $(this).removeClass('active');
@@ -239,13 +251,33 @@ $(document).ready(() => {
     $('#toggle-stop').mousedown(function() {
         window.isStopped = !isStopped;
         localStorage.isStopped = isStopped;
-        toggleStopped();
+        toggleButton($(this), isStopped);
     });
 
     $('#toggle-operators').mousedown(function() {
+        utils.purgeTimetablesTable(['plakat', 'wyciag'])
         window.showOperators = !showOperators;
         localStorage.showOperators = showOperators;
-        toggleOperators();
+        toggleButton($(this), showOperators);
+    });
+
+    $('#toggle-history').mousedown(function() {
+        window.showHistory = !showHistory;
+        localStorage.showHistory = showHistory;
+        utils.purgeTimetablesTable();
+        toggleButton($(this), showHistory);
+    });
+
+    $('#toggle-fulfilled').mousedown(function() {
+        utils.purgeTimetablesTable();
+        window.isFulfilled = !isFulfilled;
+        toggleButton($(this), isFulfilled);
+    });
+
+    $('#toggle-terminated').mousedown(function() {
+        utils.purgeTimetablesTable();
+        window.isTerminated = !isTerminated;
+        toggleButton($(this), isTerminated);
     });
 
     $('#reset-filter').mousedown(function() {
@@ -258,6 +290,7 @@ $(document).ready(() => {
         window.trainCategory = ['EI', 'MP', 'RP', 'RO', 'TM', 'LT', 'TK', 'ZG', 'ZX', 'AP'];
         window.isStopped = false;
         window.showOperators = false;
+        window.showHistory = false;
         initzializeMenu();
         loadTimetables();
     });
@@ -284,7 +317,7 @@ $(document).ready(() => {
             case 27:
                 e.preventDefault();
                 if ($('#menu-box').hasClass('popup') || $('#menu-box-2').hasClass('popup')) {
-                toggleMenu();
+                    toggleMenu();
                 }
             break;
         }
@@ -336,22 +369,11 @@ function changeOverlay() {
     utils.resizeTimetableRow();
 }
 
-function toggleStopped() {
-    let toggleStop = $('#toggle-stop');
-    if (isStopped) {
-        toggleStop.addClass('active');
+function toggleButton(button, condition) {
+    if (condition) {
+        button.addClass('active');
     } else {
-        toggleStop.removeClass('active');
-    }
-    loadTimetables();
-}
-
-function toggleOperators() {
-    let toggleOperators = $('#toggle-operators');
-    if (showOperators) {
-        toggleOperators.addClass('active');
-    } else {
-        toggleOperators.removeClass('active');
+        button.removeClass('active');
     }
     loadTimetables();
 }
@@ -381,11 +403,17 @@ function toggleRegion() {
 function toggleMenu() {
     let menuBox = $('#menu-box');
     let menuBox2 = $('#menu-box-2');
-    $('#close-box').toggleClass('active');
-    $('#menu').toggleClass('background-fade');
+    let closeBox = $('#close-box');
+
+    closeBox.toggleClass('active');
     $('#menu-button').toggleClass('fill');
-    if (menuBox2.hasClass('popup')) { menuBox2.toggleClass('popup'); }
-    else { menuBox.toggleClass('popup');}
+
+    if (menuBox2.hasClass('popup')) {
+        menuBox2.toggleClass('popup');
+    }
+    else {
+        menuBox.toggleClass('popup');
+    }
 }
 
 function switchMenuPage() {
@@ -393,9 +421,26 @@ function switchMenuPage() {
     $('#menu-box-2').toggleClass('popup');
 }
 
-function createTimetableInterval() {
+function refreshTimetables() {
+    if (showHistory && region === 'eu' || oldTimetablesAsJson === null) {
+        window.oldTimetablesAPI = `https://stacjownik.spythere.eu/api/getTimetables?countLimit=500` +
+                                    //`&terminated=${+isTerminated}` +
+                                    //`&fulfilled=${+isFulfilled}` +
+                                    `&includesScenery=${$('#sceneries').val()}` +
+                                    `&dateFrom=${dateFrom}` +
+                                    `&dateTo=${dateTo}`;
+        parser.makeAjaxRequest(oldTimetablesAPI, 'oldTimetablesAsJson').then(() => {
+                createTimetablesInterval();
+            }
+        );
+    } else {
+        createTimetablesInterval();
+    }
+}
+
+function createTimetablesInterval() {
     clearInterval(timetableInterval);
-    $('#timetables table tr').remove();
+    utils.purgeTimetablesTable();
     loadTimetables();
     document.title = `${utils.capitalizeFirstLetter(station)} - Tablice Zbiorcze`
     window.timetableInterval = setInterval(function() {
@@ -404,7 +449,6 @@ function createTimetableInterval() {
     }, 30000);
 
     let sceneries = $('#sceneries');
-    //let url = window.location.href;
     let url = new URL(window.location.href);
     if (sceneries.val() !== null) {
         url.searchParams.set('station', sceneries.val());
@@ -423,9 +467,9 @@ export function loadTimetables() {
     if (trainSet === undefined) { return; }
     let trainsNew = trainSet.filter(m => !trainsSetBefore.map(n => n.trainNo).includes(m.trainNo));
     let trainsToRemove = trainsSetBefore.filter(m => !trainSet.map(n => n.trainNo).includes(m.trainNo));
-    if (trainsSetBefore.length === 0 && trainSet.length > 0 || $('#timetables table tr').length === 0) {
+    if (trainsSetBefore.length === 0 && trainSet.length > 0 || $('#timetables > table > tbody > tr').length === 0) {
         trainSet.forEach((train, index) => {
-            $('#timetables table').append(utils.addRow(train, index));
+            $('#timetables > table').append(utils.addRow(train, index));
         });
         utils.refreshIds();
     } else {
@@ -440,7 +484,7 @@ export function loadTimetables() {
                 let index = trainSet.indexOf(train);
                 let row = utils.addRow(train, index);
                 if (index === 0) {
-                     $('#timetables table').prepend(row);
+                     $('#timetables > table').prepend(row);
                 } else {
                     $(`#${index-1}`).after(row);
                 }
@@ -503,56 +547,37 @@ export function loadTimetables() {
 
         switch (overlayName) {
             case 'tomaszow':
-                trainCatNo
-                    .text(`${train.category} ${train.trainNo}`);
+                trainCatNo.text(`${train.category} ${train.trainNo}`);
 
-                $(`#${index} td:nth-child(5)`)
-                    .text(train.operator);
-
-                $(`#${index} td:nth-child(7) span`)
-                    .text(train.trainName);
+                $(`#${index} td:nth-child(5)`).text(train.operator);
+                $(`#${index} td:nth-child(7) span`).text(train.trainName);
                 break;
             case 'krakow':
-                $(`#${index} td:nth-child(1) span:last-child`)
-                    .text(`${train.category} ${train.trainNo}`);
+                trainName.text(train.trainName);
 
-                $(`#${index} td:nth-child(2)`)
-                    .text(train.operator);
-
-                trainName
-                    .text(train.trainName);
+                $(`#${index} td:nth-child(1) span:last-child`).text(`${train.category} ${train.trainNo}`);
+                $(`#${index} td:nth-child(2)`).text(train.operator);
                 break;
             case 'starysacz':
+                trainCatNo.html(`${train.category} ${train.trainNo}`);
+
                 $(`#${index} td:nth-child(2) p`)
                     .html(train.operator);
-
-                trainCatNo
-                    .html(`${train.category} ${train.trainNo}`);
 
                 if (train.trainName === '') {
                     $(`#${index} td:nth-child(3)`).css('vertical-align', `middle`);
                     $(`#${index} td:nth-child(3) .indented`).css('display', `none`);
                 }
 
-                trainName
-                    .html(train.trainName);
+                trainName.html(train.trainName);
                 break;
             case 'plakat':
-                $(`#title-scenery`)
-                    .html(utils.capitalizeFirstLetter(station.split(',')[0]));
-
-                $(`#timetables-cycle`)
-                    .text(carsDataAsJson['timetables-cycle']);
-
-                $(`#update-time`)
-                    .text(`Aktualizacja wg stanu na ${utils.createDate()}`);
-
                 if (train.category) {
                     train.category = ` - ${train.category}`;
                 }
 
                 $(`#${index} td:nth-child(3) .train-category`).text(train.operator).append($('<b>').text(train.category));
-                $(`#${index} td:nth-child(3) .train-name`).text(train.trainName.toUpperCase());
+                $(`#${index} td:nth-child(3) .train-name`).html(train.trainName.toUpperCase());
 
                 if (isDeparture) {
                     if (stopsList !== '') { stopsList += ','; }
@@ -562,13 +587,28 @@ export function loadTimetables() {
                     stopsList = `<span class="text-bold">${train.stationFromTo} ${train.departureAt}</span>, ${stopsList}`
                 }
 
-                $(`#${index} .fromTo span:first-child`)
-                    .html(stopsList);
+                $(`#${index} .fromTo span:first-child`).html(stopsList);
                 break;
         }
     });
 
-    if (timetableRows > 0 && overlayName !== 'plakat') {
+    let titleScenery = $(`#title-scenery`);
+    let updateDate = $(`#update-date`);
+
+    switch (overlayName) {
+        case 'plakat':
+            updateDate.text(`Aktualizacja wg stanu na ${utils.createDate()}`);
+            titleScenery.html(utils.capitalizeFirstLetter(station.split(',')[0]));
+            $(`#timetables-cycle`).text(carsDataAsJson['timetables-cycle']);
+            break;
+        case 'wyciag':
+            updateDate.text(`${utils.createDate(true)}`);
+            titleScenery.html(utils.capitalizeFirstLetter(station.split(',')[0]));
+            $(`#title-scenery-bold`).html(station.split(',')[0].toUpperCase());
+            break;
+    }
+
+    if (timetableRows > 0) {
         for (let i = timetableRows; i < trainSet.length; i++) {
             $(`#${i}`).remove();
         }
@@ -592,9 +632,9 @@ function resizeTextToFit() {
 }
 
 export function refreshTimetablesAnim() {
-    let tr = $('#timetables table tr');
+    let tr = $('#timetables > table > tbody > tr');
     let td, span, animDuration, fieldWidth, widthRatio, tdWidth;
-    if (overlayName === 'plakat') { return; }
+    if (overlayName === ('plakat' || 'wyciag')) { return; }
     if (overlayName === 'starysacz') { widthRatio = 1; }
     else { widthRatio = 0.9; }
 
@@ -633,8 +673,9 @@ function changeBoardType() {
     let texts = {};
     let body = $('body');
     let container = $('#container');
-    let timetables = $('#timetables table');
+    let timetables = $('#timetables > table > tbody');
     let headers = $('#headers table');
+    let updateDate = $(`#update-date`);
     timetables.find('tr').remove();
 
     switch (overlayName) {
@@ -660,6 +701,8 @@ function changeBoardType() {
             }
             break;
         case 'plakat':
+            headers = $('#timetables > table > thead');
+            updateDate.text(`Aktualizacja wg stanu na ${utils.createDate()}`);
             if (isDeparture) {
                 texts.type = '<b>Odjazdy</b> <i>/ Departures / Відправлення</i>';
                 texts.desc1PL = 'godzina odjazdu';
@@ -667,8 +710,9 @@ function changeBoardType() {
                 texts.desc2PL = 'godziny przyjazdów do stacji pośrednich';
                 texts.desc2EN = 'arrivals at intermediate stops';
                 body.addClass('yellow-bg');
-                timetables.addClass('yellow-bg');
                 headers.addClass('yellow-bg');
+                timetables.addClass('yellow-bg');
+
             } else {
                 texts.type = '<b>Przyjazdy</b> <i>/ Arrivals / Прибуття</i>';
                 texts.desc1PL = 'godzina przyjazdu';
@@ -681,10 +725,16 @@ function changeBoardType() {
             }
 
             $('#title-type').html(texts.type);
-            headers.find('th:nth-child(1) .header-pl').html(texts.desc1PL);
-            headers.find('th:nth-child(1) .header-en').html(texts.desc1EN);
-            headers.find('th:nth-child(4) .header-pl').html(texts.desc2PL);
-            headers.find('th:nth-child(4) .header-en').html(texts.desc2EN);
+            headers.find('td:nth-child(1) .header-pl').html(texts.desc1PL);
+            headers.find('td:nth-child(1) .header-en').html(texts.desc1EN);
+            headers.find('td:nth-child(4) .header-pl').html(texts.desc2PL);
+            headers.find('td:nth-child(4) .header-en').html(texts.desc2EN);
+            break;
+        case 'wyciag':
+            updateDate.text(`${utils.createDate(true)}`);
+            if (isDeparture) {
+                $("#type-button").mousedown();
+            }
             break;
     }
 
@@ -738,8 +788,11 @@ function initzializeMenu () {
     $('#timetable-size').val(timetableSize);
     $('#region').val(region);
     $('#overlay').val(overlayName)
-    toggleStopped();
-    toggleOperators();
+    toggleButton($('#toggle-operators'), showOperators);
+    toggleButton($('#toggle-stop'), isStopped);
+    toggleButton($('#toggle-history'), showHistory);
+    toggleButton($('#toggle-fulfilled'), isFulfilled);
+    toggleButton($('#toggle-terminated'), isTerminated);
     toggleRegion();
     toggleSize();
 }
@@ -759,7 +812,7 @@ function initzializeOverlay() {
 }
 
 function setRowsCount() {
-    if (overlayName === 'plakat') {
+    if (overlayName === 'plakat' || overlayName === 'wyciag') {
         window.timetableRows = 0;
         return;
     }

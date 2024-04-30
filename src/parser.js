@@ -19,7 +19,7 @@ export function parseTimetable() {
                         return;
                     }
                 }
-                train = utils.createTrainData(stopPoint, timetable, isDeparture);
+                train = utils.createTrainData(stopPoint, timetable);
             }
             if (stopTypes.some(stop => stopPoint['stopType'].includes(stop.replace('all', ''))) && stationSwitch) {
                 if (!stopPoint['stopNameRAW'].toUpperCase().includes('SBL')) {
@@ -59,8 +59,99 @@ export function parseTimetable() {
         train = {};
         stationSwitch = !isDeparture;
     });
+
+    if (showHistory) {
+        if (dateFrom === new Date().toISOString().split('T')[0]) {
+            let historicalData = parseHistoricalTimetable();
+            historicalData.forEach((train) => {
+                if (!trainSet.some((trainSetTrain) => trainSetTrain.timetableId === train.timetableId)) {
+                    trainSet.push(train);
+                }
+            });
+        } else {
+            trainSet = parseHistoricalTimetable();
+        }
+    }
+
     window.trainsSetBefore = trainSet.sort((a, b) => { return a.timestamp - b.timestamp });
     return trainsSetBefore;
+}
+
+export function parseHistoricalTimetable() {
+    let trainSet = [], train = {}, stopList = [], stopListElement = {};
+    let stopPoint = {};
+    let stationSwitch = !isDeparture;
+    oldTimetablesAsJson.forEach((timetable) => {
+        if (region !== 'eu') { return; }
+        timetable['sceneriesString'].split('%').forEach((scenery, index) => {
+            stopPoint.stopName = scenery;
+            stopPoint.arrivalDelay = 0;
+            stopPoint.departureDelay = 0;
+            stopPoint.stopTime = parseInt(timetable['checkpointStopTypes'][index].split(',')[0]);
+            stopPoint.stopType = timetable['checkpointStopTypes'][index].split(',')[1];
+            stopPoint.arrivalTimestamp = new Date(timetable['checkpointArrivalsScheduled'][index]).getTime();
+            stopPoint.departureTimestamp = new Date(timetable['checkpointDeparturesScheduled'][index]).getTime();
+            stopPoint.beginsHere = timetable['route'].split('|')[0].toUpperCase() === station.toUpperCase();
+            stopPoint.terminatesHere = timetable['route'].split('|')[1].toUpperCase() === station.toUpperCase();
+            if (isNaN(stopPoint['stopTime'])) { stopPoint['stopTime'] = 0; }
+            if (stopPoint['stopTime'] > 0 && stopPoint['stopType'] === '') { stopPoint['stopType'] = 'pt'; }
+            if (station.toUpperCase() === scenery.toUpperCase()) {
+                stationSwitch = !stationSwitch;
+                if (isStopped && !(timetable['route'].split('|').includes(scenery))) {
+                    if (stopPoint['stopType'] === '') {
+                        return;
+                    }
+                }
+
+                train = utils.createTrainData(stopPoint, timetable, true);
+            }
+            if (stopTypes.some(stop => stopPoint['stopType'].includes(stop.replace('all', ''))) && stationSwitch) {
+                    stopListElement.stopPoint = utils.capitalizeFirstLetter(stopPoint['stopName'].split(',')[0]);
+                    stopListElement.arrivalAt = utils.convertTime(stopPoint['arrivalTimestamp']);
+                    stopListElement.departureAt = utils.convertTime(stopPoint['departureTimestamp']);
+                    if (stopPoint['stopType'].includes('pm')) {
+                        stopListElement.stopPoint = `${stopListElement.stopPoint}`;
+                        stopListElement.isShunting = true;
+                    }
+                    stopList.push(stopListElement);
+            }
+
+            stopPoint = {};
+            stopListElement = {};
+        });
+
+        stopList = stopList.filter(stop => stop.stopPoint !== train.stationFromTo);
+        stopList = stopList.filter(stop => stop.stopPoint !== utils.capitalizeFirstLetter(station).split(',')[0]);
+        stopList = stopList.filter((stop, index) => stopList.indexOf(stop) >= index);
+        train.timetable = stopList;
+
+        if (train.timestamp !== undefined) {
+            if (train.gameCategory.match(new RegExp(`\\b[${trainTypes.join('')}]`))) {
+                trainCategory.forEach((category) => {
+                    if (showOperators) {
+                        train = utils.convertOperator(train);
+                    }
+                    if (train.gameCategory.includes(category)) {
+                        if (timetable['fulfilled'] && timetable['terminated'] && isTerminated) {
+                            trainSet.push(train);
+                        }
+                        if (!timetable['fulfilled'] && timetable['terminated'] && isFulfilled) {
+                            trainSet.push(train);
+                        }
+                        if (!timetable['fulfilled'] && !timetable['terminated']) {
+                            trainSet.push(train);
+                        }
+                    }
+                });
+            }
+        }
+
+        stopList = [];
+        train = {};
+        stationSwitch = !isDeparture;
+    });
+
+    return trainSet;
 }
 
 export function generateStationsList() {

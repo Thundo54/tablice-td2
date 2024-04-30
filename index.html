@@ -53,6 +53,7 @@
                             <option value="krakow">Kraków Główny</option>
                             <option value="starysacz">Stary Sącz</option>
                             <option value="plakat">Plakat</option>
+                            <option value="wyciag">Wyciąg z rozkładu jazdy</option>
                         </select>
                     </div>
                     <div>
@@ -96,6 +97,7 @@
                         <span class="category-header">Pozostałe opcje</span>
                         <div id="misc" class="container">
                             <a id="toggle-stop"><span>Tylko rozkłady z postojem</span></a>
+                            <a id="toggle-history"><span>Pokazuj rozkłady historyczne</span></a>
                             <a id="toggle-operators"><span>Pokazuj przewoźników</span></a>
                             <a id="test" hidden><span>Komunikaty specjalne<sup> beta</sup></span></a>
                             <a id="reset-filter"><span>Resetuj filtry</span></a>
@@ -105,7 +107,7 @@
                 <footer>
                     <span>
                         <a href="https://github.com/Thundo54/tablice-td2" target="_blank">
-                            tablice-td2 v1.4.5
+                            tablice-td2 v1.5.0
                         </a>| Made with💜 by
                         <a href="https://td2.info.pl/profile/?u=6915" target="_blank">
                             Thundo
@@ -126,7 +128,7 @@
             <div id="menu-box-2">
                 <a id="previous-page" class="material-symbols-outlined menu-page-switcher">keyboard_double_arrow_left</a>
                 <section>
-                    <h2>KATEGORIE</h2>
+                    <h2>KATEGORIE POCIĄGÓW</h2>
                     <div>
                         <span class="category-header">Pociągi pażerskie</span>
                         <div class="container">
@@ -162,19 +164,36 @@
                             </div>
                         </div>
                     </div>
-                </section>
-                <div class="vertical-line"></div>
-                <section>
-                    <h2>POCIAGÓW</h2>
                     <div>
                         <span class="category-header">Pociągi utrzymaniowo-naprawcze</span>
                         <div class="container">
-                            <div id="Z-group">
+                            <div class="inline" id="Z-group">
                                 <a class="train-category" id="ZG" title="ZGE, ZGS">
                                     <span>Ratunkowe</span>
                                 </a>
                                 <a class="train-category" id="ZX" title="ZXE, ZXS">
                                     <span>Gospodarcze</span>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+                <div class="vertical-line"></div>
+                <section>
+                    <h2>HISTORIA ROZKŁADÓW</h2>
+                    <div>
+                        <label class="category-header" for="timetable-date">Data rozkładów jazdy</label>
+                        <input type="date" id="timetable-date">
+                    </div>
+                    <div>
+                        <span class="category-header">Pokazuj rozkłady</span>
+                        <div class="container">
+                            <div class="inline" >
+                                <a id="toggle-fulfilled">
+                                    <span>Porzucone</span>
+                                </a>
+                                <a id="toggle-terminated">
+                                    <span>Wypełnione</span>
                                 </a>
                             </div>
                         </div>
