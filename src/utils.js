@@ -313,13 +313,17 @@ export function purgeTimetablesTable(overlays = []) {
 }
 
 export function convertTime(time) {
-    return new Date(time).toLocaleTimeString('pl-PL', {hour: '2-digit', minute: '2-digit'});
+    let date = new Date(time).toLocaleTimeString('pl-PL', {hour: '2-digit', minute: '2-digit'})
+    if (overlayName === 'wyciag' || overlayName === 'plakat') {
+        return date.replace(/^0/, '');
+    }
+    return date;
 }
 
 export function createDepartureTime(time, timespan) {
     let date = new Date(time);
     date.setMinutes(date.getMinutes() + timespan);
-    return date.toLocaleTimeString('pl-PL', {hour: '2-digit', minute: '2-digit'});
+    return date.toLocaleTimeString('pl-PL', {hour: '2-digit', minute: '2-digit'}).replace(/^0/, '');
 }
 
 
@@ -377,14 +381,17 @@ export function convertOperator(train) {
 
 export function createDate(isDot = false) {
     let date = new Date();
+    if (showHistory) {
+        date = new Date(dateFrom.toString());
+    }
     let day = date.getDate();
     let month = date.getMonth() + 1;
     let year = date.getFullYear();
     let romanNumerals = ['I', 'II', 'III', 'IV', 'V', 'VI', 'VII', 'VIII',
         'IX', 'X', 'XI', 'XII'];
 
-    if (isDot) { return `${('0' + (day-1)).slice(-2)}.${romanNumerals[month - 1]}.${year}`; }
-    return `${day-1} ${romanNumerals[month - 1]} ${year}`;
+    if (isDot) { return `${('0' + day).slice(-2)}.${romanNumerals[month - 1]}.${year}`; }
+    return `${day} ${romanNumerals[month - 1]} ${year}`;
 }
 
 
