@@ -306,6 +306,12 @@ export function refreshIds() {
     });
 }
 
+export function purgeTimetablesTable(overlays = []) {
+    if (overlays.length === 0 || overlays.includes(overlayName)) {
+        $('#timetables > table > tbody').find('tr').remove();
+    }
+}
+
 export function convertTime(time) {
     return new Date(time).toLocaleTimeString('pl-PL', {hour: '2-digit', minute: '2-digit'});
 }

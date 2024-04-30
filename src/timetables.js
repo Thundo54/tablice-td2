@@ -216,6 +216,7 @@ $(document).ready(() => {
     });
 
     $('.train-type').mousedown(function() {
+        utils.purgeTimetablesTable(['plakat', 'wyciag'])
         let switchId = $(this).attr('id');
         if (trainTypes.includes(switchId)) {
             $(this).removeClass('active');
@@ -229,6 +230,7 @@ $(document).ready(() => {
     });
 
     $('.train-category').mousedown(function() {
+        utils.purgeTimetablesTable(['plakat', 'wyciag'])
         let switchId = $(this).attr('id');
         if (trainCategory.includes(switchId)) {
             $(this).removeClass('active');
@@ -253,6 +255,7 @@ $(document).ready(() => {
     });
 
     $('#toggle-operators').mousedown(function() {
+        utils.purgeTimetablesTable(['plakat', 'wyciag'])
         window.showOperators = !showOperators;
         localStorage.showOperators = showOperators;
         toggleButton($(this), showOperators);
@@ -261,7 +264,7 @@ $(document).ready(() => {
     $('#toggle-history').mousedown(function() {
         window.showHistory = !showHistory;
         localStorage.showHistory = showHistory;
-        $('#timetables > tbody').remove();
+        utils.purgeTimetablesTable();
         toggleButton($(this), showHistory);
     });
 
@@ -428,12 +431,11 @@ function refreshTimetables() {
     } else {
         createTimetablesInterval();
     }
-
 }
 
 function createTimetablesInterval() {
     clearInterval(timetableInterval);
-    $('#timetables > tbody').remove();
+    utils.purgeTimetablesTable();
     loadTimetables();
     document.title = `${utils.capitalizeFirstLetter(station)} - Tablice Zbiorcze`
     window.timetableInterval = setInterval(function() {
