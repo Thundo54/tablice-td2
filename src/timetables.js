@@ -33,7 +33,7 @@ window.activeStationsAPI = 'https://api.td2.info.pl/?method=getStationsOnline';
 window.carsDataAPI = "https://raw.githubusercontent.com/Thundo54/tablice-td2-api/master/carsData.json"
 window.stationAPI = 'https://raw.githubusercontent.com/Thundo54/tablice-td2-api/master/stationsData.json';
 window.operatorsAPI = 'https://raw.githubusercontent.com/Thundo54/tablice-td2-api/master/operatorConvert.json';
-window.namesCorrectionsAPI = 'https://gist.githubusercontent.com/Thundo54/da0a1f5143814f73a791c63ebf0f60a8/raw/91e33b0c2d71223cc4833d9a1435e7034a549c67/gistfile1.txt';
+window.namesCorrectionsAPI = 'https://raw.githubusercontent.com/Thundo54/tablice-td2-api/master/namesCorrections.json';
 window.trainCategory = JSON.parse(localStorage.getItem('trainCategory')) ||
     ['EI', 'MP', 'RP', 'RO', 'TM', 'LT', 'TK', 'ZG', 'ZX', 'AP'];
 
