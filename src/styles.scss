@@ -55,7 +55,7 @@ body {
 	align-items: center;
 	justify-content: center;
 	overflow: hidden;
-	transition: background-color 0.6s;
+
 
 	&.background-fade {
 		background-color: rgba(0, 0, 0, 0.4);
@@ -65,10 +65,12 @@ body {
 	#close-box {
 		position: fixed;
 		z-index: 3;
+		transition: background-color 0.6s;
 
 		&.active {
 			width: 100vw;
 			height: 100vh;
+			background-color: rgba(0, 0, 0, 0.4);
 		}
 	}
 
@@ -129,7 +131,7 @@ body {
 
 	#menu-box, #menu-box-2 {
 		z-index: 4;
-		position: relative;
+		position: fixed;
 		visibility: hidden;
 		opacity: 0;
 		display: flex;
@@ -331,10 +333,6 @@ body {
 			}
 
 		}
-	}
-
-	#menu-box-2 {
-		position: absolute;
 	}
 }
 
