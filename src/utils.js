@@ -11,7 +11,6 @@ function correctName(name) {
 }
 
 function shortenName(name) {
-    // using namesCorrectionsAsJson backwards to shorten names
     for (let key in namesCorrectionsAsJson) {
         if (name.includes(namesCorrectionsAsJson[key])) {
             let word = name.split(' ').filter((element) => element.includes(namesCorrectionsAsJson[key]))[0];
@@ -91,6 +90,8 @@ export function createTrainData(stopPoint, timetable, isHistorical = false) {
         if (!stopPoint['terminatesHere']) {
             train.afterArrivalAt = convertTime(timetable['checkpointArrivalsScheduled'][stopPointIndex + 1]);
         }
+
+        stopPoint['comments'] = timetable['checkpointComments'][stopPointIndex];
     } else {
         train.departureAt = convertTime(timetable['stopList'][0]['departureTimestamp']);
         train.arrivalAt = convertTime(timetable['stopList'][timetable['stopList'].length - 1]['arrivalTimestamp']);
@@ -106,7 +107,6 @@ export function createTrainData(stopPoint, timetable, isHistorical = false) {
                     break;
                 }
             }
-            //if () {
         }
 
         //!timetable['stopList'][i]['stopName'].includes(['po.', 'podst.'])
@@ -122,6 +122,7 @@ export function createTrainData(stopPoint, timetable, isHistorical = false) {
         }
     }
 
+    train.timetableId = timetable['timetableId'];
     train.arrivalDepartureAt = convertTime(train.timestamp);
     train.stationFrom = splitRoute(timetable['route'])[0];
     train.stationTo = splitRoute(timetable['route'])[1];
@@ -357,7 +358,10 @@ export function convertOperator(train) {
         operatorsAsJson['categories'].forEach((category) => {
             if (category.operator === train.operator) {
                 train.operator = category.operator;
-                train.category = category.category[train.gameCategory.substring(0, 2)];
+                let trainCategory = category.category[train.gameCategory.substring(0, 2)];
+                if (trainCategory) {
+                    train.category = trainCategory;
+                }
             }
         });
         operatorsAsJson['overwrite'].forEach((overwrite) => {
@@ -419,6 +423,12 @@ export function createSymbolsList(trainCars) {
 
     sortedSymbols = sortedSymbols.replace(/(.)(?=.)/g, '$1 ');
     return sortedSymbols;
+}
+
+export function addDays(date, days) {
+    let newDate = new Date(date);
+    newDate.setDate(newDate.getDate() + days);
+    return newDate.toISOString().slice(0, 10);
 }
 
 window.loadTimetablesFromUrl = (url) => {

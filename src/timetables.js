@@ -24,10 +24,10 @@ window.currentOverlay = null;
 window.timetableRows = null;
 window.resizedFinished = null;
 window.urlParams = null;
-window.dateTo = new Date(new Date().getTime() - (new Date().getTimezoneOffset()*60*1000)).toISOString().slice(0, 16);
-window.dateFrom = `${dateTo.slice(0, 10)}T00:00`;
 window.isFulfilled = false;
 window.isTerminated = true;
+window.dateFrom = new Date(new Date().getTime() - (new Date().getTimezoneOffset()*60*1000)).toISOString().slice(0, 10);
+window.dateTo = utils.addDays(dateFrom, 1);
 window.timetablesAPI = 'https://stacjownik.spythere.eu/api/getActiveTrainList';
 window.activeStationsAPI = 'https://api.td2.info.pl/?method=getStationsOnline';
 window.carsDataAPI = "https://raw.githubusercontent.com/Thundo54/tablice-td2-api/master/carsData.json"
@@ -81,6 +81,7 @@ $(document).ready(() => {
             .then(() => {
                 parser.generateStationsList();
                 parser.selectCheckpoint();
+                refreshTimetables();
             });
     });
 
@@ -117,16 +118,15 @@ $(document).ready(() => {
                 }
                 $('#td2-region').val(region);
             }
-            refreshTimetables();
         }
     });
 
-    $('#from-timestamp').val(dateFrom);
-    $('#to-timestamp').val(dateTo);
+    let timetableDate = $('#timetable-date');
+    timetableDate.val(dateFrom);
 
-    $('.history-timestamp').change(function() {
-        window.fromTimestamp = $('#from-timestamp').val();
-        window.toTimestamp = $('#to-timestamp').val();
+    timetableDate.change(function() {
+        window.dateFrom = timetableDate.val();
+        window.dateTo = utils.addDays(dateFrom, 1);
         refreshTimetables();
     });
 
@@ -422,8 +422,13 @@ function switchMenuPage() {
 }
 
 function refreshTimetables() {
-    if (showHistory && region === 'eu') {
-        window.oldTimetablesAPI = `https://stacjownik.spythere.eu/api/getTimetables?countLimit=100&terminated=1&includesScenery=${station}&dateFrom=${dateFrom}&dateTo=${dateTo}`;
+    if (showHistory && region === 'eu' || oldTimetablesAsJson === null) {
+        window.oldTimetablesAPI = `https://stacjownik.spythere.eu/api/getTimetables?countLimit=500` +
+                                    //`&terminated=${+isTerminated}` +
+                                    //`&fulfilled=${+isFulfilled}` +
+                                    `&includesScenery=${$('#sceneries').val()}` +
+                                    `&dateFrom=${dateFrom}` +
+                                    `&dateTo=${dateTo}`;
         parser.makeAjaxRequest(oldTimetablesAPI, 'oldTimetablesAsJson').then(() => {
                 createTimetablesInterval();
             }
@@ -588,13 +593,16 @@ export function loadTimetables() {
     });
 
     let titleScenery = $(`#title-scenery`);
+    let updateDate = $(`#update-date`);
 
     switch (overlayName) {
         case 'plakat':
+            updateDate.text(`Aktualizacja wg stanu na ${utils.createDate()}`);
             titleScenery.html(utils.capitalizeFirstLetter(station.split(',')[0]));
             $(`#timetables-cycle`).text(carsDataAsJson['timetables-cycle']);
             break;
         case 'wyciag':
+            updateDate.text(`${utils.createDate(true)}`);
             titleScenery.html(utils.capitalizeFirstLetter(station.split(',')[0]));
             $(`#title-scenery-bold`).html(station.split(',')[0].toUpperCase());
             break;
@@ -727,6 +735,7 @@ function changeBoardType() {
             if (isDeparture) {
                 $("#type-button").mousedown();
             }
+            break;
     }
 
     if (overlayName === 'starysacz') {
@@ -782,6 +791,8 @@ function initzializeMenu () {
     toggleButton($('#toggle-operators'), showOperators);
     toggleButton($('#toggle-stop'), isStopped);
     toggleButton($('#toggle-history'), showHistory);
+    toggleButton($('#toggle-fulfilled'), isFulfilled);
+    toggleButton($('#toggle-terminated'), isTerminated);
     toggleRegion();
     toggleSize();
 }
