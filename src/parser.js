@@ -60,9 +60,17 @@ export function parseTimetable() {
         stationSwitch = !isDeparture;
     });
 
-    //if (overlayName === 'plakat' && showHistory) {
     if (showHistory) {
-        trainSet = trainSet.concat(parseHistoricalTimetable());
+        if (dateFrom === new Date().toISOString().split('T')[0]) {
+            let historicalData = parseHistoricalTimetable();
+            historicalData.forEach((train) => {
+                if (!trainSet.some((trainSetTrain) => trainSetTrain.timetableId === train.timetableId)) {
+                    trainSet.push(train);
+                }
+            });
+        } else {
+            trainSet = parseHistoricalTimetable();
+        }
     }
 
     window.trainsSetBefore = trainSet.sort((a, b) => { return a.timestamp - b.timestamp });
