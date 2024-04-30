@@ -19,6 +19,8 @@ body {
 }
 
 #button-box {
+	position: fixed !important;
+
 	a {
 		color: $color_5 !important;
 	}
