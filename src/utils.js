@@ -223,7 +223,9 @@ export function addRow(train, index) {
                 if (train.trainName) {
                     train.symbols = train.symbols.replace('j', 'j R');
                 }
-                train.symbols += ' p';
+                if (!train.gameCategory.startsWith('PW')) {
+                    train.symbols += ' p';
+                }
             }
 
             let symbolsDiv = $('<div>').addClass('symbols');
