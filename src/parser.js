@@ -132,7 +132,15 @@ export function parseHistoricalTimetable() {
                         train = utils.convertOperator(train);
                     }
                     if (train.gameCategory.includes(category)) {
-                        trainSet.push(train);
+                        if (timetable['fulfilled'] && timetable['terminated'] && isTerminated) {
+                            trainSet.push(train);
+                        }
+                        if (!timetable['fulfilled'] && timetable['terminated'] && isFulfilled) {
+                            trainSet.push(train);
+                        }
+                        if (!timetable['fulfilled'] && !timetable['terminated']) {
+                            trainSet.push(train);
+                        }
                     }
                 });
             }

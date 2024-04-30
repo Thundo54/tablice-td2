@@ -186,12 +186,16 @@
                         <input class="history-timestamp" type="datetime-local" id="from-timestamp">
                     </div>
                     <div>
-                        <label class="category-header" for="to-timestamp">Koniec historii</label>
+                        <span class="category-header">Pokazuj rozkłady</span>
                         <div class="container">
-                            <input class="no-margin history-timestamp" type="datetime-local" id="to-timestamp">
-                            <a>
-                                <span>Czas aktualny</span>
-                            </a>
+                            <div class="inline" >
+                                <a id="toggle-fulfilled">
+                                    <span>Porzucone</span>
+                                </a>
+                                <a id="toggle-terminated">
+                                    <span>Wypełnione</span>
+                                </a>
+                            </div>
                         </div>
                     </div>
                     <div>

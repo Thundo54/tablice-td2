@@ -26,6 +26,8 @@ window.resizedFinished = null;
 window.urlParams = null;
 window.dateTo = new Date(new Date().getTime() - (new Date().getTimezoneOffset()*60*1000)).toISOString().slice(0, 16);
 window.dateFrom = `${dateTo.slice(0, 10)}T00:00`;
+window.isFulfilled = false;
+window.isTerminated = true;
 window.timetablesAPI = 'https://stacjownik.spythere.eu/api/getActiveTrainList';
 window.activeStationsAPI = 'https://api.td2.info.pl/?method=getStationsOnline';
 window.carsDataAPI = "https://raw.githubusercontent.com/Thundo54/tablice-td2-api/master/carsData.json"
@@ -261,6 +263,18 @@ $(document).ready(() => {
         localStorage.showHistory = showHistory;
         $('#timetables > tbody').remove();
         toggleButton($(this), showHistory);
+    });
+
+    $('#toggle-fulfilled').mousedown(function() {
+        utils.purgeTimetablesTable();
+        window.isFulfilled = !isFulfilled;
+        toggleButton($(this), isFulfilled);
+    });
+
+    $('#toggle-terminated').mousedown(function() {
+        utils.purgeTimetablesTable();
+        window.isTerminated = !isTerminated;
+        toggleButton($(this), isTerminated);
     });
 
     $('#reset-filter').mousedown(function() {
