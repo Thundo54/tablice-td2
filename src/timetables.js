@@ -569,6 +569,14 @@ export function loadTimetables() {
 
         let trainCatNo = $(`#${index} td:nth-child(2) span`);
         let trainName = $(`#${index} td:nth-child(3) .indented span`);
+        let extraSymbols = '';
+        let extra = '';
+
+        if (train.trainName === 'specjalny-1') {
+            train.trainName = '';
+            extra = `Przejazd tylko do stacji ${train.stationTo}. Niedostępny w sprzedaży dla wysiadających na stacjach pośrednich.`;
+            extraSymbols = `<span class="material-symbols-outlined">calendar_month</span> ${utils.createDate(false, false)};`;
+        }
 
         switch (overlayName) {
             case 'tomaszow':
@@ -606,13 +614,16 @@ export function loadTimetables() {
 
                 if (isDeparture) {
                     if (stopsList !== '') { stopsList += ','; }
-                    $(`#${index} .fromTo span:last-child`)
+                    $(`#${index} .fromTo .departure`)
                         .text(train.stationFromTo + ' ' + train.arrivalAt);
                 } else {
                     stopsList = `<span class="text-bold">${train.stationFromTo} ${train.departureAt}</span>, ${stopsList}`
                 }
 
-                $(`#${index} .fromTo span:first-child`).html(stopsList);
+                $(`#${index} .extra-symbols`).html(extraSymbols);
+                $(`#${index} .extra`).html(extra);
+
+                $(`#${index} .fromTo .stop-list`).html(stopsList);
                 break;
         }
     });

@@ -300,8 +300,35 @@ body {
 					width: auto;
 					font-size: 1.5vmin;
 					vertical-align: top;
-					padding: 0.3vmin 0 0.4vmin 0.7vmin;
+					padding: 0.3vmin 0 0.1vmin 0.7vmin;
 					text-align: left;
+					height: 1px;
+
+					& > div {
+						display: flex;
+						flex-direction: column;
+						height: 100%;
+
+						div {
+							flex-grow: 1;
+						}
+					}
+
+					.extra-symbols {
+						.material-symbols-outlined {
+							font-size: 2vmin;
+							font-weight: bold;
+						}
+
+						font-style: italic;
+						display: flex;
+						align-items: flex-end;
+					}
+
+					.extra {
+						font-size: 1.4vmin;
+						font-style: italic;
+					}
 
 					.text-bold {
 						display: inline-block;
