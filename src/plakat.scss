@@ -24,6 +24,10 @@ body {
 	a {
 		color: $color_5 !important;
 	}
+
+	#timer-button {
+		display: none;
+	}
 }
 
 #container {

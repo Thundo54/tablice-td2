@@ -12,6 +12,7 @@ window.trainTypes = JSON.parse(localStorage.getItem('trainTypes')) || ['EMRPA'];
 window.overlayName = localStorage.getItem('overlayName') || 'krakow';
 window.showOperators = localStorage.getItem('showOperators') === 'true';
 window.showHistory = localStorage.getItem('showHistory') === 'true';
+window.refreshTime = localStorage.getItem('refreshTime') || 60;
 window.timetablesAsJson = null;
 window.oldTimetablesAsJson = null;
 window.stationDataAsJson = null;
@@ -26,6 +27,7 @@ window.resizedFinished = null;
 window.urlParams = null;
 window.isFulfilled = false;
 window.isTerminated = true;
+window.timer = null;
 window.dateFrom = new Date(new Date().getTime() - (new Date().getTimezoneOffset()*60*1000)).toISOString().slice(0, 10);
 window.dateTo = utils.addDays(dateFrom, 1);
 window.timetablesAPI = 'https://stacjownik.spythere.eu/api/getActiveTrainList';
@@ -151,6 +153,17 @@ $(document).ready(() => {
             typeButton.addClass('turn');
         } else {
             typeButton.removeClass('turn');
+    $('#timer-button').mousedown(function () {
+        let timerButton = $('#timer-button');
+
+        if (timerButton.html() === 'timer_off') {
+            timerButton.html('timer');
+            window.timer = setInterval(() => {
+                $('#type-button').mousedown();
+            }, refreshTime*1000);
+        } else {
+            timerButton.html('timer_off');
+            clearInterval(timer);
         }
     });
 
@@ -213,6 +226,14 @@ $(document).ready(() => {
         }
         localStorage.setItem('stopTypes', JSON.stringify(stopTypes));
         loadTimetables();
+    });
+
+    $('.refresh-time').mousedown(function() {
+        let switchId = $(this).attr('id');
+        $('.refresh-time').removeClass('active');
+        $(this).addClass('active');
+        window.refreshTime = switchId;
+        localStorage.refreshTime = refreshTime;
     });
 
     $('.train-type').mousedown(function() {
@@ -300,6 +321,10 @@ $(document).ready(() => {
             case 121:
                 e.preventDefault();
                 $('#button-box').toggleClass('hidden');
+            break;
+            case 71:
+                e.preventDefault();
+                $('#timer-button').mousedown();
             break;
             case 70:
                 e.preventDefault();
@@ -765,7 +790,10 @@ function changeBoardType() {
 function initzializeMenu () {
     $(`.train-type`).removeClass('active');
     $(`.stop-type`).removeClass('active');
+    $(`.refresh-time`).removeClass('active');
     $(`.train-category`).removeClass('active');
+
+    $(`#${refreshTime}`).addClass('active');
 
     stopTypes.forEach((stopType) => {
         $(`#${stopType}`).addClass('active');

@@ -22,8 +22,8 @@ body {
 		color: $color_5 !important;
 	}
 
-	#type-button {
-		visibility: hidden;
+	#type-button, #timer-button {
+		display: none;
 	}
 }
 
