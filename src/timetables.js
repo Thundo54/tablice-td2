@@ -235,7 +235,7 @@ $(document).ready(() => {
         let switchId = $(this).attr('id');
         $('.refresh-time').removeClass('active');
         $(this).addClass('active');
-        window.refreshTime = switchId;
+        window.refreshTime = switchId.replace('s', '');
         localStorage.refreshTime = refreshTime;
     });
 
@@ -806,7 +806,7 @@ function initzializeMenu () {
     $(`.stop-type`).removeClass('active');
     $(`.train-category`).removeClass('active');
 
-    $(`#${refreshTime}`).addClass('active');
+    $(`#${refreshTime}s`).addClass('active');
 
     stopTypes.forEach((stopType) => {
         $(`#${stopType}`).addClass('active');
