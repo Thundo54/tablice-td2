@@ -34,10 +34,8 @@ export function capitalizeFirstLetter(string) {
         string.split(' ').forEach((element) => {
             output += element.charAt(0).toUpperCase() + element.slice(1).toLowerCase() + ' '
         });
-        //return correctNames(output.slice(0, -1));
         return correctName(output.slice(0, -1));
     } else {
-        //return correctNames(string);
         return correctName(string);
     }
 }
