@@ -153,6 +153,9 @@ $(document).ready(() => {
             typeButton.addClass('turn');
         } else {
             typeButton.removeClass('turn');
+        }
+    });
+
     $('#timer-button').mousedown(function () {
         let timerButton = $('#timer-button');
 
@@ -801,7 +804,6 @@ function changeBoardType() {
 function initzializeMenu () {
     $(`.train-type`).removeClass('active');
     $(`.stop-type`).removeClass('active');
-    $(`.refresh-time`).removeClass('active');
     $(`.train-category`).removeClass('active');
 
     $(`#${refreshTime}`).addClass('active');
