@@ -27,6 +27,7 @@ window.resizedFinished = null;
 window.urlParams = null;
 window.isFulfilled = false;
 window.isTerminated = true;
+window.isTimerOn = false;
 window.timer = null;
 window.dateFrom = new Date(new Date().getTime() - (new Date().getTimezoneOffset()*60*1000)).toISOString().slice(0, 10);
 window.dateTo = utils.addDays(dateFrom, 1);
@@ -164,9 +165,11 @@ $(document).ready(() => {
             window.timer = setInterval(() => {
                 $('#type-button').mousedown();
             }, refreshTime*1000);
+            window.isTimerOn = true;
         } else {
             timerButton.html('timer_off');
             clearInterval(timer);
+            window.isTimerOn = false;
         }
     });
 
@@ -768,11 +771,19 @@ function changeBoardType() {
             headers.find('td:nth-child(1) .header-en').html(texts.desc1EN);
             headers.find('td:nth-child(4) .header-pl').html(texts.desc2PL);
             headers.find('td:nth-child(4) .header-en').html(texts.desc2EN);
+
+            if (isTimerOn) {
+                $('#timer-button').mousedown();
+            }
             break;
         case 'wyciag':
             updateDate.text(`${utils.createDate(true)}`);
             if (isDeparture) {
                 $("#type-button").mousedown();
+            }
+
+            if (isTimerOn) {
+                $('#timer-button').mousedown();
             }
             break;
     }
