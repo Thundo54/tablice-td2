@@ -12,6 +12,7 @@ window.trainTypes = JSON.parse(localStorage.getItem('trainTypes')) || ['EMRPA'];
 window.overlayName = localStorage.getItem('overlayName') || 'krakow';
 window.showOperators = localStorage.getItem('showOperators') === 'true';
 window.showHistory = localStorage.getItem('showHistory') === 'true';
+window.refreshTime = localStorage.getItem('refreshTime') || 60;
 window.timetablesAsJson = null;
 window.oldTimetablesAsJson = null;
 window.stationDataAsJson = null;
@@ -26,6 +27,8 @@ window.resizedFinished = null;
 window.urlParams = null;
 window.isFulfilled = false;
 window.isTerminated = true;
+window.isTimerOn = false;
+window.timer = null;
 window.dateFrom = new Date(new Date().getTime() - (new Date().getTimezoneOffset()*60*1000)).toISOString().slice(0, 10);
 window.dateTo = utils.addDays(dateFrom, 1);
 window.timetablesAPI = 'https://stacjownik.spythere.eu/api/getActiveTrainList';
@@ -154,6 +157,22 @@ $(document).ready(() => {
         }
     });
 
+    $('#timer-button').mousedown(function () {
+        let timerButton = $('#timer-button');
+
+        if (timerButton.html() === 'timer_off') {
+            timerButton.html('timer');
+            window.timer = setInterval(() => {
+                $('#type-button').mousedown();
+            }, refreshTime*1000);
+            window.isTimerOn = true;
+        } else {
+            timerButton.html('timer_off');
+            clearInterval(timer);
+            window.isTimerOn = false;
+        }
+    });
+
     $('#fullscreen-button').mousedown(function () {
         if (document.fullscreenElement) {
             document.exitFullscreen().then();
@@ -213,6 +232,14 @@ $(document).ready(() => {
         }
         localStorage.setItem('stopTypes', JSON.stringify(stopTypes));
         loadTimetables();
+    });
+
+    $('.refresh-time').mousedown(function() {
+        let switchId = $(this).attr('id');
+        $('.refresh-time').removeClass('active');
+        $(this).addClass('active');
+        window.refreshTime = switchId.replace('s', '');
+        localStorage.refreshTime = refreshTime;
     });
 
     $('.train-type').mousedown(function() {
@@ -300,6 +327,10 @@ $(document).ready(() => {
             case 121:
                 e.preventDefault();
                 $('#button-box').toggleClass('hidden');
+            break;
+            case 71:
+                e.preventDefault();
+                $('#timer-button').mousedown();
             break;
             case 70:
                 e.preventDefault();
@@ -544,6 +575,14 @@ export function loadTimetables() {
 
         let trainCatNo = $(`#${index} td:nth-child(2) span`);
         let trainName = $(`#${index} td:nth-child(3) .indented span`);
+        let extraSymbols = '';
+        let extra = '';
+
+        if (train.trainName === 'specjalny-1') {
+            train.trainName = '';
+            extra = `Przejazd tylko do stacji ${train.stationTo}. Niedostępny w sprzedaży dla wysiadających na stacjach pośrednich.`;
+            extraSymbols = `<span class="material-symbols-outlined">calendar_month</span> ${utils.createDate(false, false)};`;
+        }
 
         switch (overlayName) {
             case 'tomaszow':
@@ -581,13 +620,16 @@ export function loadTimetables() {
 
                 if (isDeparture) {
                     if (stopsList !== '') { stopsList += ','; }
-                    $(`#${index} .fromTo span:last-child`)
+                    $(`#${index} .fromTo .departure`)
                         .text(train.stationFromTo + ' ' + train.arrivalAt);
                 } else {
                     stopsList = `<span class="text-bold">${train.stationFromTo} ${train.departureAt}</span>, ${stopsList}`
                 }
 
-                $(`#${index} .fromTo span:first-child`).html(stopsList);
+                $(`#${index} .extra-symbols`).html(extraSymbols);
+                $(`#${index} .extra`).html(extra);
+
+                $(`#${index} .fromTo .stop-list`).html(stopsList);
                 break;
         }
     });
@@ -729,11 +771,19 @@ function changeBoardType() {
             headers.find('td:nth-child(1) .header-en').html(texts.desc1EN);
             headers.find('td:nth-child(4) .header-pl').html(texts.desc2PL);
             headers.find('td:nth-child(4) .header-en').html(texts.desc2EN);
+
+            if (isTimerOn) {
+                $('#timer-button').mousedown();
+            }
             break;
         case 'wyciag':
             updateDate.text(`${utils.createDate(true)}`);
             if (isDeparture) {
                 $("#type-button").mousedown();
+            }
+
+            if (isTimerOn) {
+                $('#timer-button').mousedown();
             }
             break;
     }
@@ -766,6 +816,8 @@ function initzializeMenu () {
     $(`.train-type`).removeClass('active');
     $(`.stop-type`).removeClass('active');
     $(`.train-category`).removeClass('active');
+
+    $(`#${refreshTime}s`).addClass('active');
 
     stopTypes.forEach((stopType) => {
         $(`#${stopType}`).addClass('active');

@@ -18,6 +18,7 @@
         <div id="menu">
             <div id="button-box">
                 <a id="type-button" class="material-symbols-outlined">multiple_stop</a>
+                <a id="timer-button" class="material-symbols-outlined">timer_off</a>
                 <a id="menu-button" class="material-symbols-outlined">view_timeline</a>
                 <a id="fullscreen-button" class="material-symbols-outlined" mobile>fullscreen</a>
             </div>
@@ -107,7 +108,7 @@
                 <footer>
                     <span>
                         <a href="https://github.com/Thundo54/tablice-td2" target="_blank">
-                            tablice-td2 v1.5.0
+                            tablice-td2 v1.5.1
                         </a>| Made with💜 by
                         <a href="https://td2.info.pl/profile/?u=6915" target="_blank">
                             Thundo
@@ -188,13 +189,25 @@
                     <div>
                         <span class="category-header">Pokazuj rozkłady</span>
                         <div class="container">
-                            <div class="inline" >
+                            <div class="inline">
                                 <a id="toggle-fulfilled">
                                     <span>Porzucone</span>
                                 </a>
                                 <a id="toggle-terminated">
                                     <span>Wypełnione</span>
                                 </a>
+                            </div>
+                        </div>
+                    </div>
+                    <br>
+                    <h2>INNE</h2>
+                    <div>
+                        <label class="category-header">Czas zmiany tablic</label>
+                        <div class="container">
+                            <div class="inline">
+                                <a class="refresh-time" id="30s"><span>30 s</span></a>
+                                <a class="refresh-time" id="60s"><span>60 s</span></a>
+                                <a class="refresh-time" id="120s"><span>120 s</span></a>
                             </div>
                         </div>
                     </div>

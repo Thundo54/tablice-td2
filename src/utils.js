@@ -34,10 +34,8 @@ export function capitalizeFirstLetter(string) {
         string.split(' ').forEach((element) => {
             output += element.charAt(0).toUpperCase() + element.slice(1).toLowerCase() + ' '
         });
-        //return correctNames(output.slice(0, -1));
         return correctName(output.slice(0, -1));
     } else {
-        //return correctNames(string);
         return correctName(string);
     }
 }
@@ -257,8 +255,14 @@ export function addRow(train, index) {
                 )
             );
             row.append($('<td colspan="2">').addClass('fromTo')
-                .append($('<span>'))
-                .append($('<span>').addClass('departure text-bold'))
+                .append($('<div>')
+                    .append($('<div>')
+                        .append($('<span>').addClass('stop-list'))
+                        .append($('<span>').addClass('departure text-bold'))
+                    )
+                    .append($('<span>').addClass('extra-symbols'))
+                    .append($('<span>').addClass('extra'))
+                )
             );
             break;
         case 'wyciag':
@@ -382,10 +386,11 @@ export function convertOperator(train) {
             }
         });
     }
+
     return train;
 }
 
-export function createDate(isDot = false) {
+export function createDate(isDot = false, showYear = true) {
     let date = new Date();
     if (showHistory) {
         date = new Date(dateFrom.toString());
@@ -396,8 +401,15 @@ export function createDate(isDot = false) {
     let romanNumerals = ['I', 'II', 'III', 'IV', 'V', 'VI', 'VII', 'VIII',
         'IX', 'X', 'XI', 'XII'];
 
-    if (isDot) { return `${('0' + day).slice(-2)}.${romanNumerals[month - 1]}.${year}`; }
-    return `${day} ${romanNumerals[month - 1]} ${year}`;
+    if (isDot) {
+        return `${('0' + day).slice(-2)}.${romanNumerals[month - 1]}.${year}`;
+    }
+
+    if (showYear) {
+        return `${day} ${romanNumerals[month - 1]} ${year}`;
+    } else {
+        return `${day} ${romanNumerals[month - 1]}`;
+    }
 }
 
 
