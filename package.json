@@ -13,7 +13,7 @@
     "sass": "^1.58.3"
   },
   "dependencies": {
-    "firebase": "^9.22.1",
+    "firebase": "^10.12.2",
     "gulp-if": "^3.0.0"
   }
 }
