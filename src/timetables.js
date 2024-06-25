@@ -152,8 +152,10 @@ $(document).ready(() => {
         utils.resizeTimetableRow();
         if (isDeparture) {
             typeButton.addClass('turn');
+            typeButton.attr('title', 'Pokaż przyjazdy');
         } else {
             typeButton.removeClass('turn');
+            typeButton.attr('title', 'Pokaż odjazdy');
         }
     });
 
@@ -162,12 +164,14 @@ $(document).ready(() => {
 
         if (timerButton.html() === 'timer_off') {
             timerButton.html('timer');
+            timerButton.attr('title', 'Wyłącz okresowe przełączanie widoku przyjazdy/odjazdy');
             window.timer = setInterval(() => {
                 $('#type-button').mousedown();
             }, refreshTime*1000);
             window.isTimerOn = true;
         } else {
             timerButton.html('timer_off');
+            timerButton.attr('title', 'Włącz okresowe przełączanie widoku przyjazdy/odjazdy');
             clearInterval(timer);
             window.isTimerOn = false;
         }
@@ -831,10 +835,13 @@ function initzializeMenu () {
         $(`#${trainCategory}`).addClass('active');
     });
 
+    const typeButton = $('#type-button');
     if (isDeparture) {
-        $('#type-button').addClass('turn');
+        typeButton.addClass('turn');
+        typeButton.attr('title', 'Pokaż przyjazdy');
     } else {
-        $('#type-button').removeClass('turn');
+        typeButton.removeClass('turn');
+        typeButton.attr('title', 'Pokaż odjazdy');
     }
 
     $('#timetable-size').val(timetableSize);
