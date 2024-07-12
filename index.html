@@ -72,7 +72,7 @@
                         <span class="category-header">Wyświetl pociągi</span>
                         <div id="trains-type" class="container">
                             <div class="inline">
-                                <a class="train-type" id="EMRPA"><span>Pasażerskie</span></a>
+                                <a class="train-type" id="EMRP"><span>Pasażerskie</span></a>
                                 <a class="train-type" id="T"><span>Towarowe</span></a>
                             </div>
                             <div class="inline">
@@ -108,7 +108,7 @@
                 <footer>
                     <span>
                         <a href="https://github.com/Thundo54/tablice-td2" target="_blank">
-                            tablice-td2 v1.5.1
+                            tablice-td2 v1.5.2
                         </a>| Made with💜 by
                         <a href="https://td2.info.pl/profile/?u=6915" target="_blank">
                             Thundo
@@ -117,7 +117,10 @@
                     <span>
                         Specjalne podziękowania dla
                         <a href="https://td2.info.pl/profile/?u=20777" target="_blank">
-                            Spythere
+                            Spythere,
+                        </a>
+                        <a href="https://td2.info.pl/profile/?u=10387" target="_blank">
+                            Pepsi2026
                         </a>
                         oraz
                         <a href="https://td2.info.pl/profile/?u=1417" target="_blank">
@@ -133,22 +136,54 @@
                     <div>
                         <span class="category-header">Pociągi pażerskie</span>
                         <div class="container">
-                            <div id="EMRPA-group">
-                                <a class="train-category" id="EI" title="EIE, EIJ, EIS">
-                                    <span>Ekspresowe krajowe</span>
-                                </a>
-                                <a class="train-category" id="MP" title="MPE, MPJ, MPS">
-                                    <span>Międzywojewódzkie pośpieszne</span>
-                                </a>
-                                <a class="train-category" id="RP" title="RPE, RPJ, RPS, RPM">
-                                    <span>Wojewódzkie pośpieszne</span>
-                                </a>
-                                <a class="train-category" id="RO" title="ROE, ROJ, ROS, APM">
-                                    <span>Wojewódzkie osobowe</span>
-                                </a>
-                                <a class="train-category" id="PW" title="PWE, PWJ, PWS, PWM">
-                                    <span>Próźne składy pasażerskie</span>
-                                </a>
+                            <div id="EMRP-group">
+                                <div class="inline">
+                                    <a class="train-category" id="EI" title="Ekspresowe krajowe&#013;[EIE, EIS]">
+                                        <span>EIx</span>
+                                    </a>
+                                    <a class="train-category" id="EC" title="Ekspresowe międzynarodowe&#013;[ECE, ECS]">
+                                        <span>ECx</span>
+                                    </a>
+                                    <a class="train-category" id="EN" title="Ekspresowe międzynarodowe nocne&#013;[ENE, ENS]">
+                                        <span>ENx</span>
+                                    </a>
+                                </div>
+                                <div class="inline">
+                                    <a class="train-category" id="MP" title="Międzywojewódzkie pośpieszne&#013;[MPE, MPJ, MPS, MPM]">
+                                        <span>MPx</span>
+                                    </a>
+                                    <a class="train-category" id="MH" title="Międzywojewódzkie pospieszne nocne&#013;[MHE, MHJ, MHS]">
+                                        <span>MHx</span>
+                                    </a>
+                                    <a class="train-category" id="MM" title="Międzynarodowe pospieszne&#013;[MME, MMJ, MMS, MMM]">
+                                        <span>MMx</span>
+                                    </a>
+                                    <a class="train-category" id="MO" title="Międzynarodowe osobowe&#013;[MOE, MOJ, MOS, MOM]">
+                                        <span>MOx</span>
+                                    </a>
+                                </div>
+                                <div class="inline">
+                                    <a class="train-category" id="RP" title="Wojewódzkie pośpieszne&#013;[RPE, RPJ, RPS, RPM]">
+                                        <span>RPx</span>
+                                    </a>
+                                    <a class="train-category" id="RA" title="Wojewódzkie osobowe - aglomeracyjne&#013;[RAE, RAJ, RAS, RAM]">
+                                        <span>RAx</span>
+                                    </a>
+                                    <a class="train-category" id="RM" title="Wojewódzkie osobowe międzynarodowe&#013;[RME, RMJ, RMS, RMM]">
+                                        <span>RMx</span>
+                                    </a>
+                                    <a class="train-category" id="RO" title="Wojewódzkie osobowe&#013;[ROE, ROJ, ROS, ROM]">
+                                        <span>ROx</span>
+                                    </a>
+                                </div>
+                                <div class="inline">
+                                    <a class="train-category" id="PW" title="Próżne pasażerskie&#013;[PWE, PWJ, PWS, PWM]">
+                                        <span>PWx</span>
+                                    </a>
+                                    <a class="train-category" id="PX" title="Próżne pasażerskie próbne&#013;[PXE, PXJ, PXS, PXM]">
+                                        <span>PXx</span>
+                                    </a>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -156,24 +191,51 @@
                         <span class="category-header">Pociągi towarowe</span>
                         <div class="container">
                             <div id="T-group">
-                                <a class="train-category" id="TM" title="TME, TMS">
-                                    <span>Do przewozów masowych</span>
-                                </a>
-                                <a class="train-category" id="TK" title="TKE, TKS">
-                                    <span>Do obsługi stacji i bocznic</span>
-                                </a>
+                                <div class="inline">
+                                    <a class="train-category" id="TC" title="Towarowy międzynarodowe intermodalne&#013;[TCE, TCS]">
+                                        <span>TCx</span>
+                                    </a>
+                                    <a class="train-category" id="TG" title="Towarowe międzynarodowe masowe&#013;[TGE, TGS]">
+                                        <span>TGx</span>
+                                    </a>
+                                    <a class="train-category" id="TR" title="Towarowe międzynarodowe niemasowe&#013;[TRE, TRS]">
+                                        <span>TRx</span>
+                                    </a>
+                                </div>
+                                <div class="inline">
+                                    <a class="train-category" id="TD" title="Towarowy krajowe intermodalne&#013;[TDE, TDS]">
+                                        <span>TDx</span>
+                                    </a>
+                                    <a class="train-category" id="TM" title="Towarowe krajowe masowe&#013;[TME, TMS]">
+                                        <span>TMx</span>
+                                    </a>
+                                    <a class="train-category" id="TN" title="Towarowe krajowe niemasowe&#013;[TNE, TNS]">
+                                        <span>TNx</span>
+                                    </a>
+                                </div>
+                                <div class="inline">
+                                    <a class="train-category" id="TK" title="Towarowe do obsługi stacji i bocznic&#013;[TKE, TKS]">
+                                        <span>TKx</span>
+                                    </a>
+                                    <a class="train-category" id="TS" title="Próżne składy towarowe z/do naprawy lub próbny&#013;[TSE, TSS]">
+                                        <span>TSx</span>
+                                    </a>
+                                </div>
                             </div>
                         </div>
                     </div>
                     <div>
-                        <span class="category-header">Pociągi utrzymaniowo-naprawcze</span>
+                        <span class="category-header">Pojazdy kolejowe luzem</span>
                         <div class="container">
-                            <div class="inline" id="Z-group">
-                                <a class="train-category" id="ZG" title="ZGE, ZGS">
-                                    <span>Ratunkowe</span>
+                            <div class="inline" id="L-group">
+                                <a class="train-category" id="LP" title="Pasażerskie lokomotywy luzem">
+                                    <span>LPE</span>
                                 </a>
-                                <a class="train-category" id="ZX" title="ZXE, ZXS">
-                                    <span>Gospodarcze</span>
+                                <a class="train-category" id="LT" title="Towarowe lokomotywy luzem">
+                                    <span>LTE</span>
+                                </a>
+                                <a class="train-category" id="LS" title="Lokomotywy manewrowe luzem">
+                                    <span>LSS</span>
                                 </a>
                             </div>
                         </div>

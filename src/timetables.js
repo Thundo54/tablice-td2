@@ -8,7 +8,7 @@ window.isDeparture = localStorage.getItem('isDeparture') === 'true';
 window.isStopped = localStorage.getItem('isStopped') === 'true';
 window.timetableSize = localStorage.getItem('timetableSize') || 'normal';
 window.stopTypes = JSON.parse(localStorage.getItem('stopTypes')) || ['ph'];
-window.trainTypes = JSON.parse(localStorage.getItem('trainTypes')) || ['EMRPA'];
+window.trainTypes = JSON.parse(localStorage.getItem('trainTypes')) || ['EMRP'];
 window.overlayName = localStorage.getItem('overlayName') || 'krakow';
 window.showOperators = localStorage.getItem('showOperators') === 'true';
 window.showHistory = localStorage.getItem('showHistory') === 'true';
@@ -38,7 +38,13 @@ window.stationAPI = 'https://raw.githubusercontent.com/Thundo54/tablice-td2-api/
 window.operatorsAPI = 'https://raw.githubusercontent.com/Thundo54/tablice-td2-api/master/operatorConvert.json';
 window.namesCorrectionsAPI = 'https://raw.githubusercontent.com/Thundo54/tablice-td2-api/master/namesCorrections.json';
 window.trainCategory = JSON.parse(localStorage.getItem('trainCategory')) ||
-    ['EI', 'MP', 'RP', 'RO', 'TM', 'LT', 'TK', 'ZG', 'ZX', 'AP'];
+    [
+        'EI', 'EC', 'EN',
+        'MP', 'MH', 'MM', 'MO',
+        'RP', 'RA', 'RM', 'RO',
+        'TC', 'TG', 'TR', 'TD', 'TM', 'TN', 'TK', 'TS',
+        'LP', 'LT', 'LS'
+    ];
 
 $(document).ready(() => {
     window.urlParams = new URLSearchParams(window.location.search);
@@ -313,8 +319,14 @@ $(document).ready(() => {
         localStorage.removeItem('trainCategory');
         localStorage.removeItem('isStopped');
         window.stopTypes = ['ph'];
-        window.trainTypes = ['EMRPA'];
-        window.trainCategory = ['EI', 'MP', 'RP', 'RO', 'TM', 'LT', 'TK', 'ZG', 'ZX', 'AP'];
+        window.trainTypes = ['EMRP'];
+        window.trainCategory =     [
+            'EI', 'EC', 'EN',
+            'MP', 'MH', 'MM', 'MO',
+            'RP', 'RA', 'RM', 'RO',
+            'TC', 'TG', 'TR', 'TD', 'TM', 'TN', 'TK', 'TS',
+            'LP', 'LT', 'LS'
+        ];
         window.isStopped = false;
         window.showOperators = false;
         window.showHistory = false;

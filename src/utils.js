@@ -362,7 +362,13 @@ export function convertOperator(train) {
         operatorsAsJson['categories'].forEach((category) => {
             if (category.operator === train.operator) {
                 train.operator = category.operator;
-                let trainCategory = category.category[train.gameCategory.substring(0, 2)];
+                let trainCategory;
+                trainCategory = category.category[train.gameCategory.substring(0, 2)];
+
+                if (trainCategory === undefined) {
+                    trainCategory = category.category[train.gameCategory.substring(0, 1)];
+                }
+
                 if (trainCategory) {
                     train.category = trainCategory;
                 }
@@ -373,6 +379,11 @@ export function convertOperator(train) {
                 if (overwrite['trainNoStartsWith'].some(a => train.trainNo.toString().startsWith(a))) {
                     train.operator = overwrite['operatorOverwrite'];
                     train.category = overwrite.category[train.gameCategory.substring(0, 2)];
+
+                    if (train.category === undefined) {
+                        train.category = overwrite.category[train.gameCategory.substring(0, 1)];
+                    }
+
                     train.trainName = overwrite['remarks'];
                 }
             }
