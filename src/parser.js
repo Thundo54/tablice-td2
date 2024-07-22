@@ -238,9 +238,6 @@ export function selectCheckpoint() {
         refreshCheckpointsList();
         if (urlParams.get('checkpoint') !== null) {
             let checkpoint = urlParams.get('checkpoint').replace('_', ' ');
-            if (checkpoint.includes(',') && !checkpoint.split(',')[1].includes('.')) {
-                checkpoint += '.';
-            }
             if (checkpoint.includes('MAZ') && !checkpoint.split('MAZ')[1].includes('.')) { //temporary for TOMASZÓW & GRODZISK
                 checkpoint += '.';
             }
