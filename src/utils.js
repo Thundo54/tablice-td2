@@ -95,7 +95,7 @@ export function createTrainData(stopPoint, timetable, isHistorical = false) {
         train.arrivalAt = convertTime(timetable['stopList'][timetable['stopList'].length - 1]['arrivalTimestamp']);
         train.gameCategory = timetable['category'];
 
-        let postTypes = ['po.', 'podst.', 'gt', 'GT'];
+        let postTypes = ['po', 'pe', 'gt', 'GT'];
 
         if (!stopPoint['beginsHere']) {
             //train.beforeDepartureAt = convertTime(timetable['stopList'][timetable['stopList'].indexOf(stopPoint) - 1]['departureTimestamp']);
