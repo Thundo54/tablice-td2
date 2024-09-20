@@ -62,6 +62,36 @@ $(document).ready(() => {
         }
     }
 
+    if (urlParams.get('type') !== null) {
+        switch (urlParams.get('type')) {
+            case 'tomaszow':
+                window.overlayName = 'tomaszow';
+                break;
+            case 'krakow':
+                window.overlayName = 'krakow';
+                break;
+            case 'starysacz':
+                window.overlayName = 'starysacz';
+                break;
+            case 'wyciag':
+                window.overlayName = 'wyciag';
+                break;
+            default:
+                window.overlayName = 'plakat';
+                break;
+        }
+        $('#overlay').val(overlayName);
+    }
+
+    if (urlParams.get('mode') !== null && urlParams.get('mode') === 'kiosk') {
+        $('#button-box').toggleClass('hidden');
+        window.isDeparture = true;
+        //window.isStopped = true;
+        window.showHistory = true;
+        window.showOperators = true;
+        $('body').addClass('kiosk');
+    }
+
     initzializeOverlay();
     initzializeMenu();
 
@@ -777,7 +807,7 @@ function changeBoardType() {
                 texts.desc1EN = 'arrival time';
                 texts.desc2PL = 'godziny odjazdów ze stacji pośrednich';
                 texts.desc2EN = 'departures from intermediate stops';
-                body.removeClass();
+                body.removeClass('yellow-bg');
                 timetables.removeClass();
                 headers.removeClass();
             }
@@ -898,7 +928,7 @@ function setRowsCount() {
         window.timetableRows = 7
     }
     if (overlayName === 'tomaszow') {
-        window.timetableRows = 15
+        window.timetableRows = 12;
     }
 }
 
