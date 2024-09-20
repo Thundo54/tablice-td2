@@ -891,7 +891,7 @@ function setRowsCount() {
         window.timetableRows = 7
     }
     if (overlayName === 'tomaszow') {
-        window.timetableRows = 15
+        window.timetableRows = 12;
     }
 }
 
