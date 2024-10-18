@@ -474,13 +474,11 @@ export function scrollTimetableUp() {
 }
 
 export function scrollTimetableDown() {
-
-        if ($(window).scrollTop() + $(window).height() !== $(document).height()) {
-            window.lastIndex += 1;
-            $('html, body').animate({
-                scrollTop: $(`#${lastIndex}`).offset().top
-            }, 0);
-        }
+    if ($(window).scrollTop() + $(window).height() !== $(document).height()) {
+        window.lastIndex += 1;
+        $('html, body').animate({
+            scrollTop: $(`#${lastIndex}`).offset().top
+        }, 0);
     }
 }
 
