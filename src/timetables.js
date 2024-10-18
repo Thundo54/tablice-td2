@@ -4,6 +4,7 @@ window.trainsSetBefore = [];
 window.stationsSet = [];
 window.station = '';
 window.region = 'eu';
+window.lastIndex = -1;
 window.isDeparture = localStorage.getItem('isDeparture') === 'true';
 window.isStopped = localStorage.getItem('isStopped') === 'true';
 window.timetableSize = localStorage.getItem('timetableSize') || 'normal';
@@ -53,6 +54,8 @@ $(document).ready(() => {
     let timetablesRequest;
     let operatorsRequest;
     let carsDataRequest;
+    let body = $('body');
+    let overlay = $('#overlay');
 
     if (urlParams.get('timetables') !== null) {
         if (urlParams.get('timetables') === 'departure') {
@@ -80,7 +83,7 @@ $(document).ready(() => {
                 window.overlayName = 'plakat';
                 break;
         }
-        $('#overlay').val(overlayName);
+        overlay.val(overlayName);
     }
 
     if (urlParams.get('mode') !== null && urlParams.get('mode') === 'kiosk') {
@@ -89,7 +92,7 @@ $(document).ready(() => {
         //window.isStopped = true;
         window.showHistory = true;
         window.showOperators = true;
-        $('body').addClass('kiosk');
+        body.addClass('kiosk');
     }
 
     initzializeOverlay();
@@ -244,7 +247,7 @@ $(document).ready(() => {
         toggleRegion();
     });
 
-    $('#overlay').change(function() {
+    overlay.change(function() {
         window.currentOverlay = overlayName;
         window.overlayName = $(this).val();
         localStorage.overlayName = overlayName;
@@ -395,6 +398,18 @@ $(document).ready(() => {
                 e.preventDefault();
                 if ($('#menu-box').hasClass('popup') || $('#menu-box-2').hasClass('popup')) {
                     toggleMenu();
+                }
+            break;
+            case 38:
+                if (body.hasClass('kiosk')) {
+                    e.preventDefault();
+                    utils.scrollTimetableUp();
+                }
+            break;
+            case 40:
+                if (body.hasClass('kiosk')) {
+                    e.preventDefault();
+                    utils.scrollTimetableDown();
                 }
             break;
         }

@@ -454,6 +454,38 @@ export function addDays(date, days) {
     return newDate.toISOString().slice(0, 10);
 }
 
+
+export function scrollTimetableUp() {
+    if ($('body').hasClass('kiosk')) {
+        if (lastIndex === 0) {
+            $('html, body').animate({
+                scrollTop: 0
+            }, 0);
+            window.lastIndex = -1;
+        }
+
+        if (lastIndex > 0) {
+            window.lastIndex -= 1;
+            $('html, body').animate({
+                scrollTop: $(`#${lastIndex}`).offset().top
+            }, 0);
+        }
+    }
+}
+
+export function scrollTimetableDown() {
+
+        if ($(window).scrollTop() + $(window).height() !== $(document).height()) {
+            window.lastIndex += 1;
+            $('html, body').animate({
+                scrollTop: $(`#${lastIndex}`).offset().top
+            }, 0);
+        }
+    }
+}
+
+window.scrollTimetableUp = scrollTimetableUp;
+window.scrollTimetableDown = scrollTimetableDown;
 window.loadTimetablesFromUrl = (url) => {
     clearInterval(timetableInterval);
     clearInterval(getTimetablesInterval);
@@ -461,3 +493,4 @@ window.loadTimetablesFromUrl = (url) => {
     window.timetablesAPI = url;
     parser.makeAjaxRequest(timetablesAPI, 'timetablesAsJson').then(() => loadTimetables());
 };
+
